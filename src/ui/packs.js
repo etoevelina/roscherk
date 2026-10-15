@@ -4,6 +4,7 @@
 // подпись «100 уровней · пройдено 12», тонкий прогресс; у первой (или текущей) — чёрная стрелка.
 // Стили — src/styles/30-packs-map.css (префикс pk-).
 import { h } from './dom.js';
+import { backTo } from './settings.js';
 import { screen, header, chips, progress, art, arrowCircle } from './kit.js';
 import { tr } from '../core/i18n.js';
 import { doneCount, isDone, nextLevelIndex } from '../core/progress.js';
@@ -244,7 +245,8 @@ export function mountWordPacks(app, params = {}) {
               label: `${title}${th.theme.en ? ` (${th.theme.en})` : ''}. ${meta}`,
               onClick: () => {
                 app.audio?.tap?.();
-                app.go('levels', { modeId: 'words', pack: th.pack });
+                // «Назад» с карты темы — на этот список (с тем же источником возврата).
+                app.go('levels', { modeId: 'words', pack: th.pack, back: { name: 'wordPacks', params: { group, back: params.back } } });
               },
             });
           })
@@ -264,7 +266,7 @@ export function mountWordPacks(app, params = {}) {
   const { el } = screen(
     {
       className: 'pk-screen pk-words',
-      header: header({ title: mode ? tr(mode.name) : COPY.wordsTitle, onBack: () => app.go('packs'), center: false }),
+      header: header({ title: mode ? tr(mode.name) : COPY.wordsTitle, onBack: () => backTo(app, params, 'packs'), center: false }),
     },
     groupRow,
     list,

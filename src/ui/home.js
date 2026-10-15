@@ -185,7 +185,8 @@ export function mountHome(app) {
         'aria-label': `${title}. ${sub}`,
         onClick: () => {
           tap();
-          app.go(target);
+          // «Назад» с открытого экрана возвращает на главную, откуда пришли.
+          app.go(target, { back: { name: 'home' } });
         },
       },
       h('span', { class: 'hm-tile-title', text: title }),

@@ -310,11 +310,8 @@ function drawStatic(ctx, state, lay, theme) {
     markTile(ctx, cx, cy, cell * MARK_R, col.tile, col.hairline, 1);
   }
 
-  // Рамка — внешняя линия сетки (край поля задаёт сама карточка), стены — чернила с круглыми
+  // Рамки у сетки нет — край поля задаёт только карточка-бумага; стены — чернила с круглыми
   // концами: на поле читаются только они («иерархия контрастом, а не рамками»).
-  ctx.strokeStyle = theme.grid;
-  ctx.lineWidth = 1;
-  ctx.strokeRect(x0, y0, size, size);
   ctx.strokeStyle = theme.wall;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';

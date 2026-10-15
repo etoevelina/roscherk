@@ -96,7 +96,7 @@ test('подготовка → штрих пальцем → Пуск → поб
   assert.match(draw.footer(st).ru, /чернила \d+ %/);
   const calls = [];
   draw.render(fakeCtx(calls), st, lay, THEME, 1000, { reducedMotion: false });
-  assert.ok(calls.some((c) => c[0] === 'fillText'), 'подпись чернил');
+  assert.ok(calls.some((c) => c[0] === 'fill'), 'полоса чернил');
   const act = draw.act(st, 'launch', 1000);
   assert.ok(act.some((e) => e.kind === 'launch'));
   assert.deepEqual(draw.actions(st), []);

@@ -26,7 +26,8 @@ import {
 } from '../core/progress.js';
 import { recordDailyWin, displayStreak } from '../core/daily.js';
 import { recordActivity } from '../core/stats.js';
-import { updateBest, createStreakTracker } from '../core/endless.js';
+import { updateBest, createStreakTracker, pickEndlessLevel, MIX } from '../core/endless.js';
+import { hash32 } from '../core/rng.js';
 import { buildWinOverlay, splitStatLine } from './win.js';
 
 /** Статистика попытки, которую undo не откатывает (§2.1): тупики stroke, подсказки и вводы «Слов». */
@@ -48,6 +49,9 @@ const COPY = {
   hintPrice: 'снимет звезду «без подсказок»',
   hintNote: 'Подсказка снимает звезду «без подсказок». Две другие — за прохождение и идеальное решение.',
   hintNoteUsed: 'Звезда «без подсказок» в этой попытке уже снята — подсказки бесплатны.',
+  hintStreakPrice: (n) => `оборвёт серию ${n}`,
+  hintStreakNote: (n) => `Подсказка обрывает серию Бесконечности (${n}). Рекорд сохранится.`,
+  hintDailyNote: 'В ежедневной звёзды не считаются — подсказки бесплатны.',
   nextMove: 'Следующий ход',
   settings: 'Настройки',
   sound: 'Звук',
@@ -147,10 +151,12 @@ export function mountGame(app, params) {
   let winAt = 0;
   let ghost = null;
   let ghostStart = 0;
-  let ghostDismissed = resume; // обучение — до первого касания (§3.1 п.7)
+  // Обучение — до первого касания (§3.1 п.7); следующий уровень Бесконечности, записанный в current
+  // при победе (state ещё нет), — новая партия, а не продолжение.
+  let ghostDismissed = resume && cur.state != null;
   // Партия «тронута» (было касание, клавиша, undo, сброс, подсказка) или продолжена: только тогда
   // она записывается в current. Иначе просто открытый и закрытый уровень затирал бы начатую партию
-  // другого уровня (слот current один, §3.3). Бесконечность пишет current всегда (серия).
+  // другого уровня (слот current один, §3.3). Бесконечность с серией > 0 пишет current всегда.
   let touched = resume;
   let introOpen = Array.isArray(mode.intro) && mode.intro.length > 0 && !(state.settings.introSeen || []).includes(mode.id);
   let ghostTimer = null;
@@ -690,10 +696,20 @@ export function mountGame(app, params) {
     });
   }
 
-  /** Цена подсказки в строке шторки: «−★», пока звезда «без подсказок» ещё не снята. */
+  /**
+   * Цена подсказки в строке шторки: «−★», пока звезда «без подсказок» ещё не снята. В Бесконечности
+   * звёзд нет — первая подсказка обрывает серию (§3.2): «−🔥»; в ежедневной звёзды не считаются.
+   */
+  const streakAtRisk = () => isEndless && !attempt.hintUsed && streak.streak > 0;
   function hintPrice() {
-    if (attempt.hintUsed) return null;
+    if (attempt.hintUsed || isDaily || (isEndless && !streakAtRisk())) return null;
+    if (isEndless) return h('span', { class: 'g-price flame' }, '−', icon('flame'));
     return h('span', { class: 'g-price' }, '−', icon('star'));
+  }
+  function hintNote() {
+    if (isDaily) return COPY.hintDailyNote;
+    if (isEndless) return streakAtRisk() ? COPY.hintStreakNote(streak.streak) : null;
+    return attempt.hintUsed ? COPY.hintNoteUsed : COPY.hintNote;
   }
 
   /**
@@ -708,7 +724,7 @@ export function mountGame(app, params) {
       if (end) onPointer(end);
     }
     const price = hintPrice();
-    const priceLabel = price ? COPY.hintPrice : null;
+    const priceLabel = price ? (isEndless ? COPY.hintStreakPrice(streak.streak) : COPY.hintPrice) : null;
     const options =
       typeof mode.hintOptions === 'function'
         ? (mode.hintOptions(gameState) || []).map((o) => ({
@@ -725,7 +741,7 @@ export function mountGame(app, params) {
       title: COPY.hintTitle,
       className: 'g-hint-sheet',
       options,
-      note: attempt.hintUsed ? COPY.hintNoteUsed : COPY.hintNote,
+      note: hintNote(),
     });
   }
 
@@ -912,7 +928,9 @@ export function mountGame(app, params) {
   // --- current ---------------------------------------------------------------------------
   function saveCurrent() {
     if (ended || destroyed) return;
-    if (!touched && !isEndless) return;
+    // Нетронутая Бесконечность пишет current, только если есть серия: открытая и закрытая на
+    // серии 0 не затирает начатую партию кампании (слот current один, §3.3).
+    if (!touched && !(isEndless && endlessInfo.streak > 0)) return;
     const snapshot = { ...mode.serialize(gameState) };
     const record = {
       kind,
@@ -959,21 +977,21 @@ export function mountGame(app, params) {
     let chapterDone = null;
     let endlessStreak = null;
     let endlessRecord = false;
+    let nextEndless = null;
 
     let chapterLabel = null;
     if (isCampaign) {
       const progress = state.progress[mode.id] || {};
       prevBestMs = progress[level.id]?.bestMs || 0;
+      const wasDone = isDone(progress, level.id);
       state.progress[mode.id] = recordWin(progress, level.id, star, elapsedMs, stars, !attempt.hintUsed);
       // Пройденный уровень больше не «пропущенный» (пунктирная рамка на карте).
       const skipped = state.skipped[mode.id] || [];
       if (skipped.includes(level.id)) state.skipped[mode.id] = skipped.filter((id) => id !== level.id);
-      const nextLevel = campaign[levelIndex + 1];
-      // «Глава/тема пройдена» — только когда пройдены все её уровни (при окне по темам их можно
-      // проходить вразнобой, §2.5).
-      const chapterComplete =
-        !mode.openByChapter || campaign.filter((l) => l.chapter === level.chapter).every((l) => isDone(state.progress[mode.id], l.id));
-      if ((!nextLevel || nextLevel.chapter !== level.chapter) && chapterComplete) {
+      // «Глава/тема пройдена» — один раз, на победе, которая закрыла последний непройденный уровень
+      // главы (темы): в любом порядке (окно по темам, §2.5) и не раньше, чем пройдены пропущенные.
+      const chapterComplete = campaign.filter((l) => l.chapter === level.chapter).every((l) => isDone(state.progress[mode.id], l.id));
+      if (chapterComplete && !wasDone) {
         chapterDone = level.chapter;
         if (typeof mode.chapterTitle === 'function') chapterLabel = t('themeDone', { name: tr(mode.chapterTitle(level.chapter, level)) });
       }
@@ -987,20 +1005,32 @@ export function mountGame(app, params) {
       endlessRecord = endlessInfo.streak > prevBest;
       state.endless.best = updateBest(state.endless.best, endlessInfo.modeChoice, endlessInfo.streak);
       app.endlessUsed.add(level.id);
+      nextEndless = pickNextEndless();
     }
     // Активность по дням — для графика и итогов «Статистики» (кампания, ежедневная, бесконечность).
     state.activity = recordActivity(state.activity, app.today());
-    state.current = null;
+    // Бесконечность: следующий уровень серии выбран сразу и записан в current — любой выход с итога
+    // («Испытания», «‹», закрытие приложения) продолжает живую серию (§3.2), а не начинает с нуля.
+    state.current = nextEndless
+      ? {
+          kind: 'endless',
+          mode: nextEndless.mode,
+          levelId: nextEndless.level.id,
+          elapsedMs: 0,
+          hintUsed: false,
+          resets: 0,
+          startedAt: 0,
+          state: null,
+          endless: { streak: endlessInfo.streak, modeChoice: endlessInfo.modeChoice },
+        }
+      : null;
     app.save();
 
-    // Напоминание об установке после 3-го пройденного уровня во вкладке Safari.
+    // Напоминание об установке после 3-го пройденного уровня во вкладке Safari — не поверх итога
+    // (второй тёмной пилюлей над «Следующий уровень»), а после выхода с экрана игры (destroy).
     if (!app.isStandalone && !state.settings.installReminderShown) {
       const total = app.modes.reduce((acc, m) => acc + doneCount(app.modeSets(m.id).campaign, state.progress[m.id] || {}), 0);
-      if (total >= 3) {
-        state.settings.installReminderShown = true;
-        app.save();
-        setTimeout(() => app.overlays.toast(t('installReminder'), { duration: 5000 }), 1500);
-      }
+      if (total >= 3) app.pendingInstallReminder = true;
     }
 
     app.audio.win();
@@ -1050,6 +1080,8 @@ export function mountGame(app, params) {
           else app.go('levels', mapParams());
         } else if (isDaily) {
           app.go('home');
+        } else if (nextEndless) {
+          app.go('game', { kind: 'endless', modeId: nextEndless.mode, levelId: nextEndless.level.id, endless: { streak: endlessInfo.streak, modeChoice: endlessInfo.modeChoice } });
         } else {
           app.startEndless(endlessInfo.modeChoice, endlessInfo.streak);
         }
@@ -1058,12 +1090,15 @@ export function mountGame(app, params) {
       mapLabel: isCampaign ? COPY.toMap : isDaily ? COPY.statsBtn : COPY.challengesBtn,
       onMap: isCampaign ? toMap : () => (app.audio.tap(), app.go(isDaily ? 'stats' : 'challenges')),
       onBack: () => (app.audio.tap(), goBack()),
-      onRepeat: () => {
-        app.audio.tap();
-        // «Повторить» возвращает серию, с которой уровень открыли; после обрыва — 0.
-        if (isEndless) app.go('game', { kind, modeId: mode.id, levelId: level.id, endless: { ...endlessInfo, streak: streak.before } });
-        else app.go('game', { kind, modeId: mode.id, levelId: level.id, date: dailyDate });
-      },
+      // Решённую ежедневную не переигрывают (вкладка показывает «Решена ✓», docs/DESIGN.md §5.8).
+      onRepeat: isDaily
+        ? null
+        : () => {
+            app.audio.tap();
+            // «Повторить» возвращает серию, с которой уровень открыли; после обрыва — 0.
+            if (isEndless) app.go('game', { kind, modeId: mode.id, levelId: level.id, endless: { ...endlessInfo, streak: streak.before } });
+            else app.go('game', { kind, modeId: mode.id, levelId: level.id, date: dailyDate });
+          },
     });
     const delay = reduced ? 0 : WIN_OVERLAY_DELAY_MS;
     setTimeout(() => {
@@ -1073,6 +1108,28 @@ export function mountGame(app, params) {
       // Фокус на заголовок итога: VoiceOver объявляет результат, Tab идёт по кнопкам диалога.
       overlay.querySelector('.g-res-title')?.focus?.({ preventScroll: true });
     }, delay);
+  }
+
+  /**
+   * Следующий уровень Бесконечности для живой серии — тот же выбор, что app.startEndless (main.js):
+   * пулы режимов ротации, сложность по серии, без уровней этой сессии. null — пул пуст.
+   */
+  function pickNextEndless() {
+    const ids = app.rotationModes.map((m) => m.id);
+    const pools = {};
+    for (const id of ids) pools[id] = app.modeSets(id).pool;
+    const choice = endlessInfo.modeChoice;
+    const used = new Set(app.endlessUsed);
+    const picked = pickEndlessLevel({
+      pools,
+      modeIds: ids,
+      modeChoice: ids.includes(choice) ? choice : ids.length > 1 ? MIX : ids[0],
+      streak: endlessInfo.streak,
+      usedIds: used,
+      seed: hash32(Date.now(), used.size),
+    });
+    if (picked) app.endlessUsed.add(picked.level.id);
+    return picked;
   }
 
   /**
@@ -1204,6 +1261,13 @@ export function mountGame(app, params) {
       document.body.classList.remove('toasts-top');
       document.body.classList.remove('result-open');
       document.body.classList.remove('mode-actions-on');
+      // Напоминание об установке, отложенное с итога: флаг ставится, только когда тост показан.
+      if (app.pendingInstallReminder) {
+        app.pendingInstallReminder = false;
+        state.settings.installReminderShown = true;
+        app.save();
+        setTimeout(() => app.overlays.toast(t('installReminder'), { duration: 5000 }), 600);
+      }
     },
   };
 }

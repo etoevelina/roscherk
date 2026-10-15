@@ -6,7 +6,7 @@ import { load, save, normalize } from './core/storage.js';
 import { createAudio, setHaptics } from './core/audio.js';
 import { applyTheme, readTheme, watchSystemTheme, modeAccent, setThemeColorMeta } from './core/theme.js';
 import { t } from './core/i18n.js';
-import { localDateString, pickDaily } from './core/daily.js';
+import { localDateString, pickDaily, isDailyDone } from './core/daily.js';
 import { pickEndlessLevel, MIX } from './core/endless.js';
 import { hash32 } from './core/rng.js';
 import { createOverlays } from './ui/overlays.js';
@@ -159,6 +159,8 @@ function createApp() {
 
     startDaily() {
       const today = app.today();
+      // Решённую сегодня ежедневную не переигрываем (её победа засчиталась бы повторно).
+      if (isDailyDone(app.state.daily, today)) return app.go('daily');
       const pick = pickDaily(today, ROTATION_IDS, app.dailyPoolSize());
       const level = modeSets(levels, pick.mode).daily[pick.index];
       if (!level) {

@@ -43,7 +43,7 @@
   align-items: center;
   gap: 4px;
   min-height: 56px;
-  padding: calc(var(--safe-top) + 6px) calc(var(--w-gutter) - 10px) 4px;
+  padding: calc(var(--safe-top) + 6px) calc(var(--w-gutter) - 6px) 4px;
   background: var(--w-canvas);
 }
 .g-head-center { min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -153,7 +153,7 @@
 .bar-btn:disabled { opacity: 0.4; }
 .bar-btn.skip { color: var(--w-ink); font-weight: 600; }
 .g-status { margin-left: auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 1px; padding-right: 4px; }
-.g-next { font-size: 13px; font-weight: 600; color: var(--w-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.g-next { font-size: 12px; font-weight: 500; color: var(--w-ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .g-next:empty { display: none; }
 /* Подпись режима («ходов N · P %», «слов 3/7») — всегда одной строкой, даже с «Пропустить». */
 .footer-text {
@@ -246,7 +246,8 @@
 .kbd .key.hint-key.down { background: var(--w-sage-ink); }
 .kbd .key.hint-key.pulse { animation: g-soft-pulse 1.6s ease-in-out infinite; }
 body.a11y-large .kbd .key:not(.hint-key) { font-size: 23px; }
-body.a11y-large .kbd .key.hint-key { font-size: 11px; }
+/* Подпись «Подсказка» на 375pt: ключ сужается до 59px — чуть плотнее трекинг, чтобы не вылезать за края. */
+@media (max-width: 389px) { .kbd .key.hint-key { letter-spacing: -0.02em; } }
 @media (max-height: 700px) {
   .kbd { gap: 7px; padding-top: 4px; }
   .kbd .key { height: 42px; }
@@ -352,6 +353,17 @@ body.a11y-large .kbd .key.hint-key { font-size: 11px; }
   .wv-clues { font: -apple-system-body; }
 }
 .wv-clues::-webkit-scrollbar { display: none; }
+/* Нижний край списка: частично видимая строка растворяется в бумаге, а не режется посреди кружка. */
+.wv-clues::after {
+  content: '';
+  position: sticky;
+  bottom: -5px;
+  display: block;
+  height: 22px;
+  margin-top: -22px;
+  background: linear-gradient(to bottom, transparent, var(--w-paper));
+  pointer-events: none;
+}
 .wv-row {
   display: flex;
   align-items: flex-start;
@@ -780,6 +792,7 @@ body.result-open .toast-stack { top: auto; bottom: calc(var(--safe-bottom) + 156
 .sheet-check svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .g-price { display: inline-flex; align-items: center; gap: 1px; }
 .g-price svg { width: 20px; height: 20px; fill: #f2bf45; stroke: #c78d1c; stroke-width: 1.4; stroke-linejoin: round; }
+.g-price.flame svg { fill: #f0894a; stroke: #b9581f; }
 .sheet-note { margin: 12px 8px 2px; font-size: 13px; line-height: 1.4; color: var(--w-muted); }
 .sheet-content { display: grid; gap: 8px; }
 

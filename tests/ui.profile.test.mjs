@@ -10,6 +10,8 @@ import {
   formatNumber,
   initialOf,
   cleanName,
+  fitName,
+  nameLength,
   totalStars,
   themeLabel,
   backTo,
@@ -62,6 +64,21 @@ test('cleanName: как storage.normalize — пробелы схлопнуты,
   assert.equal(cleanName(raw), st.settings.name);
   const emoji = `${'a'.repeat(23)}😀`; // 25 code units: эмодзи не режется пополам
   assert.ok(!/[\uD800-\uDBFF]$/.test(cleanName(emoji)));
+});
+
+test('имя с эмодзи: аватар, счётчик и обрезка — целыми графемами', () => {
+  const fam = '👨‍👩‍👧‍👦'; // ZWJ-цепочка, 11 единиц UTF-16
+  assert.equal(initialOf('🇷🇺Ева'), '🇷🇺'); // флаг целиком, не одинокий региональный индикатор
+  assert.equal(initialOf(`${fam} Ева`), fam);
+  assert.equal(nameLength(`${fam}${fam} Ева`), 6); // счётчик: эмодзи = 1
+  assert.equal(nameLength('Ева'), 3);
+  const cut = cleanName(`${fam}${fam} Ева`);
+  assert.ok(cut.length <= NAME_MAX);
+  assert.ok(cut.startsWith(`${fam}${fam}`)); // семья не порвана
+  assert.ok(!/[\u200D\uD800-\uDBFF]$/.test(cut));
+  assert.equal(normalize({ v: 1, settings: { name: cut } }).settings.name, cut); // переживает перезагрузку
+  assert.equal(fitName(`${'a'.repeat(20)}${fam}`), 'a'.repeat(20)); // эмодзи не влезает — уходит целиком
+  assert.equal(cleanName('👨‍👩‍'), '👨‍👩'); // висячий ZWJ от старой обрезки убран
 });
 
 test('totalStars: сумма 1–3 звёзд по режимам, только уровни кампании сборки', () => {

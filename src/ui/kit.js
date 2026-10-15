@@ -38,6 +38,7 @@ export function tabBar(app, active) {
         {
           class: 'w-tab',
           type: 'button',
+          'data-tab': tab.id,
           'aria-current': tab.id === active ? 'page' : null,
           onClick: () => {
             if (tab.id === active) return;

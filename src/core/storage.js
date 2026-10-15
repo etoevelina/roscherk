@@ -160,6 +160,12 @@ export function normalize(raw, modeIds = DEFAULT_MODES) {
       .sort((a, b) => (a[0] < b[0] ? -1 : 1))
       .slice(-ACTIVITY_DAYS);
     for (const [d, n] of days) out.activity[d] = Math.min(9999, Number(n) | 0);
+  } else if (!('activity' in raw)) {
+    // Состояние/код до редизайна: активности ещё не было — восстанавливаем её
+    // из того, что знает даты (решённые ежедневные), чтобы статистика не спорила с серией.
+    for (const d of out.daily.history) {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(d)) out.activity[d] = (out.activity[d] || 0) + 1;
+    }
   }
 
   if (isObject(raw.endless) && isObject(raw.endless.best)) {

@@ -4,6 +4,7 @@
 import { h, icon } from './dom.js';
 import { art, button, iconButton } from './kit.js';
 import { t, tr, formatTime, daysWord } from '../core/i18n.js';
+import { isDailyDone } from '../core/daily.js';
 
 const STAR_WORDS = ['звёзд', 'звезда', 'звезды', 'звезды'];
 
@@ -224,7 +225,8 @@ export function mountCampaignDone(app, { modeId }) {
           ? button(modeId === 'words' ? 'К темам' : 'К карте', { variant: 'primary', arrow: true, block: true, onClick: toMap })
           : [
               button(t('endless'), { variant: 'primary', arrow: true, block: true, onClick: () => app.startEndless(app.rotationModes.length > 1 ? 'mix' : app.rotationModes[0].id, 0) }),
-              button(t('daily'), { variant: 'secondary', block: true, onClick: () => app.startDaily() }),
+              // Решённая сегодня ежедневная не переигрывается — ведём на вкладку («Решена ✓», §5.8).
+              button(t('daily'), { variant: 'secondary', block: true, onClick: () => (isDailyDone(app.state.daily, app.today()) ? app.go('daily') : app.startDaily()) }),
             ],
         button('На главную', { variant: 'ghost', block: true, onClick: () => app.go('home') }),
       ),

@@ -185,8 +185,9 @@ export function mountStats(app) {
         'aria-label': `${name}: пройдено ${r.done} из ${r.total}, ${r.stars} ${plural(r.stars, STARS)} из ${r.starsMax}`,
         onClick: () => {
           app.audio?.tap?.();
-          if (r.id === 'words') app.go('wordPacks');
-          else app.go('levels', { modeId: r.id });
+          // «Назад» с карты/тем возвращает в «Статистику», откуда пришли.
+          if (r.id === 'words') app.go('wordPacks', { back: { name: 'stats' } });
+          else app.go('levels', { modeId: r.id, back: { name: 'stats' } });
         },
       },
       h('span', { class: `st-mode-icon ${FAMILY[r.id] || 'mist'}`, 'aria-hidden': 'true' }, modeIcon(mode)),

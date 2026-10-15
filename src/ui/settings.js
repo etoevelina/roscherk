@@ -91,16 +91,38 @@ export function formatNumber(n) {
   return String(Math.max(0, Math.trunc(Number(n) || 0))).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-/** initialOf('евелина') → 'Е'; пустое имя → '' (тогда в аватаре иконка user). */
+// Графемы (то, что человек видит одним символом): флаг 🇷🇺 и семья 👨‍👩‍👧‍👦 — по одной.
+// Без Intl.Segmenter (старый WebKit) — запасной вариант по кодовым точкам.
+const SEGMENTER = typeof Intl !== 'undefined' && Intl.Segmenter ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
+const graphemes = (s) => (SEGMENTER ? Array.from(SEGMENTER.segment(s), (g) => g.segment) : Array.from(s));
+
+/** Сколько символов видит человек: эмодзи и флаг считаются за один. */
+export const nameLength = (s) => graphemes(String(s ?? '')).length;
+
+/**
+ * fitName(s) → начало строки целыми графемами, не длиннее NAME_MAX кодовых единиц UTF-16:
+ * storage.normalize режет имя как slice(0, NAME_MAX), поэтому так оно переживает перезагрузку
+ * без изменений, а эмодзи никогда не обрывается посередине (ни суррогат, ни ZWJ-цепочка).
+ */
+export function fitName(s) {
+  let out = '';
+  for (const g of graphemes(String(s ?? ''))) {
+    if (out.length + g.length > NAME_MAX) break;
+    out += g;
+  }
+  return out;
+}
+
+/** initialOf('евелина') → 'Е'; пустое имя → '' (тогда в аватаре иконка user). Первая графема целиком. */
 export function initialOf(name) {
-  const first = Array.from(String(name || '').trim())[0] || '';
+  const first = graphemes(String(name || '').trim())[0] || '';
   return first.toUpperCase();
 }
 
-/** cleanName(raw) → имя как его хранит storage.normalize: пробелы схлопнуты, ≤ 24 символов. */
+/** cleanName(raw) → имя как его хранит storage.normalize: пробелы схлопнуты, ≤ 24 единиц, эмодзи целые. */
 export function cleanName(raw) {
-  let s = String(raw ?? '').replace(/\s+/g, ' ').trim().slice(0, NAME_MAX);
-  if (/[\uD800-\uDBFF]$/.test(s)) s = s.slice(0, -1); // не рвать эмодзи пополам
+  let s = fitName(String(raw ?? '').replace(/\s+/g, ' ').trim());
+  s = s.replace(/[\uD800-\uDBFF]$/, '').replace(/\u200D+$/, ''); // остатки уже обрезанных имён
   return s.trim();
 }
 
@@ -416,7 +438,7 @@ export function mountSettings(app, params = {}) {
     const input = h('input', {
       class: 'pf-input',
       type: 'text',
-      maxlength: String(NAME_MAX),
+      maxlength: String(NAME_MAX * 4), // грубый предел для вставки; точный — fitName в onInput
       autocomplete: 'given-name',
       autocapitalize: 'words',
       enterkeyhint: 'done',
@@ -427,9 +449,20 @@ export function mountSettings(app, params = {}) {
     });
     input.value = settings().name;
     const count = h('span', { class: 'pf-count', 'aria-hidden': 'true' });
-    const renderCount = () => (count.textContent = `${input.value.length} / ${NAME_MAX}`);
+    const renderCount = () => (count.textContent = `${nameLength(input.value)} / ${NAME_MAX}`);
     renderCount();
-    input.addEventListener('input', renderCount);
+    input.addEventListener('input', () => {
+      // Предел — целыми графемами: maxlength браузера режет по UTF-16 и рвёт эмодзи.
+      const fitted = fitName(input.value);
+      if (fitted !== input.value) {
+        const caret = Math.min(input.selectionStart ?? fitted.length, fitted.length);
+        input.value = fitted;
+        try {
+          input.setSelectionRange(caret, caret);
+        } catch {}
+      }
+      renderCount();
+    });
     const saveName = () => {
       settings().name = cleanName(input.value);
       app.save();

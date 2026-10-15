@@ -163,14 +163,12 @@ const mode = {
     ctx.globalAlpha = appear;
 
     // --- Полоса чернил — прогресс WORDS: тонкая дорожка (волосяная), заливка чернилами (активный
-    // прогресс; < 15 % — --w-danger), подпись «N %» справа тихим текстом на холсте (≥ 4.5:1).
+    // прогресс; < 15 % — --w-danger) на всю ширину. Число «N %» не дублируем: его показывает footer().
     const bar = layout.bar;
     const frac = clamp(1 - sim.inkUsed / sim.inkTotal, 0, 1);
-    const labelSize = theme.large ? 13 : 11;
-    const labelW = labelSize * 3.6;
     const th = Math.min(bar.h, 6);
     const ty = bar.y + (bar.h - th) / 2;
-    const tw = Math.max(th, bar.w - labelW);
+    const tw = Math.max(th, bar.w);
     ctx.fillStyle = theme.hairline || theme.surface2;
     roundRect(ctx, bar.x, ty, tw, th, th / 2);
     ctx.fill();
@@ -179,11 +177,6 @@ const mode = {
       roundRect(ctx, bar.x, ty, Math.max(th, tw * frac), th, th / 2);
       ctx.fill();
     }
-    ctx.font = `600 ${labelSize}px ${FONT}`;
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = theme.textMuted; // --w-danger на холсте < 4.5:1 — предупреждает заливка
-    ctx.fillText(`${Math.round(frac * 100)} %`, bar.x + bar.w, bar.y + bar.h / 2 + 0.5);
 
     // --- Поле (бумага WORDS на холсте, волосяная обводка — после содержимого, поверх среза).
     const fieldR = FIELD_R * Math.min(1, scale * 1.2);

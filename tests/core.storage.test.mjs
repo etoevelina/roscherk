@@ -131,3 +131,13 @@ test('WORDS: имя, онбординг, специальные возможно
   assert.equal(d.settings.onboarded, false);
   assert.deepEqual(d.activity, {});
 });
+
+test('код до редизайна без activity: активность восстанавливается из истории ежедневных', () => {
+  const s = normalize(
+    { v: 1, daily: { streak: 3, lastDate: '2026-10-14', history: ['2026-10-12', '2026-10-13', '2026-10-14'] } },
+    MODES,
+  );
+  assert.deepEqual(s.activity, { '2026-10-12': 1, '2026-10-13': 1, '2026-10-14': 1 });
+  const empty = normalize({ v: 1, activity: {}, daily: { history: ['2026-10-12'] } }, MODES);
+  assert.deepEqual(empty.activity, {});
+});

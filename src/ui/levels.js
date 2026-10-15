@@ -8,6 +8,7 @@
 // Стили — src/styles/30-packs-map.css (префикс mp-).
 import { h, icon } from './dom.js';
 import { screen, header, pill, progress, art } from './kit.js';
+import { backTo } from './settings.js';
 import { tr, formatTime } from '../core/i18n.js';
 import { levelStatuses, levelStars } from '../core/progress.js';
 import { modeLook, themeLook, packIdOf, wordThemes, plural } from './packs.js';
@@ -322,7 +323,7 @@ export function mountLevels(app, params = {}) {
   const { el, scroll } = screen(
     {
       className: 'mp-screen',
-      header: header({ title, onBack: () => app.go(themed ? 'wordPacks' : 'packs'), right: starPill, backLabel: COPY.back }),
+      header: header({ title, onBack: () => backTo(app, params, themed ? 'wordPacks' : 'packs'), right: starPill, backLabel: COPY.back }),
     },
     track,
   );

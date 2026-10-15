@@ -14,8 +14,7 @@
 :root[data-theme="dark"] .pk-card.mist, :root[data-theme="dark"] .mp-thumb.mist { background: linear-gradient(105deg, #1f201e 0%, #252725 50%, #30353b 100%); }
 
 /* ---------- Вкладка «Режимы» и темы «Слов». ---------- */
-.pk-heading { margin: 10px 0 18px; }
-.pk-words .w-header .w-title-sm { font-size: 20px; font-weight: 500; letter-spacing: -0.025em; }
+.pk-heading { margin: 6px 0 20px; }
 
 /* Чипы как в эталоне: скруглённые прямоугольники, ряд на всю ширину (лишние — прокрутка). */
 .pk-chips { gap: 8px; }
@@ -68,7 +67,7 @@
 
 /* 3D-объекты: 40–70 % карточки, обрезаны краем, текст — вне бликов. */
 .pk-art { right: 0; top: 0; }
-.pk-card .pk-art-sage-loop { width: 76%; right: -30%; top: -30%; transform: rotate(-8deg); }
+.pk-card .pk-art-sage-loop { width: 76%; right: -40%; top: -30%; transform: rotate(-8deg); }
 .pk-card .pk-art-pearl-ribbon { width: 50%; right: -10%; top: -44%; transform: rotate(-58deg); }
 /* Голубое семейство: жемчужная лента подкрашена в голубое стекло (как «Nature» в эталоне). */
 .pk-card.blue .pk-art-pearl-ribbon, .mp-thumb.blue .pk-art-pearl-ribbon { filter: sepia(0.55) hue-rotate(180deg) saturate(1.15) brightness(0.9) var(--w-shadow-art); }
@@ -87,6 +86,11 @@
   --mp-node-shadow: inset 0 0 0 1px rgba(241, 239, 234, 0.08), 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 .mp-screen .w-scroll { padding: 0; }
+/* Узлы, прокрученные вверх, гаснут до строки заголовка (а не просвечивают сквозь шапку). */
+.mp-screen .w-scroll {
+  -webkit-mask-image: linear-gradient(to bottom, transparent calc(var(--safe-top) + 40px), #000 calc(var(--safe-top) + 96px));
+  mask-image: linear-gradient(to bottom, transparent calc(var(--safe-top) + 40px), #000 calc(var(--safe-top) + 96px));
+}
 .mp-screen .w-header {
   position: absolute;
   top: 0;
@@ -100,7 +104,6 @@
 }
 .mp-screen .w-header > :first-child { justify-self: start; }
 .mp-screen .w-header .w-header-right { justify-self: end; }
-.mp-screen .w-header .w-title-sm { font-size: 20px; font-weight: 500; letter-spacing: -0.025em; }
 .mp-screen .w-pill { background: color-mix(in srgb, var(--w-surface) 78%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: inset 0 0 0 1px var(--w-line); min-height: 40px; padding: 0 14px; }
 
 .mp-track {

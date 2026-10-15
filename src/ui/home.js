@@ -18,7 +18,8 @@ export function mountHome(app) {
     h(
       'div',
       { class: 'hero' },
-      h('img', { class: 'hero-icon', src: './icon-180.png', alt: '', width: '60', height: '60', 'aria-hidden': 'true' }),
+      // Сборка без иконок (артефакт, --no-icons): битую картинку убираем, остаётся заголовок.
+      h('img', { class: 'hero-icon', src: './icon-180.png', alt: '', width: '60', height: '60', 'aria-hidden': 'true', onError: (e) => e.currentTarget.remove() }),
       h('div', { class: 'hero-text' }, h('h1', { text: t('appTitle') }), h('p', { text: t('heroSub') })),
     ),
   );
@@ -51,7 +52,8 @@ export function mountHome(app) {
   const cur = state.current;
   const curMode = cur ? app.modeById[cur.mode] : null;
   const curFound = curMode ? findLevel(app.levels, cur.mode, cur.levelId) : null;
-  const hasContinue = !!curFound;
+  // Ежедневная прошлого дня не продолжается: её победа засчиталась бы задним числом (§3.2).
+  const hasContinue = !!curFound && !(cur.kind === 'daily' && cur.date !== today);
   if (hasContinue) {
     const campaign = app.modeSets(curMode.id).campaign;
     const where =
@@ -129,8 +131,9 @@ export function mountHome(app) {
   let stars = 0;
   for (const m of app.modes) {
     const progress = state.progress[m.id] || {};
-    solved += doneCount(app.modeSets(m.id).campaign, progress);
-    for (const rec of Object.values(progress)) if (rec && rec.star) stars++;
+    const campaign = app.modeSets(m.id).campaign;
+    solved += doneCount(campaign, progress);
+    for (const l of campaign) if (progress[l.id]?.star) stars++; // только уровни этой сборки
   }
   const stat = (value, label) => h('div', { class: 'stat' }, h('strong', { text: String(value) }), h('small', { text: label }));
   content.appendChild(h('div', { class: 'stat-row' }, stat(streak, t('statStreak')), stat(solved, t('statSolved')), stat(stars, t('statStars'))));
@@ -198,6 +201,7 @@ export function mountHome(app) {
       ...choices.map((id) =>
         h('button', {
           class: id === choice ? 'on' : '',
+          'aria-pressed': String(id === choice),
           text: id === MIX ? t('mix') : tr(app.modeById[id].name),
           onClick: () => {
             choice = id;

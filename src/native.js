@@ -16,13 +16,9 @@ export function setupNative() {
       /* без вибрации */
     }
   };
-  // Статус-бар: поверх страницы (safe-area учтена в CSS), стиль — по теме документа.
-  const syncStatusBar = () => {
-    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    StatusBar.setStyle({ style: dark ? Style.Dark : Style.Light }).catch(() => {});
-  };
+  // Статус-бар поверх страницы (safe-area учтена в CSS). Под ним в обеих темах тёмная полоса
+  // шапки (§4.1), поэтому текст статус-бара всегда светлый (Style.Dark = светлые значки).
   StatusBar.setOverlaysWebView({ overlay: true }).catch(() => {});
-  syncStatusBar();
-  new MutationObserver(syncStatusBar).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
   SplashScreen.hide().catch(() => {});
 }

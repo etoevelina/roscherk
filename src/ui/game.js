@@ -63,7 +63,8 @@ export function mountGame(app, params) {
 
   // --- Восстановление незавершённой партии ---------------------------------------------
   const cur = state.current;
-  const resume = !!cur && cur.kind === kind && cur.mode === mode.id && cur.levelId === level.id;
+  const resume =
+    !!cur && cur.kind === kind && cur.mode === mode.id && cur.levelId === level.id && (!isDaily || !params.date || cur.date === params.date);
   let gameState = mode.create(level, resume && cur.state ? cur.state : undefined);
   const t0 = now();
   const attempt = resume
@@ -296,7 +297,8 @@ export function mountGame(app, params) {
       // Lumin «soft radial bloom»: мягкое свечение цвета режима из центра поля, гаснет за 700 мс.
       const rect = cv.rect();
       const cx = rect.w / 2;
-      const cy = layout && layout.y0 != null && layout.size ? layout.y0 + layout.size / 2 : rect.h / 2;
+      // Центр поля: сетка (zip/flow — y0 + size) или bbox фигуры (stroke — by + bh).
+      const cy = !layout ? rect.h / 2 : layout.size ? layout.y0 + layout.size / 2 : layout.bh != null ? layout.by + layout.bh / 2 : rect.h / 2;
       const r = Math.max(rect.w, rect.h) * 0.6;
       const fade = 1 - dt / dur;
       ctx.save();
@@ -753,6 +755,7 @@ export function mountGame(app, params) {
       kbd.style.display = 'none';
       document.body.classList.remove('kbd-open');
     }
+    document.body.classList.add('toasts-top'); // поле уже не в игре — тосты не над кнопками победы
     updateHud();
     winAt = tt;
     const reduced = app.reducedMotion();
@@ -917,6 +920,7 @@ export function mountGame(app, params) {
         document.removeEventListener('keydown', onKeyDown);
         document.body.classList.remove('kbd-open');
       }
+      document.body.classList.remove('toasts-top');
     },
   };
 }

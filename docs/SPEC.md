@@ -448,7 +448,7 @@ Service Worker и отладочного `window.__roscherk`.
 - `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">`;
   `apple-mobile-web-app-capable`, `apple-mobile-web-app-status-bar-style=black-translucent`,
   `apple-mobile-web-app-title=Росчерк`, `apple-touch-icon` (180), `theme-color`,
-  `<meta name="color-scheme" content="dark light">`, инлайн `<html style="background:#0f1117">`
+  `<meta name="color-scheme" content="dark light">`, инлайн `<html style="background:#121412">`
   до CSS (против белой вспышки). Иконки и мета iOS читает один раз при установке.
 - `html, body { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: none;
   -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
@@ -464,8 +464,9 @@ Service Worker и отладочного `window.__roscherk`.
 - Шапка всех экранов — цвета фона (Lumin), круглые кнопки 44pt; под статус-баром в светлой теме —
   тёмная полоса высотой safe-area (статус-бар black-translucent пишет белым),
   `padding-top: env(safe-area-inset-top)`. Отступ снизу ≥ `env(safe-area-inset-bottom)` + 8pt.
-  Тосты — под шапкой (снизу их перекрывали бы клавиатура «Слов» и кнопки победы); тост без
-  кнопок не перехватывает касания.
+  Тосты — над нижней панелью; под шапкой — только с клавиатурой «Слов» (`body.kbd-open`) и после
+  победы (`body.toasts-top`), чтобы не накрывать ни верхний ряд поля, ни клавиши, ни «Дальше»;
+  тост без кнопок не перехватывает касания.
 - Кнопки ≥ 44pt; контраст AA; цифры в zip ≥ 16pt, рисуются поверх дорожки белым/чёрным с
   обводкой 2px контрастного цвета.
 

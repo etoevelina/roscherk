@@ -323,7 +323,7 @@
 
 /* Маленькие экраны (iPhone SE): место отдаём цитате — без совета, определение в 2 строки. */
 @media (max-height: 700px) {
-  .lumin .tip { display: none; }
+  .game-screen.dom .tip { display: none; } /* только «Слова»: у головоломок совет нужен на уровне 1 */
   .wv { gap: 6px; padding-top: 8px; }
   .wv-panel { gap: 6px; }
   .wv-clue { height: 84px; }

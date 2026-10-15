@@ -22,9 +22,9 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
   /* «Потоки»: 12 приглушённых, но различимых оттенков (Lumin «muted, not washed out»). */
-  --flow-0: #e08a8e; --flow-1: #e8a86b; --flow-2: #d9c066; --flow-3: #94c48a;
-  --flow-4: #6cc4bc; --flow-5: #8daee0; --flow-6: #b49ce6; --flow-7: #e39ac6;
-  --flow-8: #b8cc6a; --flow-9: #7fc0e0; --flow-10: #cfa27f; --flow-11: #c3c8d2;
+  --flow-0: #ce7a7f; --flow-1: #e8a86b; --flow-2: #ebd176; --flow-3: #99ca8f;
+  --flow-4: #6cc4bc; --flow-5: #a3c4f7; --flow-6: #b49ce6; --flow-7: #bb75a0;
+  --flow-8: #91a646; --flow-9: #5ea0be; --flow-10: #a8805e; --flow-11: #c9ced8;
   --flow-text-0: #111311; --flow-text-1: #111311; --flow-text-2: #111311; --flow-text-3: #111311;
   --flow-text-4: #111311; --flow-text-5: #111311; --flow-text-6: #111311; --flow-text-7: #111311;
   --flow-text-8: #111311; --flow-text-9: #111311; --flow-text-10: #111311; --flow-text-11: #111311;
@@ -49,10 +49,10 @@
   --ok: #56705a;
   --shadow: 0 1px 2px rgba(12, 17, 13, 0.05), 0 10px 30px rgba(30, 36, 30, 0.06);
 
-  --flow-0: #b5555a; --flow-1: #b86f2e; --flow-2: #9a7d1f; --flow-3: #4f7f47;
-  --flow-4: #2f7f79; --flow-5: #4a6fa5; --flow-6: #7a62a8; --flow-7: #a8507f;
-  --flow-8: #6d7d22; --flow-9: #2f6f8f; --flow-10: #8f6040; --flow-11: #5a5f6b;
-  --flow-text-0: #ffffff; --flow-text-1: #ffffff; --flow-text-2: #ffffff; --flow-text-3: #ffffff;
+  --flow-0: #a4464c; --flow-1: #8f4d08; --flow-2: #a08225; --flow-3: #366630;
+  --flow-4: #2f7f79; --flow-5: #214d80; --flow-6: #7f67ad; --flow-7: #812c5c;
+  --flow-8: #6d7d22; --flow-9: #2f6f8f; --flow-10: #a57453; --flow-11: #393e49;
+  --flow-text-0: #ffffff; --flow-text-1: #ffffff; --flow-text-2: #111311; --flow-text-3: #ffffff;
   --flow-text-4: #ffffff; --flow-text-5: #ffffff; --flow-text-6: #ffffff; --flow-text-7: #ffffff;
   --flow-text-8: #ffffff; --flow-text-9: #ffffff; --flow-text-10: #ffffff; --flow-text-11: #ffffff;
   color-scheme: light;
@@ -277,7 +277,7 @@ button:disabled { opacity: 0.4; cursor: default; }
 
 .calendar { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; margin-top: 10px; }
 .calendar span { aspect-ratio: 1; border-radius: 6px; background: var(--surface3); }
-.calendar span.done { background: var(--lm-sage); }
+.calendar span.done { background: var(--lm-ink); }
 .calendar span.today { outline: 2px solid var(--lm-lav-strong); outline-offset: -2px; }
 
 .seg {
@@ -296,7 +296,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   font-weight: 600;
   color: var(--text-muted);
 }
-.seg button.on { background: var(--lm-tile); color: var(--text); box-shadow: 0 1px 2px rgba(12, 17, 13, 0.08), inset 0 0 0 1px var(--lm-line); }
+.seg button.on { background: var(--lm-ink); color: var(--lm-on-ink); box-shadow: none; }
 
 /* --- Выбор уровня --- */
 .chapter { margin-bottom: 18px; }
@@ -415,6 +415,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   text-align: center;
 }
 .win-card h2 { margin: 2px 0 0; font-size: 28px; line-height: 1.05; font-weight: 620; letter-spacing: -0.045em; }
+.win-card h2:focus { outline: none; }
 /* Lumin «Level complete»: галочка в шалфейном круге, одно восходящее движение. */
 .win-card .badge {
   width: 64px;
@@ -520,6 +521,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 .toggle.on { background: var(--lm-ink); }
+.toggle.on::after { background: var(--lm-on-ink); }
 .toggle.on::after { transform: translateX(20px); }
 .setting-btn { width: 100%; justify-content: flex-start; padding: 0 4px; min-height: 48px; background: none; font-weight: 500; }
 .version { color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 16px; }
@@ -528,17 +530,20 @@ button:disabled { opacity: 0.4; cursor: default; }
 #overlays { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
 #overlays > * { pointer-events: auto; }
 .toast-stack {
-  /* Тосты — под шапкой: снизу их перекрывали бы клавиатура «Слов» и кнопки экрана победы. */
+  /* Тосты — над нижней панелью; под шапкой — только с клавиатурой «Слов» и после победы (иначе
+     тост сверху накрывал бы верхний ряд поля, снизу — клавиши и кнопку «Дальше»). */
   position: absolute;
   left: 24px;
   right: 24px;
-  top: calc(var(--safe-top) + 60px);
+  bottom: calc(var(--safe-bottom) + 84px);
   display: flex;
   flex-direction: column;
   gap: 8px;
   align-items: center;
   pointer-events: none;
 }
+body.kbd-open .toast-stack,
+body.toasts-top .toast-stack { top: calc(var(--safe-top) + 60px); bottom: auto; }
 .toast.passive { pointer-events: none; }
 .toast {
   pointer-events: auto;
@@ -586,6 +591,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   padding: 24px;
   animation: fade-in 150ms ease-out;
 }
+:root:not([data-theme="light"]) .dialog-backdrop { background: rgba(0, 0, 0, 0.5); }
 .dialog {
   width: 100%;
   max-width: 360px;
@@ -626,7 +632,7 @@ button:disabled { opacity: 0.4; cursor: default; }
 .rotate-overlay svg { width: 64px; height: 64px; stroke: var(--lm-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 @media (prefers-reduced-motion: reduce) {
-  .screen, .toast, .win-overlay, .dialog-backdrop, .win-card .badge { animation: none; }
+  .screen, .toast, .win-overlay, .dialog-backdrop, .win-card .badge, .cd-badge { animation: none; }
   .board.shake { animation: none; }
   .bar-btn.pulse { animation: none; }
   .toggle, .toggle::after { transition: none; }

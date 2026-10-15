@@ -496,6 +496,12 @@ const mode = {
       if (hint.kind === 'cells') {
         for (let i = 0; i < hint.cells.length; i++) {
           highlightCell(ctx, hint.cells[i], layout, theme.hint, 0.35 * fade, cell * 0.08, appear);
+          // Контур в полную силу: заливка 0,35 в светлой теме слишком бледна (§4.1 контраст ≥ 3:1).
+          ctx.globalAlpha = fade * appear;
+          ctx.strokeStyle = theme.hint;
+          ctx.lineWidth = Math.max(2, cell * 0.06);
+          ctx.stroke();
+          ctx.globalAlpha = appear;
         }
       } else if (hint.kind === 'rollback') {
         highlightCell(ctx, hint.cell, layout, theme.danger, 0.4 * fade, cell * 0.08, appear);
@@ -573,7 +579,7 @@ const mode = {
       const phase = pulsing ? 0.5 + 0.5 * Math.sin(t / 260) : 0.5;
       const cx = x0 + ((nextCell % n) + 0.5) * cell;
       const cy = y0 + (((nextCell / n) | 0) + 0.5) * cell;
-      ctx.globalAlpha = (0.35 + 0.35 * phase) * appear;
+      ctx.globalAlpha = (pulsing ? 0.35 + 0.35 * phase : 1) * appear; // без пульса (Reduce Motion) — в полную силу
       ctx.strokeStyle = theme.accent;
       ctx.lineWidth = Math.max(2, cell * 0.06);
       ctx.beginPath();
@@ -589,10 +595,12 @@ const mode = {
     ctx.textBaseline = 'middle';
     ctx.lineJoin = 'round';
     ctx.lineWidth = 2;
-    ctx.strokeStyle = theme.bg;
-    ctx.fillStyle = theme.text;
     for (let i = 0; i < state.marks.length; i++) {
       const c = state.marks[i][0];
+      // В тёмной теме дорожка светлая (Lumin, приглушённый шалфей): число на ней — тёмное со светлой обводкой.
+      const onPath = theme.id === 'dark' && state.posOf[c] >= 0;
+      ctx.strokeStyle = onPath ? theme.text : theme.bg;
+      ctx.fillStyle = onPath ? theme.bg : theme.text;
       let cx = x0 + ((c % n) + 0.5) * cell;
       const cy = y0 + (((c / n) | 0) + 0.5) * cell;
       if (rejecting && c === state.fx.rejectCell && !reduced) {

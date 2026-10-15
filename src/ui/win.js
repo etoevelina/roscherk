@@ -28,13 +28,13 @@ export function buildWinOverlay(app, info) {
   }
   if (info.dailyWon) lines.push(h('div', { class: 'line', text: t('dailyWon') }));
 
-  const badge = h('div', { class: `badge ${info.star ? 'star' : 'check'}` }, icon(info.star ? 'star' : 'check'));
+  const badge = h('div', { class: `badge ${info.star ? 'star' : 'check'}`, 'aria-hidden': 'true' }, icon(info.star ? 'star' : 'check'));
 
   const card = h(
     'div',
-    { class: 'win-card', style: { '--mode-color': app.theme.accentOf(info.mode) } },
+    { class: 'win-card', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'win-title', style: { '--mode-color': app.theme.accentOf(info.mode) } },
     badge,
-    h('h2', { text: t('done') }),
+    h('h2', { id: 'win-title', tabindex: '-1', text: t('done') }),
     ...lines,
     info.chapterDone ? h('div', { class: 'chapter-done', text: info.chapterLabel || t('chapterDone', { n: info.chapterDone }) }) : null,
     vocabList(info.vocab),
@@ -133,7 +133,7 @@ export function mountCampaignDone(app, { modeId }) {
             'div',
             { class: 'btn-row', style: { marginTop: '24px' } },
             h('button', { class: 'btn primary', text: t('endless'), onClick: () => app.startEndless(app.rotationModes.length > 1 ? 'mix' : app.rotationModes[0].id, 0) }),
-            h('button', { class: 'btn primary', text: t('daily'), onClick: () => app.startDaily() }),
+            h('button', { class: 'btn tonal', text: t('daily'), onClick: () => app.startDaily() }),
           ),
       h('div', { class: 'btn-row' }, h('button', { class: 'btn', text: t('home'), onClick: () => app.go('home') })),
     ),

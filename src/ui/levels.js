@@ -34,9 +34,16 @@ export function mountLevels(app, { modeId }) {
     const tiles = h('div', { class: 'tiles' });
     for (const level of ch.items) {
       const s = statuses[campaign.indexOf(level)];
+      const parts = [t('level', { n: s.index + 1 })];
+      if (s.status === 'locked') parts.push(t('locked'));
+      else if (s.status === 'done') {
+        parts.push(t(s.star ? 'star' : 'check'));
+        if (s.bestMs) parts.push(t('best', { t: formatTime(s.bestMs) }));
+      } else if (s.skipped) parts.push(t('skippedLevel'));
       const tile = h('button', {
         class: `tile ${s.status} ${s.skipped ? 'skipped' : ''} ${s.index === current ? 'current' : ''}`,
-        'aria-label': `${t('level', { n: s.index + 1 })}${s.status === 'locked' ? `, ${t('locked')}` : ''}`,
+        'aria-label': parts.join(', '),
+        'aria-current': s.index === current ? 'step' : null,
         disabled: s.status === 'locked',
         onClick: () => {
           app.audio.tap();
@@ -102,13 +109,14 @@ function mountLuminLevels(app, mode) {
     const nodes = ch.items.map((x) => {
       const cls = `lp-node ${x.s.status}${x === current ? ' current' : ''}${x.s.star ? ' star' : ''}`;
       const n = ch.items.indexOf(x) + 1;
-      const label = `${tr(theme)}, ${t('level', { n })}${x.s.status === 'locked' ? `, ${t('locked')}` : x.s.status === 'done' ? `, ${t('check')}` : ''}`;
+      const label = `${tr(theme)}, ${t('level', { n })}${x.s.status === 'locked' ? `, ${t('locked')}` : x.s.status === 'done' ? `, ${t(x.s.star ? 'star' : 'check')}` : ''}`;
       const btn = h(
         'button',
         {
           class: cls,
           type: 'button',
           'aria-label': label,
+          'aria-current': x === current ? 'step' : null,
           disabled: x.s.status === 'locked',
           onClick: () => {
             app.audio.tap();

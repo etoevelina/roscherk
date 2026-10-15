@@ -31,7 +31,7 @@ test('index.html содержит уровни, apple-touch-icon и мета iOS
   assert.match(html, /<link rel="apple-touch-icon" href="\.\/icon-180\.png">/);
   assert.match(html, /apple-mobile-web-app-capable/);
   assert.match(html, /viewport-fit=cover/);
-  assert.match(html, /<html lang="ru" style="background:#0f1117">/);
+  assert.match(html, /<html lang="ru" style="background:#121412">/);
   assert.match(html, /<link rel="manifest" href="\.\/manifest\.webmanifest">/);
   assert.ok(!html.includes('__CONTENT_HASH__'), 'плейсхолдер хэша не подставлен');
   assert.ok(!html.includes('__CSS__') && !html.includes('__JS__') && !html.includes('__LEVELS__'));

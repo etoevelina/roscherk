@@ -17,6 +17,6 @@ html = html
   .replace(/^\s*<meta [^>]*>\s*$/gim, '')
   .replace(/^\s*<link [^>]*>\s*$/gim, '');
 // Фон корня до загрузки стилей — вместо inline-атрибута на <html>.
-html = html.replace('<title>', '<style>:root{background:#0f1117}</style>\n<title>');
+html = html.replace('<title>', '<style>:root{background:#121412}</style>\n<title>');
 writeFileSync(resolve(dist, 'artifact.html'), html.trim() + '\n');
 console.log('dist/artifact.html:', Buffer.byteLength(html, 'utf8'), 'байт');

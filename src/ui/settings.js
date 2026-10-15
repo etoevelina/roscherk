@@ -29,6 +29,7 @@ export function mountSettings(app) {
       ].map(([id, label]) =>
         h('button', {
           class: state.settings.theme === id ? 'on' : '',
+          'aria-pressed': String(state.settings.theme === id),
           text: label,
           onClick: () => {
             state.settings.theme = id;

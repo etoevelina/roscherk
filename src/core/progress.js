@@ -93,13 +93,31 @@ export function starFor(attempt, perfect = true) {
 }
 
 /**
- * recordWin(progress, levelId, star, ms) → новый объект progress для режима.
- * Звезда, полученная однажды, сохраняется; лучшее время — минимум.
+ * recordWin(progress, levelId, star, ms, stars) → новый объект progress для режима.
+ * Звезда, полученная однажды, сохраняется; лучшее время — минимум; звёзды 1–3 — максимум.
  */
-export function recordWin(progress, levelId, star, ms) {
+export function recordWin(progress, levelId, star, ms, stars = star ? 3 : 1) {
   const prev = progress[levelId];
   const bestMs = prev && prev.bestMs > 0 ? Math.min(prev.bestMs, ms) : ms;
-  return { ...progress, [levelId]: { star: !!(prev?.star || star), bestMs: Math.max(1, Math.round(bestMs)) } };
+  const best = Math.max(prev?.stars || (prev?.star ? 3 : prev ? 1 : 0), clampStars(stars), star ? 3 : 1);
+  return { ...progress, [levelId]: { star: !!(prev?.star || star), bestMs: Math.max(1, Math.round(bestMs)), stars: best } };
+}
+
+const clampStars = (n) => (Number.isInteger(n) ? Math.min(3, Math.max(1, n)) : 1);
+
+/**
+ * starsFor(attempt, perfect) → 1–3 звезды итога (docs/DESIGN.md): 1 — уровень пройден,
+ * +1 — без подсказок, +1 — идеально (perfect режима: без тупиков, чернила ≤ par, без ошибок…).
+ * Три звезды ⇔ star (starFor): звезда за уровень в прогрессе — это «все три».
+ */
+export function starsFor(attempt, perfect = true) {
+  return 1 + (attempt.hintUsed ? 0 : 1) + (perfect === true ? 1 : 0);
+}
+
+/** Звёзды уровня из записи прогресса (0 — не пройден). */
+export function levelStars(rec) {
+  if (!rec) return 0;
+  return clampStars(rec.stars || (rec.star ? 3 : 1));
 }
 
 /** Пропуск: уровень остаётся без галочки, следующий открывается. */

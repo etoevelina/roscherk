@@ -62,7 +62,7 @@ bundle id ещё не зарегистрирован (шаг 1).
 - **Add for Review** → **Submit to App Review**.
 
 Ревью обычно 1–3 дня. Если отклонят по правилу 4.2 («минимальная функциональность»), в ответ
-достаточно описать, что это офлайн-игра на 400 уровней с четырьмя режимами, без веб-контента
+достаточно описать, что это офлайн-игра на 460 уровней с пятью режимами, без веб-контента
 (текст заметки для ревьюера это уже объясняет).
 
 ### 5. Следующие версии
@@ -73,10 +73,10 @@ bundle id ещё не зарегистрирован (шаг 1).
 ## Метаданные
 
 **Name:** Росчерк
-**Subtitle (до 30 символов):** Линии, потоки и слова
+**Subtitle (до 30 символов):** Линии, слова и физика
 **Promotional text (до 170):**
-Четыре режима логических головоломок: проведи одну линию через все клетки, соедини потоки,
-обведи фигуру одним росчерком — и разгадай английские цитаты по словам.
+Пять режимов головоломок: проведи линию через все клетки, соедини потоки, обведи фигуру одним
+росчерком, разгадай английские цитаты — и нарисуй мост, чтобы шарик докатился.
 
 **Description:**
 Росчерк — спокойные логические головоломки для коротких пауз и долгих вечеров. Каждое решение
@@ -87,13 +87,16 @@ bundle id ещё не зарегистрирован (шаг 1).
 • Один штрих — обведи фигуру, пройдя каждый отрезок ровно один раз.
 • Слова — английский акростих: отгадывай слова по определениям, их буквы встают в скрытую
   цитату. 20 тем, 700 слов уровня B2–C1 с переводами и 100 цитат классиков.
+• Карандаш — физика: нарисованное пальцем становится твёрдым. Построй мост или рампу, чтобы
+  шарик докатился до цели, или защити банку мёда от роя ос и жуков. Ветер, лёд, качели,
+  воздушные шары, шипы — 60 уровней от разминки до бури.
 
-400 уровней кампании, ежедневный уровень с серией, режим «Бесконечность» с растущей сложностью.
+460 уровней кампании, ежедневный уровень с серией, режим «Бесконечность» с растущей сложностью.
 Честные подсказки, отмена хода, звёзды за чистое прохождение. Работает полностью офлайн, без
 рекламы, покупок и регистрации. Светлая и тёмная тема, поддержка VoiceOver и Dynamic Type.
 
 **Keywords (до 100 символов):**
-головоломка,логика,линия,потоки,кроссворд,английский,слова,puzzle,flow,zip,acrostic
+головоломка,логика,линия,потоки,кроссворд,английский,физика,рисуй,puzzle,flow,acrostic
 
 **Support URL:** https://github.com/etoevelina/roscherk/issues
 **Marketing URL:** https://etoevelina.github.io/roscherk/
@@ -101,8 +104,9 @@ bundle id ещё не зарегистрирован (шаг 1).
 **Copyright:** 2026 Evelina Penkova
 
 **Notes for App Review:**
-Roscherk is a fully offline puzzle game (400 hand-verified levels across four modes: three
-one-line drawing puzzles and an English acrostic word puzzle for Russian-speaking learners).
+Roscherk is a fully offline puzzle game (460 hand-verified levels across five modes: three
+one-line drawing puzzles, an English acrostic word puzzle for Russian-speaking learners, and
+a physics puzzle where lines drawn with a finger become solid objects).
 It is built with Capacitor; all game logic and content are bundled in the app, there is no web
 content loaded from a server, no account, no purchases and no data collection. No login is
 needed for review: open the app and tap «Играть» on any mode.

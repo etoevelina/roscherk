@@ -60,7 +60,7 @@ test('миграция: недостающие поля дописываются
     endless: { best: { zip: 4, mix: -1, flow: 'x' } },
   };
   const s = normalize(raw, MODES);
-  assert.deepEqual(s.progress.zip, { abc: { star: true, bestMs: 4100 }, neg: { star: false, bestMs: 0 } });
+  assert.deepEqual(s.progress.zip, { abc: { star: true, bestMs: 4100, stars: 3 }, neg: { star: false, bestMs: 0, stars: 1 } });
   assert.deepEqual(s.progress.flow, {});
   assert.deepEqual(s.progress.stroke, {});
   assert.deepEqual(s.skipped.zip, ['a']);
@@ -91,7 +91,7 @@ test('current без mode/levelId отбрасывается', () => {
 test('save → load даёт то же состояние', () => {
   const storage = fakeStorage();
   const s = defaultState(MODES);
-  s.progress.zip.deadbeef = { star: true, bestMs: 1234 };
+  s.progress.zip.deadbeef = { star: true, bestMs: 1234, stars: 3 };
   s.current = { kind: 'daily', mode: 'flow', levelId: 'f1', elapsedMs: 5, hintUsed: true, resets: 1, startedAt: 10, state: { x: 1 } };
   assert.equal(save(s, storage), true);
   assert.deepEqual(load(storage, MODES), s);
@@ -99,7 +99,7 @@ test('save → load даёт то же состояние', () => {
 
 test('код прогресса: экспорт без current, импорт возвращает нормализованное состояние', () => {
   const s = defaultState(MODES);
-  s.progress.flow.ff = { star: false, bestMs: 99 };
+  s.progress.flow.ff = { star: false, bestMs: 99, stars: 1 };
   s.daily = { streak: 3, bestStreak: 5, lastDate: '2026-02-03', history: ['2026-02-01', '2026-02-02', '2026-02-03'] };
   s.current = { kind: 'campaign', mode: 'zip', levelId: 'z', elapsedMs: 1, hintUsed: false, resets: 0, startedAt: 0, state: {} };
   const code = exportCode(s);
@@ -111,4 +111,23 @@ test('код прогресса: экспорт без current, импорт в�
   assert.equal(importCode('не base64 вовсе', MODES), null);
   assert.equal(importCode(Buffer.from('{"v":9}').toString('base64'), MODES), null);
   assert.equal(importCode('', MODES), null);
+});
+
+test('WORDS: имя, онбординг, специальные возможности, активность по дням — нормализуются', () => {
+  const s = normalize(
+    {
+      v: 1,
+      settings: { name: '  Евелина   Пенкова  очень-очень-длинное имя ', onboarded: true, a11y: { largeText: true, haptics: 'loud', reduceMotion: 'yes' } },
+      activity: { '2026-10-15': 3, '2026-10-14': -1, junk: 5, '2026-10-13': '2' },
+    },
+    MODES,
+  );
+  assert.equal(s.settings.onboarded, true);
+  assert.equal(s.settings.name.length <= 24, true);
+  assert.ok(s.settings.name.startsWith('Евелина Пенкова'));
+  assert.deepEqual(s.settings.a11y, { largeText: true, reduceMotion: false, contrastNumbers: false, haptics: 'light' });
+  assert.deepEqual(s.activity, { '2026-10-13': 2, '2026-10-15': 3 });
+  const d = defaultState(MODES);
+  assert.equal(d.settings.onboarded, false);
+  assert.deepEqual(d.activity, {});
 });

@@ -449,14 +449,25 @@ function ensureCache(ctx, state, layout, theme) {
   return cache;
 }
 
-/** Статический слой: подложка, сетка, точки. */
+/** Скругление поля: как у карточек WORDS, но не больше трети клетки (угловые точки не срезаются). */
+function boardRadius(cell) {
+  return Math.min(20, Math.max(8, cell * 0.3));
+}
+
+/**
+ * Статический слой (WORDS, docs/DESIGN.md §5.6): поле — бумага со скруглением и волосяной
+ * обводкой на холсте, сетка — тонкие линии, точки — палитра FLOW_PALETTE (src/core/theme.js).
+ */
 function drawStatic(ctx, state, layout, theme) {
   const { x0, y0, cell, n } = layout;
   const size = cell * n;
-  const radius = Math.min(14, cell * 0.35);
-  ctx.fillStyle = theme.surface;
-  roundRect(ctx, x0, y0, size, size, radius);
+  const radius = boardRadius(cell);
+  ctx.fillStyle = theme.paper || theme.surface;
+  roundRect(ctx, x0 + 0.5, y0 + 0.5, size - 1, size - 1, radius);
   ctx.fill();
+  ctx.strokeStyle = theme.hairline || theme.grid;
+  ctx.lineWidth = 1;
+  ctx.stroke();
 
   ctx.strokeStyle = theme.grid;
   ctx.lineWidth = 1;
@@ -548,20 +559,28 @@ function render(ctx, state, layout, theme, t, opts) {
     animating = true;
   }
 
+  // Подкраска клеток дорожек — внутри скруглённого поля: угловые клетки не выступают за скругление.
+  ctx.save();
+  roundRect(ctx, x0, y0, size, size, boardRadius(cell));
+  ctx.clip();
+  ctx.globalAlpha = 0.16 * base;
   for (let f = 0; f < state.paths.length; f++) {
     const path = state.paths[f];
-    const color = theme.flow[f % theme.flow.length];
-    // Подкраска клеток дорожки.
-    ctx.fillStyle = color;
-    ctx.globalAlpha = 0.16 * base;
+    ctx.fillStyle = theme.flow[f % theme.flow.length];
     for (let i = 0; i < path.length; i++) {
       const c = path[i];
       ctx.fillRect(x0 + (c % n) * cell + 1, y0 + Math.floor(c / n) * cell + 1, cell - 2, cell - 2);
     }
-    if (path.length < 2) {
-      ctx.globalAlpha = base;
-      continue;
-    }
+  }
+  ctx.restore();
+  ctx.globalAlpha = base;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (let f = 0; f < state.paths.length; f++) {
+    const path = state.paths[f];
+    const color = theme.flow[f % theme.flow.length];
+    if (path.length < 2) continue;
     tracePath(ctx, path, layout);
     ctx.strokeStyle = color;
     let glowAlpha = 0.22;
@@ -589,8 +608,10 @@ function render(ctx, state, layout, theme, t, opts) {
   }
 
   // Номера потоков на точках (настройка).
+  // «Крупный текст» — +20 %, «Контрастные номера» — жирнее; цвет цифр — readableOn (≥ 4.5:1).
   if (flowNumbers) {
-    ctx.font = `bold ${Math.max(10, Math.round(cell * 0.3))}px system-ui, sans-serif`;
+    const numSize = Math.max(theme.large ? 12 : 10, Math.round(cell * (theme.large ? 0.36 : 0.3)));
+    ctx.font = `${theme.contrast ? 800 : 600} ${numSize}px -apple-system, system-ui, "SF Pro Text", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     for (let f = 0; f < state.dots.length; f++) {
@@ -668,8 +689,10 @@ const flowMode = {
     ru: 'Соедини каждую пару точек дорожкой своего цвета. Дорожки не пересекаются, все клетки должны быть заполнены.',
     en: 'Connect each pair of dots with a path of its colour. Paths never cross and every cell must be filled.',
   },
-  color: '#92BCC5', // Lumin (§4.4): приглушённый оттенок режима для тёмной темы
-  colorLight: '#4F7C86',
+  // WORDS: голубое семейство (docs/DESIGN.md §5.3, --w-blue-2): сланцево-голубой, светлая — ≥ 4:1
+  // к бумаге и белый текст ≥ 4.5:1, тёмная — пастель ≥ 8:1. Сами потоки — FLOW_PALETTE.
+  color: '#9BB8D0',
+  colorLight: '#4E7792',
 
   /** create(levelData, saved) → state. Битый снимок игнорируется — создаётся чистое состояние. */
   create(levelData, saved) {

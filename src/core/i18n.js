@@ -91,7 +91,7 @@ const STRINGS = {
   levelsTitle: { ru: '{mode} — уровни' },
   noLevels: { ru: 'Уровней пока нет' },
   share: { ru: 'Поделиться' },
-  heroSub: { ru: 'Головоломки одной линией и английские слова' },
+  heroSub: { ru: 'Линии, английские слова и физика' },
   statStreak: { ru: 'Серия' },
   statSolved: { ru: 'Пройдено' },
   statStars: { ru: 'Звёзд' },

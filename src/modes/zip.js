@@ -12,6 +12,8 @@ const WIN_PULSE_MS = 1200;
 const APPEAR_MS = 200;
 const PULSE_ACTIVE_MS = 4000; // пульс «следующего числа» идёт столько после последнего изменения
 const BOARD_PAD = 6; // поля вокруг сетки под толщину стен и рамки (CSS px)
+const MARK_R = 0.34; // радиус плитки под числом в долях клетки
+const FONT = '-apple-system, system-ui, "SF Pro Text", "Helvetica Neue", Arial, sans-serif';
 
 // Биты стен по направлениям: 0 — вверх, 1 — вправо, 2 — вниз, 3 — влево.
 function dirBit(a, b, n) {
@@ -249,15 +251,43 @@ function nextMarkCell(state) {
   return state.marks[state.nextMark - 1][0];
 }
 
-/** Рисование статического слоя: подложка, сетка, диски под числами, стены. */
+/** Палитра поля WORDS с откатом на прежние поля темы (тесты и старые объекты theme). */
+function boardColors(theme) {
+  return {
+    paper: theme.paper || theme.surface,
+    tile: theme.tile || theme.surface2,
+    ink: theme.ink || theme.text,
+    hairline: theme.hairline || theme.grid,
+  };
+}
+
+/** Плитка под числом: белый диск (бумага светлее поля) с тонкой обводкой, как плитки букв WORDS. */
+function markTile(ctx, cx, cy, r, fill, ring, ringW) {
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = fill;
+  ctx.fill();
+  ctx.strokeStyle = ring;
+  ctx.lineWidth = ringW;
+  ctx.stroke();
+}
+
+/**
+ * Рисование статического слоя (WORDS, docs/DESIGN.md §5.6): поле — бумага со скруглением и тонкой
+ * обводкой на холсте, сетка — волосяные линии, под числами — плитки, рамка и стены — чернила.
+ */
 function drawStatic(ctx, state, lay, theme) {
   const { x0, y0, cell, n } = lay;
   const size = cell * n;
-  const radius = Math.max(6, cell * 0.18);
+  const radius = Math.min(20, Math.max(10, cell * 0.24));
+  const col = boardColors(theme);
 
-  ctx.fillStyle = theme.surface;
-  roundRect(ctx, x0 - BOARD_PAD, y0 - BOARD_PAD, size + 2 * BOARD_PAD, size + 2 * BOARD_PAD, radius);
+  ctx.fillStyle = col.paper;
+  roundRect(ctx, x0 - BOARD_PAD + 0.5, y0 - BOARD_PAD + 0.5, size + 2 * BOARD_PAD - 1, size + 2 * BOARD_PAD - 1, radius);
   ctx.fill();
+  ctx.strokeStyle = col.hairline;
+  ctx.lineWidth = 1;
+  ctx.stroke();
 
   ctx.strokeStyle = theme.grid;
   ctx.lineWidth = 1;
@@ -272,24 +302,23 @@ function drawStatic(ctx, state, lay, theme) {
   }
   ctx.stroke();
 
-  // Диски под числами — заметны и под дорожкой.
-  ctx.fillStyle = theme.surface2;
+  // Плитки под числами; пройденные дорожкой перекрываются «станциями» в render.
   for (let i = 0; i < state.marks.length; i++) {
     const c = state.marks[i][0];
     const cx = x0 + ((c % n) + 0.5) * cell;
     const cy = y0 + (((c / n) | 0) + 0.5) * cell;
-    ctx.beginPath();
-    ctx.arc(cx, cy, cell * 0.36, 0, Math.PI * 2);
-    ctx.fill();
+    markTile(ctx, cx, cy, cell * MARK_R, col.tile, col.hairline, 1);
   }
 
-  // Рамка и стены — толстые линии с круглыми концами.
+  // Рамка — внешняя линия сетки (край поля задаёт сама карточка), стены — чернила с круглыми
+  // концами: на поле читаются только они («иерархия контрастом, а не рамками»).
+  ctx.strokeStyle = theme.grid;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x0, y0, size, size);
   ctx.strokeStyle = theme.wall;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
-  ctx.lineWidth = Math.max(2, cell * 0.06);
-  ctx.strokeRect(x0, y0, size, size);
-  ctx.lineWidth = Math.max(3, cell * 0.13);
+  ctx.lineWidth = Math.max(3, cell * 0.12);
   ctx.beginPath();
   for (let i = 0; i < state.walls.length; i++) {
     wallPath(ctx, state.walls[i][0], state.walls[i][1], lay);
@@ -371,7 +400,9 @@ const mode = {
     ru: 'Проведи одну дорожку от 1 до последнего числа через все клетки, посещая числа по порядку. Сквозь толстые линии нельзя.',
     en: 'Draw one route from 1 to the last number through every cell, visiting numbers in order. Thick lines are walls.',
   },
-  color: '#9DBB98', // Lumin (§4.4): приглушённый оттенок режима для тёмной темы
+  // WORDS: семейство шалфея (docs/DESIGN.md §5.3). Светлая — ≥ 4:1 к бумаге и белый текст ≥ 4.5:1,
+  // тёмная — пастель ≥ 7:1 к тёмной бумаге. Цвет дорожки, кольца станций и следующего числа.
+  color: '#9DBB98',
   colorLight: '#5E7D63',
 
   /**
@@ -495,11 +526,12 @@ const mode = {
       const fade = Math.min(1, (hint.until - t) / 400);
       if (hint.kind === 'cells') {
         for (let i = 0; i < hint.cells.length; i++) {
-          highlightCell(ctx, hint.cells[i], layout, theme.hint, 0.35 * fade, cell * 0.08, appear);
-          // Контур в полную силу: заливка 0,35 в светлой теме слишком бледна (§4.1 контраст ≥ 3:1).
+          highlightCell(ctx, hint.cells[i], layout, theme.hint, 0.28 * fade, cell * 0.08, appear);
+          // Контур в полную силу: заливка в светлой теме слишком бледна (§4.1 контраст ≥ 3:1);
+          // тонкий — подсказка WORDS спокойная, не перекрикивает дорожку.
           ctx.globalAlpha = fade * appear;
           ctx.strokeStyle = theme.hint;
-          ctx.lineWidth = Math.max(2, cell * 0.06);
+          ctx.lineWidth = Math.max(1.5, cell * 0.035);
           ctx.stroke();
           ctx.globalAlpha = appear;
         }
@@ -543,7 +575,8 @@ const mode = {
           if (i === 0) ctx.moveTo(cx, cy);
           else ctx.lineTo(cx, cy);
         }
-        ctx.globalAlpha = (0.35 + 0.25 * pulse) * appear;
+        // В тёмной теме светлый ореол на графите читается как серая кайма — он тише.
+        ctx.globalAlpha = ((theme.id === 'dark' ? 0.22 : 0.35) + 0.25 * pulse) * appear;
         ctx.strokeStyle = theme.lineGlow || theme.line;
         ctx.lineWidth = width * 1.36;
         ctx.stroke();
@@ -551,6 +584,18 @@ const mode = {
         ctx.strokeStyle = theme.line;
         ctx.lineWidth = width;
         ctx.stroke();
+      }
+    }
+
+    // 4б. «Станции»: пройденные числа — плитка поверх дорожки с кольцом цвета линии. Число всегда
+    // стоит на плитке (чернила на белом ≥ 4.5:1 в обеих темах), а кольцо показывает «пройдено».
+    const col = boardColors(theme);
+    if (len > 0) {
+      const ringW = Math.max(2, cell * 0.07);
+      for (let i = 0; i < state.marks.length; i++) {
+        const c = state.marks[i][0];
+        if (state.posOf[c] < 0) continue;
+        markTile(ctx, x0 + ((c % n) + 0.5) * cell, y0 + (((c / n) | 0) + 0.5) * cell, cell * MARK_R, col.tile, theme.line, ringW);
       }
     }
 
@@ -583,24 +628,23 @@ const mode = {
       ctx.strokeStyle = theme.accent;
       ctx.lineWidth = Math.max(2, cell * 0.06);
       ctx.beginPath();
-      ctx.arc(cx, cy, cell * (0.36 + 0.05 * phase), 0, Math.PI * 2);
+      ctx.arc(cx, cy, cell * (MARK_R + 0.05 + 0.05 * phase), 0, Math.PI * 2);
       ctx.stroke();
       ctx.globalAlpha = appear;
     }
 
-    // 7. Числа — поверх дорожки, с контрастной обводкой; тряска клетки при отказе.
-    const fontSize = Math.max(16, Math.round(cell * 0.42));
-    ctx.font = `700 ${fontSize}px -apple-system, system-ui, "Helvetica Neue", Arial, sans-serif`;
+    // 7. Числа — чернилами на плитке (обводка цвета плитки отделяет цифру от кольца); тряска при
+    // отказе. «Крупный текст» — +12 %, «Контрастные номера» — жирнее (docs/DESIGN.md §5.11).
+    const fontSize = Math.max(16, Math.round(cell * (theme.large ? 0.47 : 0.42)));
+    ctx.font = `${theme.contrast ? 800 : 600} ${fontSize}px ${FONT}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.lineJoin = 'round';
     ctx.lineWidth = 2;
+    ctx.strokeStyle = col.tile;
+    ctx.fillStyle = col.ink;
     for (let i = 0; i < state.marks.length; i++) {
       const c = state.marks[i][0];
-      // В тёмной теме дорожка светлая (Lumin, приглушённый шалфей): число на ней — тёмное со светлой обводкой.
-      const onPath = theme.id === 'dark' && state.posOf[c] >= 0;
-      ctx.strokeStyle = onPath ? theme.text : theme.bg;
-      ctx.fillStyle = onPath ? theme.bg : theme.text;
       let cx = x0 + ((c % n) + 0.5) * cell;
       const cy = y0 + (((c / n) | 0) + 0.5) * cell;
       if (rejecting && c === state.fx.rejectCell && !reduced) {

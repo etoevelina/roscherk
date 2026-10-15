@@ -65,6 +65,22 @@ test('уровни «Слов» (§2.5) вшиты отдельным <script id
   }
 });
 
+test('уровни «Карандаша» (§2.6) вшиты <script id="draw">, без «</script>» внутри, и разбираются рантаймом', async () => {
+  const html = readFileSync(resolve(DIST, 'index.html'), 'utf8');
+  assert.ok(!html.includes('__DRAW__'), 'плейсхолдер «Карандаша» не подставлен');
+  const m = html.match(/<script type="application\/json" id="draw">([\s\S]*?)<\/script>/);
+  assert.ok(m, 'блок «Карандаша» не найден');
+  const { readEmbeddedLevels } = await import('../src/core/levels.js');
+  const levelsBlock = html.match(/<script type="application\/json" id="levels">([\s\S]*?)<\/script>/)[1];
+  const fakeDoc = { getElementById: (id) => (id === 'levels' ? { textContent: levelsBlock } : id === 'draw' ? { textContent: m[1] } : null) };
+  const levels = readEmbeddedLevels(fakeDoc);
+  if (existsSync(resolve(ROOT, 'src/data/draw.json'))) {
+    const src = JSON.parse(readFileSync(resolve(ROOT, 'src/data/draw.json'), 'utf8'));
+    assert.equal(levels.draw.campaign.length, src.draw.campaign.length, 'все уровни «Карандаша» в сборке');
+    assert.deepEqual(levels.draw.campaign[0], src.draw.campaign[0]);
+  }
+});
+
 test('sw.js и манифест записаны, хэш подставлен', () => {
   const sw = readFileSync(resolve(DIST, 'sw.js'), 'utf8');
   assert.ok(sw.includes(`'roscherk-' + CONTENT_HASH`) || sw.includes('roscherk-'));

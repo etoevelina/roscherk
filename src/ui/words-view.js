@@ -1,17 +1,25 @@
-// Вид режима «Слова» (§2.5, дизайн-система Lumin «Puzzle»): DOM-разметка вместо холста —
-// плитки цитаты с номерами (слова не разрываются), фишки ответов, блок определения, клетки ответа.
+// Вид режима «Слова» (§2.5; оформление — WORDS 1.2, docs/DESIGN.md §5.6): DOM-разметка вместо
+// холста — цитата плитками с номерами на бумажной панели (слова не разрываются), список
+// определений строками с кружками-метками (текущее — чернилами), клетки ответа с подчёркиванием.
 // Тапы уходят оболочке через api.tap(target); состояние только читается. Всё, что нужно от логики
-// режима, приходит в api.helpers (без циклического импорта src/modes/words.js).
-import { h, icon } from './dom.js';
+// режима, приходит в api.helpers (без циклического импорта src/modes/words.js). Стили — 60-game.css.
+import { h } from './dom.js';
 import { tr } from '../core/i18n.js';
 
-const TILE_MAX = 31; // Lumin: плитка 31×39
+const TILE_MAX = 31; // WORDS: плитка 31×39
 const TILE_MIN = 21; // буква ≈ 12 px, номер 8 px — мельче нечитаемо
 const TILE_FLOOR = 16; // только если иначе слово не влезает по ширине
 const TILE_SCALE_MAX = 1.4; // Dynamic Type: плитки растут вместе с текстом, но не больше чем в 1.4 раза
-const ANSWER_MAX = 34; // Lumin: клетка ответа 34×42
-const POP_MS = 220; // Lumin: распространение буквы
+const ANSWER_MAX = 34; // WORDS: клетка ответа 34×42
+const CLUE_SLACK_KEEP = 16; // воздух над панелью цитаты, который не отдаём списку определений
+const POP_MS = 220; // WORDS: распространение буквы
 const ERR_MS = 420;
+
+/** «11 букв» из подписи режима «прил. · 11 букв»: длина показана справа «(11)», в подписи — только часть речи. */
+function posOnly(meta) {
+  const parts = String(meta || '').split(' · ');
+  return parts.length > 1 ? parts.slice(0, -1).join(' · ') : '';
+}
 
 /**
  * mountWordsView(root, api) → { update(state, info), destroy() }.
@@ -20,30 +28,18 @@ const ERR_MS = 420;
 export function mountWordsView(root, api) {
   const H = api.helpers;
   const el = h('div', { class: 'wv' });
-  // Подписи клеток — по-русски (lang наследуется от <html lang="ru">); английский — только определение.
+  // Подписи клеток — по-русски (lang наследуется от <html lang="ru">); английский — только определения.
   const quote = h('div', { class: 'wv-quote', role: 'group', 'aria-label': 'Цитата' });
   const scroll = h('div', { class: 'wv-scroll' }, quote);
-  const chips = h('div', { class: 'wv-chips', role: 'tablist', 'aria-label': 'Ответы' });
-  const noEl = h('span', { class: 'wv-no', 'aria-hidden': 'true' });
-  const defEl = h('p', { class: 'wv-def', lang: 'en' });
-  const metaEl = h('div', { class: 'wv-meta' });
-  const trEl = h('div', { class: 'wv-tr' });
-  const prev = h('button', { class: 'wv-nav', type: 'button', 'aria-label': 'Предыдущий ответ', dataset: { step: '-1' } }, icon('back'));
-  const next = h('button', { class: 'wv-nav next', type: 'button', 'aria-label': 'Следующий ответ', dataset: { step: '1' } }, icon('back'));
+  const clues = h('div', { class: 'wv-clues', role: 'group', 'aria-label': 'Определения' });
   const answer = h('div', { class: 'wv-answer', role: 'group', 'aria-label': 'Ответ' });
   // Озвучка ввода для VoiceOver: «E — неверно», «Слово отгадано: brush — щётка».
   const live = h('div', { class: 'sr-only', 'aria-live': 'polite', 'aria-atomic': 'true' });
-  const panel = h(
-    'div',
-    { class: 'wv-panel' },
-    chips,
-    h('div', { class: 'wv-clue' }, prev, h('div', { class: 'wv-clue-body' }, h('div', { class: 'wv-clue-head' }, noEl, defEl), metaEl, trEl), next),
-    answer,
-  );
+  const panel = h('div', { class: 'wv-panel' }, clues, answer);
   el.append(scroll, panel, live);
   root.appendChild(el);
 
-  // Делегирование тапов: плитка/клетка ответа (data-z), фишка (data-clue), стрелка (data-step).
+  // Делегирование тапов: плитка/клетка ответа (data-z), строка определения (data-clue).
   el.addEventListener('click', (e) => {
     const b = e.target && e.target.closest ? e.target.closest('[data-z],[data-clue],[data-step]') : null;
     if (!b || !el.contains(b) || b.getAttribute('aria-disabled') === 'true') return;
@@ -55,7 +51,7 @@ export function mountWordsView(root, api) {
 
   let level = null;
   let tiles = []; // { btn, b, n, i }
-  let chipBtns = [];
+  let rows = []; // { btn, no, def, sub, meta, tr, len }
   let cells = []; // клетки текущего ответа
   let shownClue = -1;
   let lastSeq = -1;
@@ -63,7 +59,7 @@ export function mountWordsView(root, api) {
   const flashes = { pop: null, err: null };
   const timers = { pop: 0, err: 0 };
   let lastSel = '';
-  let lastChip = -1;
+  let lastRow = -1;
   let lastSize = '';
 
   function build(state) {
@@ -88,11 +84,20 @@ export function mountWordsView(root, api) {
       words.push(word);
     }
     quote.replaceChildren(...words);
-    chipBtns = state.clues.map((c, k) => h('button', { class: 'wv-chip', type: 'button', role: 'tab', dataset: { clue: String(k) }, text: H.LABELS[k] }));
-    chips.replaceChildren(...chipBtns);
+    rows = state.clues.map((c, k) => {
+      const no = h('span', { class: 'wv-no', 'aria-hidden': 'true', text: H.LABELS[k] });
+      const def = h('span', { class: 'wv-def', lang: 'en', text: c.c || '' });
+      const meta = h('span', { class: 'wv-meta' });
+      const trEl = h('span', { class: 'wv-tr' });
+      const sub = h('span', { class: 'wv-sub' }, meta, trEl);
+      const len = h('span', { class: 'wv-len', 'aria-hidden': 'true', text: `(${String(c.w || '').length})` });
+      const btn = h('button', { class: 'wv-row', type: 'button', dataset: { clue: String(k) } }, no, h('span', { class: 'wv-row-body' }, def, sub), len);
+      return { btn, no, def, sub, meta, tr: trEl, len };
+    });
+    clues.replaceChildren(...rows.map((r) => r.btn));
     shownClue = -1;
     lastSeq = -1;
-    lastChip = -1;
+    lastRow = -1;
     lastSize = '';
     fit();
   }
@@ -109,33 +114,59 @@ export function mountWordsView(root, api) {
     fitAnswer(nums.length);
   }
 
-  /** Масштаб системного текста (Dynamic Type): размер шрифта определения к базовым 16 px. */
+  /**
+   * Масштаб текста: размер шрифта определений к базовым 15 px — растёт с Dynamic Type и с
+   * «Крупным текстом в головоломке» (body.a11y-large: определения 17 px, буквы в плитках +20 % — CSS).
+   */
   function textScale() {
-    const fs = typeof getComputedStyle === 'function' ? parseFloat(getComputedStyle(defEl).fontSize) || 16 : 16;
-    return Math.max(1, Math.min(TILE_SCALE_MAX, fs / 16));
+    const probe = rows[0]?.def;
+    const fs = probe && typeof getComputedStyle === 'function' ? parseFloat(getComputedStyle(probe).fontSize) || 15 : 15;
+    return Math.max(1, Math.min(TILE_SCALE_MAX, fs / 15));
   }
 
   /**
    * Плитки — крупнейшего размера, при котором цитата помещается: по высоте без прокрутки и по
-   * ширине (слово не разрывается — самое длинное слово должно влезть в строку карточки). Если не
+   * ширине (слово не разрывается — самое длинное слово должно влезть в строку панели). Если не
    * помещается даже минимальная плитка (длинная цитата на маленьком экране) — она и прокрутка:
-   * мельче плитки нечитаемы (Lumin: не уменьшать текст ниже читаемого; на телефоне цитата может
-   * быть видна частично). Шире строки — только при словах длиннее ~13 букв.
+   * мельче плитки нечитаемы (WORDS: не уменьшать текст ниже читаемого). Шире строки — только при
+   * словах длиннее ~13 букв.
    */
   function fit() {
-    const avail = scroll.clientHeight;
-    if (!avail) return;
+    // Список определений — базовой высоты из CSS; остаток места после подгонки цитаты отдаём ему.
+    clues.style.height = '';
+    el.classList.remove('fitted');
+    const cs = typeof getComputedStyle === 'function' ? getComputedStyle(scroll) : null;
+    const pad = cs ? (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0) : 0;
+    const avail = scroll.clientHeight - pad;
+    if (avail <= 0) return;
     const k = textScale();
     const tmax = Math.round(TILE_MAX * k);
     const tmin = Math.round(TILE_MIN * k);
     const fitsWidth = () => quote.scrollWidth <= quote.clientWidth + 1;
     for (let t = tmax; t >= tmin; t--) {
       el.style.setProperty('--t', `${t}px`);
-      if (fitsWidth() && quote.offsetHeight <= avail) return;
+      if (fitsWidth() && quote.offsetHeight <= avail) return growClues(avail);
     }
     let t = tmin;
     el.style.setProperty('--t', `${t}px`);
     while (!fitsWidth() && t > TILE_FLOOR) el.style.setProperty('--t', `${--t}px`);
+  }
+
+  /**
+   * Цитата поместилась с запасом: панель цитаты обнимает плитки, а лишняя высота уходит списку
+   * определений (до высоты всех строк) — как в эталоне, где под полем видно три-четыре определения.
+   */
+  function growClues(avail) {
+    el.classList.add('fitted');
+    const need = quote.offsetHeight;
+    el.classList.remove('fitted');
+    const slack = avail - need - CLUE_SLACK_KEEP;
+    if (slack <= 0) return;
+    const base = clues.offsetHeight;
+    // Строки ещё свёрнуты (текущая раскроется в update): запас на 3 строки текущего определения.
+    const em = (typeof getComputedStyle === 'function' && parseFloat(getComputedStyle(clues).fontSize)) || 15;
+    const target = Math.min(base + slack, Math.max(base, clues.scrollHeight + 2 + em * 2.8));
+    if (target > base + 4) clues.style.height = `${Math.round(target)}px`;
   }
 
   function fitAnswer(len) {
@@ -147,7 +178,7 @@ export function mountWordsView(root, api) {
   }
 
   // Подгонка — только при смене размера самого вида (поворот, клавиатура, Dynamic Type), а не при
-  // смене ответа: панель ответа фиксированной высоты, плитки под пальцем не прыгают.
+  // смене ответа: панель определений фиксированной высоты, плитки под пальцем не прыгают.
   const ro =
     typeof ResizeObserver === 'function'
       ? new ResizeObserver(() => {
@@ -183,6 +214,20 @@ export function mountWordsView(root, api) {
       `${isSel ? ', выбрана' : ''}${state.given[n] ? ', открыта' : ''}${state.rev[n] ? ', подсказка' : ''}` +
       `${state.chk[n] ? ', неверно' : ''}${done ? ', отгадан' : ''}`
     );
+  }
+
+  /** Текущая строка определения — в видимой части списка (прокрутка только самого списка). */
+  function revealRow(k, reduced) {
+    const row = rows[k]?.btn;
+    if (!row || !clues.clientHeight) return;
+    const top = row.offsetTop - clues.offsetTop;
+    const bottom = top + row.offsetHeight;
+    let next = clues.scrollTop;
+    if (top < clues.scrollTop) next = top - 4;
+    else if (bottom > clues.scrollTop + clues.clientHeight) next = bottom - clues.clientHeight + 4;
+    if (next === clues.scrollTop) return;
+    if (typeof clues.scrollTo === 'function') clues.scrollTo({ top: Math.max(0, next), behavior: reduced ? 'auto' : 'smooth' });
+    else clues.scrollTop = Math.max(0, next);
   }
 
   function update(state, info = {}) {
@@ -239,34 +284,37 @@ export function mountWordsView(root, api) {
       else tile.btn.removeAttribute('aria-current');
     }
 
+    // Список определений: текущее — чернильный кружок и полный текст, отгаданные — шалфей и ✓.
     const k = state.cur >= 0 && state.cur < state.m ? state.cur : 0;
-    chipBtns.forEach((btn, j) => {
+    rows.forEach((r, j) => {
+      const c = state.clues[j] || {};
       const done = H.wordSolved(state, j);
-      const cls = `wv-chip${j === k ? ' cur' : ''}${done ? ' done' : ''}`;
-      if (btn.className !== cls) btn.className = cls;
-      btn.setAttribute('aria-selected', j === k ? 'true' : 'false');
-      btn.setAttribute('aria-label', `Ответ ${H.LABELS[j]}${done ? ', отгадан' : ''}`);
+      const cur = j === k;
+      const cls = `wv-row${cur ? ' cur' : ''}${done ? ' done' : ''}`;
+      if (r.btn.className !== cls) r.btn.className = cls;
+      r.no.textContent = done && !cur ? '✓' : H.LABELS[j];
+      const shown = state.shown.has(j);
+      r.btn.setAttribute(
+        'aria-label',
+        `Ответ ${H.LABELS[j]}, ${tr(H.metaOf(c))}${done ? `, отгадан: ${String(c.w).toLowerCase()} — ${c.ru}` : shown ? `, перевод: ${c.ru}` : ''}. ${c.c || ''}`,
+      );
+      if (cur) r.btn.setAttribute('aria-current', 'true');
+      else r.btn.removeAttribute('aria-current');
+      if (!cur) return;
+      const meta = posOnly(tr(H.metaOf(c)));
+      if (r.meta.textContent !== meta) r.meta.textContent = meta;
+      r.tr.className = `wv-tr${done ? ' ok' : shown ? ' hint' : ''}`;
+      const trText = done ? `${String(c.w).toLowerCase()} — ${c.ru}` : shown ? c.ru : '';
+      if (r.tr.textContent !== trText) r.tr.textContent = trText;
     });
-    if (k !== lastChip) {
-      lastChip = k;
-      const chip = chipBtns[k];
-      if (chip) {
-        // Активная фишка — в видимой части ряда (прокрутка только самого ряда, не страницы).
-        const r = chip.getBoundingClientRect();
-        const c = chips.getBoundingClientRect();
-        if (r.left < c.left) chips.scrollLeft -= c.left - r.left + 8;
-        else if (r.right > c.right) chips.scrollLeft += r.right - c.right + 8;
-      }
+    if (k !== lastRow) {
+      // Первый показ — без анимации; дальше — плавно (если движение не отключено).
+      revealRow(k, reduced || lastRow < 0);
+      lastRow = k;
     }
 
     if (k !== shownClue) buildAnswer(state, k);
-    const clue = state.clues[k] || {};
-    noEl.textContent = H.LABELS[k] || '';
-    defEl.textContent = clue.c || '';
-    metaEl.textContent = tr(H.metaOf(clue));
     const done = H.wordSolved(state, k);
-    trEl.className = `wv-tr${done ? ' ok' : state.shown.has(k) ? ' hint' : ''}`;
-    trEl.textContent = done ? `✓ ${String(clue.w).toLowerCase()} — ${clue.ru}` : state.shown.has(k) ? clue.ru : '';
     answer.setAttribute('aria-label', `Ответ ${H.LABELS[k] || ''}`);
     for (const cell of cells) {
       const { n, i } = cell;

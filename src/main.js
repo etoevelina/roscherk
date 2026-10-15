@@ -3,7 +3,7 @@
 import { MODES, MODE_BY_ID, MODE_IDS, ROTATION_MODES, ROTATION_IDS } from './modes/index.js';
 import { readEmbeddedLevels, modeSets } from './core/levels.js';
 import { load, save, normalize } from './core/storage.js';
-import { createAudio } from './core/audio.js';
+import { createAudio, setHaptics } from './core/audio.js';
 import { applyTheme, readTheme, watchSystemTheme, modeAccent, setThemeColorMeta } from './core/theme.js';
 import { t } from './core/i18n.js';
 import { localDateString, pickDaily } from './core/daily.js';
@@ -15,6 +15,14 @@ import { mountLevels } from './ui/levels.js';
 import { mountGame } from './ui/game.js';
 import { mountSettings } from './ui/settings.js';
 import { mountCampaignDone } from './ui/win.js';
+// WORDS (docs/DESIGN.md): онбординг, вкладки «Режимы», «Ежедневная», «Статистика», профиль,
+// специальные возможности, «Испытания», темы «Слов».
+import { mountOnboarding } from './ui/onboarding.js';
+import { mountPacks, mountWordPacks } from './ui/packs.js';
+import { mountDaily } from './ui/daily.js';
+import { mountStats } from './ui/stats.js';
+import { mountA11y } from './ui/a11y.js';
+import { mountChallenges } from './ui/challenges.js';
 // Нативная оболочка: tools/build.mjs --native подставляет импорт src/native.js, в вебе — заглушка.
 import { setupNative } from '__NATIVE_MODULE__';
 
@@ -78,7 +86,8 @@ function createApp() {
       return Math.max(1, ...ROTATION_MODES.map((m) => modeSets(levels, m.id).daily.length));
     },
     today: () => localDateString(new Date()),
-    reducedMotion: () => reducedMq.matches,
+    // Меньше движения: системная настройка или своя в «Специальных возможностях».
+    reducedMotion: () => reducedMq.matches || app.state.settings.a11y?.reduceMotion === true,
     isLandscape: () => landscapeMq.matches,
 
     save() {
@@ -88,6 +97,16 @@ function createApp() {
       app.state = normalize(next, MODE_IDS);
       app.save();
       app.applyTheme();
+      app.applyA11y();
+    },
+
+    /** Специальные возможности → классы <body> и вибрация (docs/DESIGN.md). */
+    applyA11y() {
+      const a = app.state.settings.a11y || {};
+      document.body.classList.toggle('a11y-large', a.largeText === true);
+      document.body.classList.toggle('a11y-motion', a.reduceMotion === true);
+      document.body.classList.toggle('a11y-contrast', a.contrastNumbers === true);
+      setHaptics(a.haptics !== 'off');
     },
 
     /**
@@ -174,10 +193,18 @@ function createApp() {
 
   const SCREENS = {
     home: mountHome,
-    levels: mountLevels,
+    levels: mountLevels, // карта уровней режима (или темы «Слов»: params.pack)
     game: mountGame,
-    settings: mountSettings,
+    settings: mountSettings, // профиль и настройки
+    profile: mountSettings,
     campaignDone: mountCampaignDone,
+    onboarding: mountOnboarding,
+    packs: mountPacks, // вкладка «Режимы»
+    wordPacks: mountWordPacks, // темы «Слов»
+    daily: mountDaily, // вкладка «Ежедневная»
+    stats: mountStats, // вкладка «Статистика»
+    a11y: mountA11y,
+    challenges: mountChallenges, // «Испытания»: Бесконечность
   };
 
   // Системная тема → перечитать объект theme (экран игры подписан через onThemeChange).
@@ -200,11 +227,61 @@ function createApp() {
   if (app.state.current && app.state.current.kind === 'endless' && app.state.current.levelId) {
     app.endlessUsed.add(app.state.current.levelId);
   }
-  app.go('home');
+  // Разработка (localhost): ?demo=1 — демо-прогресс, ?theme=dark|light, ?screen=stats&mode=zip&level=3
+  // — сразу открыть экран (для скриншотов tools/shot.mjs). В вебе на GitHub Pages и в App Store не работает.
+  const devParams = app.dev ? new URLSearchParams(location.search) : null;
+  if (devParams?.get('demo')) app.state = normalize(demoState(app), MODE_IDS);
+  if (devParams?.get('theme')) app.state.settings.theme = devParams.get('theme');
+  if (devParams?.get('theme') || devParams?.get('demo')) app.applyTheme();
+  app.applyA11y();
+  if (devParams?.get('screen')) {
+    const name = devParams.get('screen');
+    const modeId = devParams.get('mode') || 'zip';
+    const params = { modeId, pack: devParams.get('pack') || undefined, filter: devParams.get('filter') || undefined };
+    if (name === 'game') {
+      const list = modeSets(levels, modeId).campaign;
+      const lv = list[Math.max(0, Math.min(list.length - 1, Number(devParams.get('level') || 1) - 1))];
+      if (lv) app.go('game', { kind: 'campaign', modeId, levelId: lv.id, dev: devParams.get('dev') || undefined });
+    } else app.go(name, params);
+    return app;
+  }
+  // Онбординг (docs/DESIGN.md) — только при первом запуске; кто уже играл, его не видит.
+  const played = Object.values(app.state.progress).some((p) => p && Object.keys(p).length) || !!app.state.daily.lastDate;
+  if (!app.state.settings.onboarded && played) {
+    app.state.settings.onboarded = true;
+    app.save();
+  }
+  app.go(app.state.settings.onboarded ? 'home' : 'onboarding');
   return app;
 }
 
 /** Service Worker (§4.6): не на localhost, под try/catch (file:// открывается без офлайна). */
+/** Демо-состояние для разработки (?demo=1): прогресс, звёзды, активность, серия, имя. */
+function demoState(app) {
+  const st = { v: 1, progress: {}, skipped: {}, current: null, endless: { best: { mix: 14, zip: 9 } } };
+  const counts = { zip: 12, flow: 7, stroke: 4, words: 6, draw: 3 };
+  for (const m of app.modes) {
+    const list = app.modeSets(m.id).campaign;
+    st.progress[m.id] = {};
+    list.slice(0, counts[m.id] || 0).forEach((lv, i) => {
+      const stars = 1 + ((i * 7) % 3);
+      st.progress[m.id][lv.id] = { star: stars === 3, bestMs: 30000 + i * 4100, stars };
+    });
+  }
+  const today = app.today();
+  const day = (k) => {
+    const d = new Date();
+    d.setDate(d.getDate() - k);
+    return localDateString(d);
+  };
+  st.activity = {};
+  for (let k = 0; k < 40; k++) if (k % 5 !== 3) st.activity[day(k)] = 1 + ((k * 5) % 6);
+  st.daily = { streak: 12, bestStreak: 15, lastDate: day(1), history: Array.from({ length: 12 }, (_, k) => day(k + 1)).reverse() };
+  st.settings = { ...app.state.settings, onboarded: true, name: 'Евелина', installCardClosed: true, introSeen: ['words', 'draw'] };
+  void today;
+  return st;
+}
+
 function registerServiceWorker(app) {
   try {
     if (NATIVE || !('serviceWorker' in navigator)) return;

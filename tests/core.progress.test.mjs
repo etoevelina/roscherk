@@ -14,8 +14,7 @@ import {
   createTimer,
   createUndoStack,
   doneCount,
-  WINDOW,
-} from '../src/core/progress.js';
+  WINDOW, starsFor, levelStars } from '../src/core/progress.js';
 
 const levels = Array.from({ length: 10 }, (_, i) => ({ id: `L${i}`, chapter: i < 5 ? 1 : 2 }));
 const statusList = (progress, skipped = []) => levelStatuses(levels, progress, skipped).map((s) => s.status);
@@ -72,11 +71,24 @@ test('звезда — за попытку без подсказки и perfect;
 
 test('recordWin: лучшее время — минимум, звезда сохраняется навсегда', () => {
   let p = recordWin({}, 'L0', false, 50000);
-  assert.deepEqual(p.L0, { star: false, bestMs: 50000 });
+  assert.deepEqual(p.L0, { star: false, bestMs: 50000, stars: 1 });
+  p = recordWin(p, 'L0', false, 55000, 2);
+  assert.deepEqual(p.L0, { star: false, bestMs: 50000, stars: 2 }, 'звёзды 1–3 — максимум');
   p = recordWin(p, 'L0', true, 60000);
-  assert.deepEqual(p.L0, { star: true, bestMs: 50000 });
-  p = recordWin(p, 'L0', false, 41000.4);
-  assert.deepEqual(p.L0, { star: true, bestMs: 41000 }, 'звезда не теряется при повторе без звезды');
+  assert.deepEqual(p.L0, { star: true, bestMs: 50000, stars: 3 });
+  p = recordWin(p, 'L0', false, 41000.4, 1);
+  assert.deepEqual(p.L0, { star: true, bestMs: 41000, stars: 3 }, 'звезда и три звезды не теряются при повторе без звезды');
+});
+
+test('starsFor / levelStars: 1 — пройден, +1 без подсказок, +1 идеально; старые записи', () => {
+  assert.equal(starsFor({ hintUsed: true }, false), 1);
+  assert.equal(starsFor({ hintUsed: false }, false), 2);
+  assert.equal(starsFor({ hintUsed: true }, true), 2);
+  assert.equal(starsFor({ hintUsed: false }, true), 3);
+  assert.equal(levelStars(undefined), 0);
+  assert.equal(levelStars({ star: true, bestMs: 1 }), 3);
+  assert.equal(levelStars({ star: false, bestMs: 1 }), 1);
+  assert.equal(levelStars({ star: false, bestMs: 1, stars: 2 }), 2);
 });
 
 test('«Пропустить» после 3 сбросов или 90 с простоя; подсказка пульсирует через 60 с', () => {

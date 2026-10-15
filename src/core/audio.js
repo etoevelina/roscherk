@@ -96,7 +96,14 @@ export function createAudio(isEnabled = () => true) {
  * window.__roscherkHaptic (см. src/native.js); в браузере — navigator.vibrate (на iPhone его нет).
  * pattern — число мс или массив [мс, пауза, мс…]; сила: ≤ 15 — light, ≤ 25 — medium, иначе heavy.
  */
+let hapticsOn = true;
+/** Вибрация из «Специальных возможностей» (settings.a11y.haptics): 'off' — тишина. */
+export function setHaptics(on) {
+  hapticsOn = on !== false;
+}
+
 export function vibrate(pattern) {
+  if (!hapticsOn) return;
   try {
     const haptic = typeof window !== 'undefined' ? window.__roscherkHaptic : null;
     if (typeof haptic === 'function') {

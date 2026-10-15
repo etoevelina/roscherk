@@ -1,0 +1,1335 @@
+{
+  "slug": "health",
+  "ru": "Здоровье и медицина",
+  "en": "Health & Medicine",
+  "quotes": [
+    {
+      "q": "The first wealth is health. Sickness is poor-spirited, and cannot serve any one.",
+      "a": "Ralph Waldo Emerson",
+      "src": "The Conduct of Life, essay Power (1860)",
+      "ru": "Первое богатство — здоровье. Болезнь малодушна и никому не может служить."
+    },
+    {
+      "q": "Use your health, even to the point of wearing it out. That is what it is for.",
+      "a": "George Bernard Shaw",
+      "src": "The Doctor's Dilemma, Preface on Doctors (1909)",
+      "ru": "Пользуйтесь своим здоровьем, пусть даже до полного износа. Для того оно и дано."
+    },
+    {
+      "q": "Apprehension, uncertainty, waiting, expectation, fear of surprise, do a patient more harm than any exertion.",
+      "a": "Florence Nightingale",
+      "src": "Notes on Nursing (1859)",
+      "ru": "Тревога, неизвестность, ожидание, напряжённое предчувствие, страх перед неожиданностью вредят больному больше любого физического усилия."
+    },
+    {
+      "q": "It may seem a strange principle to enunciate as the very first requirement in a hospital that it should do the sick no harm.",
+      "a": "Florence Nightingale",
+      "src": "Notes on Hospitals, Preface (1863)",
+      "ru": "Может показаться странным провозглашать главным требованием к больнице то, чтобы она не причиняла больным вреда."
+    },
+    {
+      "q": "Health is the second blessing that we mortals are capable of; a blessing that money cannot buy.",
+      "a": "Izaak Walton",
+      "src": "The Compleat Angler, Chapter 21 (revised edition)",
+      "ru": "Здоровье — второе из благ, доступных нам, смертным; благо, которое не купишь ни за какие деньги."
+    },
+    {
+      "q": "Cheerfulness is, in the first place, the best promoter of health.",
+      "a": "Joseph Addison",
+      "src": "The Spectator, No. 387 (1712)",
+      "ru": "Жизнерадостность — это, во-первых, лучшее средство для укрепления здоровья."
+    },
+    {
+      "q": "Health and cheerfulness mutually beget each other.",
+      "a": "Joseph Addison",
+      "src": "The Spectator, No. 387 (1712)",
+      "ru": "Здоровье и жизнерадостность взаимно порождают друг друга."
+    },
+    {
+      "q": "The desire to take medicine is perhaps the greatest feature which distinguishes man from animals.",
+      "a": "William Osler",
+      "src": "Quoted in Harvey Cushing, The Life of Sir William Osler, vol. 1 (1925)",
+      "ru": "Желание принимать лекарства — пожалуй, главная черта, отличающая человека от животных."
+    },
+    {
+      "q": "Medicine is a science of uncertainty and an art of probability.",
+      "a": "William Osler",
+      "src": "Quoted in W. B. Bean, Sir William Osler: Aphorisms (1950)",
+      "ru": "Медицина — это наука о неопределённости и искусство вероятного."
+    },
+    {
+      "q": "Life is short, and art long; the crisis fleeting; experience perilous, and decision difficult.",
+      "a": "Hippocrates",
+      "src": "Aphorisms, I.1, translated by Francis Adams (1849)",
+      "ru": "Жизнь коротка, а путь искусства долог; решающий миг мимолётен, опыт рискован, а решение трудно."
+    },
+    {
+      "q": "As to diseases, make a habit of two things — to help, or at least, to do no harm.",
+      "a": "Hippocrates",
+      "src": "Epidemics, Book I, translated by W. H. S. Jones (1923)",
+      "ru": "Что касается болезней, возьми за правило две вещи: помогать или хотя бы не вредить."
+    },
+    {
+      "q": "All things are poison, and nothing is without poison; the dosage alone makes it so a thing is not a poison.",
+      "a": "Paracelsus",
+      "src": "Septem Defensiones, Third Defence (1538); standard English rendering",
+      "ru": "Всё есть яд, и ничто не лишено яда; лишь доза делает так, что вещество не является ядом."
+    },
+    {
+      "q": "There are some remedies worse than the disease.",
+      "a": "Publilius Syrus",
+      "src": "Sentences, Maxim 301, translated by D. Lyman (1856)",
+      "ru": "Бывают лекарства хуже самой болезни."
+    },
+    {
+      "q": "You should pray for a healthy mind in a healthy body.",
+      "a": "Juvenal",
+      "src": "Satires, X, line 356 (early 2nd century)",
+      "ru": "Молиться следует о здоровом духе в здоровом теле."
+    },
+    {
+      "q": "A merry heart doeth good like a medicine: but a broken spirit drieth the bones.",
+      "a": "Bible (King James Version)",
+      "src": "Proverbs 17:22 (1611)",
+      "ru": "Весёлое сердце благотворно, как лекарство, а унылый дух сушит кости."
+    },
+    {
+      "q": "An ounce of prevention is worth a pound of cure.",
+      "a": "Proverb",
+      "src": "Proverb",
+      "ru": "Унция профилактики стоит фунта лечения."
+    },
+    {
+      "q": "An apple a day keeps the doctor away.",
+      "a": "Proverb",
+      "src": "Proverb",
+      "ru": "Кто съедает по яблоку в день, тому доктор не нужен."
+    },
+    {
+      "q": "Desperate diseases require desperate remedies.",
+      "a": "Proverb",
+      "src": "Proverb",
+      "ru": "Отчаянные болезни требуют отчаянных средств."
+    },
+    {
+      "q": "Prevention is better than cure.",
+      "a": "Proverb",
+      "src": "Proverb",
+      "ru": "Болезнь легче предупредить, чем лечить."
+    }
+  ],
+  "words": [
+    {
+      "w": "REMEDY",
+      "p": "n",
+      "c": "A medicine or treatment that cures or relieves an illness",
+      "ru": "средство, лекарство"
+    },
+    {
+      "w": "AILMENT",
+      "p": "n",
+      "c": "A minor illness, usually one that is not serious",
+      "ru": "недуг, хворь"
+    },
+    {
+      "w": "MALADY",
+      "p": "n",
+      "c": "A disease or illness (a formal or literary word)",
+      "ru": "недуг, болезнь"
+    },
+    {
+      "w": "OINTMENT",
+      "p": "n",
+      "c": "A smooth greasy cream rubbed on the skin to heal it",
+      "ru": "мазь"
+    },
+    {
+      "w": "CAPSULE",
+      "p": "n",
+      "c": "A small soluble shell containing a dose of medicine",
+      "ru": "капсула"
+    },
+    {
+      "w": "LOZENGE",
+      "p": "n",
+      "c": "A medicated sweet you suck to soothe a sore throat",
+      "ru": "пастилка (от горла)"
+    },
+    {
+      "w": "TINCTURE",
+      "p": "n",
+      "c": "A medicine made by dissolving a plant extract in alcohol",
+      "ru": "настойка"
+    },
+    {
+      "w": "POULTICE",
+      "p": "n",
+      "c": "A warm, soft, moist mass applied to the body to ease pain",
+      "ru": "припарка, компресс"
+    },
+    {
+      "w": "TONIC",
+      "p": "n",
+      "c": "A medicinal drink taken to give you energy",
+      "ru": "тонизирующее средство"
+    },
+    {
+      "w": "INHALER",
+      "p": "n",
+      "c": "A small device for breathing medicine into the lungs",
+      "ru": "ингалятор"
+    },
+    {
+      "w": "SYRINGE",
+      "p": "n",
+      "c": "A tube with a plunger and needle, used for injections",
+      "ru": "шприц"
+    },
+    {
+      "w": "BANDAGE",
+      "p": "n",
+      "c": "A strip of cloth wrapped around a wound or injury",
+      "ru": "бинт, повязка"
+    },
+    {
+      "w": "GAUZE",
+      "p": "n",
+      "c": "Thin, loosely woven cloth used to dress wounds",
+      "ru": "марля"
+    },
+    {
+      "w": "SWAB",
+      "p": "n",
+      "c": "A pad of cotton wool for cleaning wounds or taking samples",
+      "ru": "тампон, мазок"
+    },
+    {
+      "w": "SPLINT",
+      "p": "n",
+      "c": "A rigid strip that stops a broken bone from moving",
+      "ru": "шина (медицинская)"
+    },
+    {
+      "w": "CRUTCH",
+      "p": "n",
+      "c": "A support fitting under the arm to help an injured person walk",
+      "ru": "костыль"
+    },
+    {
+      "w": "STRETCHER",
+      "p": "n",
+      "c": "A frame for carrying a sick or injured person lying down",
+      "ru": "носилки"
+    },
+    {
+      "w": "TOURNIQUET",
+      "p": "n",
+      "c": "A tight band around a limb to stop heavy bleeding",
+      "ru": "жгут"
+    },
+    {
+      "w": "SCALPEL",
+      "p": "n",
+      "c": "A small, very sharp knife used by surgeons",
+      "ru": "скальпель"
+    },
+    {
+      "w": "STETHOSCOPE",
+      "p": "n",
+      "c": "Instrument a doctor uses to listen to your heart and lungs",
+      "ru": "стетоскоп"
+    },
+    {
+      "w": "SUTURE",
+      "p": "n",
+      "c": "A stitch used to close a wound or surgical cut",
+      "ru": "хирургический шов"
+    },
+    {
+      "w": "DOSE",
+      "p": "n",
+      "c": "The amount of a medicine taken at one time",
+      "ru": "доза"
+    },
+    {
+      "w": "OVERDOSE",
+      "p": "n",
+      "c": "A dangerously large amount of a drug taken at once",
+      "ru": "передозировка"
+    },
+    {
+      "w": "SEDATIVE",
+      "p": "n",
+      "c": "A drug that calms you down or helps you sleep",
+      "ru": "успокоительное, седативное"
+    },
+    {
+      "w": "PAINKILLER",
+      "p": "n",
+      "c": "A medicine that reduces or stops physical aches",
+      "ru": "обезболивающее"
+    },
+    {
+      "w": "ANTIBIOTIC",
+      "p": "n",
+      "c": "A drug that kills bacteria or stops them growing",
+      "ru": "антибиотик"
+    },
+    {
+      "w": "SUPPLEMENT",
+      "p": "n",
+      "c": "A pill taken to add vitamins or minerals to your diet",
+      "ru": "пищевая добавка, БАД"
+    },
+    {
+      "w": "REGIMEN",
+      "p": "n",
+      "c": "A prescribed plan of diet, exercise or medical treatment",
+      "ru": "режим, схема лечения"
+    },
+    {
+      "w": "EFFICACY",
+      "p": "n",
+      "c": "How well a drug produces the result it is meant to",
+      "ru": "эффективность, действенность"
+    },
+    {
+      "w": "WITHDRAWAL",
+      "p": "n",
+      "c": "Unpleasant symptoms felt after stopping an addictive drug",
+      "ru": "абстинентный синдром, ломка"
+    },
+    {
+      "w": "DISPENSARY",
+      "p": "n",
+      "c": "A room where medicines are prepared and handed out",
+      "ru": "аптека (при больнице)"
+    },
+    {
+      "w": "PHARMACIST",
+      "p": "n",
+      "c": "A person trained to prepare and sell medicines",
+      "ru": "фармацевт, провизор"
+    },
+    {
+      "w": "VACCINE",
+      "p": "n",
+      "c": "A substance that trains the body to resist a disease",
+      "ru": "вакцина"
+    },
+    {
+      "w": "ANTIDOTE",
+      "p": "n",
+      "c": "A medicine that counteracts the effects of a poison",
+      "ru": "противоядие"
+    },
+    {
+      "w": "PLACEBO",
+      "p": "n",
+      "c": "A dummy pill with no active ingredient, used in trials",
+      "ru": "плацебо, пустышка"
+    },
+    {
+      "w": "PANACEA",
+      "p": "n",
+      "c": "A supposed remedy for all diseases or problems",
+      "ru": "панацея"
+    },
+    {
+      "w": "QUACK",
+      "p": "n",
+      "c": "A dishonest person who falsely claims medical skill",
+      "ru": "шарлатан, лжелекарь"
+    },
+    {
+      "w": "SYMPTOM",
+      "p": "n",
+      "c": "A sign of illness that a patient notices or feels",
+      "ru": "симптом"
+    },
+    {
+      "w": "DIAGNOSIS",
+      "p": "n",
+      "c": "Identifying an illness by examining the patient",
+      "ru": "диагноз"
+    },
+    {
+      "w": "PROGNOSIS",
+      "p": "n",
+      "c": "A doctor's forecast of how a disease will develop",
+      "ru": "прогноз (течения болезни)"
+    },
+    {
+      "w": "REMISSION",
+      "p": "n",
+      "c": "A period when the symptoms of a serious disease lessen",
+      "ru": "ремиссия"
+    },
+    {
+      "w": "RELAPSE",
+      "p": "n",
+      "c": "A return of illness after a period of improvement",
+      "ru": "рецидив"
+    },
+    {
+      "w": "CONTAGION",
+      "p": "n",
+      "c": "The passing of disease from person to person by touch",
+      "ru": "заражение, зараза"
+    },
+    {
+      "w": "OUTBREAK",
+      "p": "n",
+      "c": "A sudden start or rise in cases of a disease",
+      "ru": "вспышка (болезни)"
+    },
+    {
+      "w": "EPIDEMIC",
+      "p": "n",
+      "c": "A disease affecting many people in one area at once",
+      "ru": "эпидемия"
+    },
+    {
+      "w": "QUARANTINE",
+      "p": "n",
+      "c": "A period of isolation to stop a disease from spreading",
+      "ru": "карантин"
+    },
+    {
+      "w": "PATHOGEN",
+      "p": "n",
+      "c": "A bacterium, virus or other germ that causes disease",
+      "ru": "возбудитель болезни, патоген"
+    },
+    {
+      "w": "IMMUNITY",
+      "p": "n",
+      "c": "The body's ability to resist a particular infection",
+      "ru": "иммунитет"
+    },
+    {
+      "w": "ANTIBODY",
+      "p": "n",
+      "c": "A protein the blood makes to fight a specific germ",
+      "ru": "антитело"
+    },
+    {
+      "w": "HYGIENE",
+      "p": "n",
+      "c": "Keeping yourself and your surroundings clean to stay well",
+      "ru": "гигиена"
+    },
+    {
+      "w": "STAMINA",
+      "p": "n",
+      "c": "Physical strength to keep going for a long time",
+      "ru": "выносливость"
+    },
+    {
+      "w": "LONGEVITY",
+      "p": "n",
+      "c": "The quality of living to a great age",
+      "ru": "долголетие"
+    },
+    {
+      "w": "POSTURE",
+      "p": "n",
+      "c": "The way you hold your body when sitting or standing",
+      "ru": "осанка"
+    },
+    {
+      "w": "BIOPSY",
+      "p": "n",
+      "c": "Removal of a tissue sample to test it for disease",
+      "ru": "биопсия"
+    },
+    {
+      "w": "TRANSFUSION",
+      "p": "n",
+      "c": "Putting donated blood into a patient's veins",
+      "ru": "переливание (крови)"
+    },
+    {
+      "w": "TRANSPLANT",
+      "p": "n",
+      "c": "An operation moving an organ from one person to another",
+      "ru": "пересадка, трансплантация"
+    },
+    {
+      "w": "WARD",
+      "p": "n",
+      "c": "A room in a hospital with beds for several patients",
+      "ru": "палата"
+    },
+    {
+      "w": "HOSPICE",
+      "p": "n",
+      "c": "A home providing care for people who are dying",
+      "ru": "хоспис"
+    },
+    {
+      "w": "PARAMEDIC",
+      "p": "n",
+      "c": "A trained worker who gives emergency care in an ambulance",
+      "ru": "фельдшер скорой помощи"
+    },
+    {
+      "w": "MIDWIFE",
+      "p": "n",
+      "c": "A nurse trained to help women give birth",
+      "ru": "акушерка"
+    },
+    {
+      "w": "ALLERGY",
+      "p": "n",
+      "c": "A bad bodily reaction to pollen, dust or certain foods",
+      "ru": "аллергия"
+    },
+    {
+      "w": "RASH",
+      "p": "n",
+      "c": "An area of red spots or irritated patches on the skin",
+      "ru": "сыпь"
+    },
+    {
+      "w": "BLISTER",
+      "p": "n",
+      "c": "A small bubble of watery fluid under the skin",
+      "ru": "волдырь, водяная мозоль"
+    },
+    {
+      "w": "BRUISE",
+      "p": "n",
+      "c": "A dark mark on the skin caused by a blow",
+      "ru": "синяк, ушиб"
+    },
+    {
+      "w": "SPRAIN",
+      "p": "n",
+      "c": "An injury caused by suddenly twisting a joint",
+      "ru": "растяжение (связок)"
+    },
+    {
+      "w": "FRACTURE",
+      "p": "n",
+      "c": "A crack or break in a bone",
+      "ru": "перелом"
+    },
+    {
+      "w": "SCAB",
+      "p": "n",
+      "c": "A dry crust that forms over a healing cut",
+      "ru": "струп, корочка"
+    },
+    {
+      "w": "SWELLING",
+      "p": "n",
+      "c": "A puffy, enlarged area on the body after an injury",
+      "ru": "припухлость, отёк"
+    },
+    {
+      "w": "ABSCESS",
+      "p": "n",
+      "c": "A swollen, painful pocket of pus in the body",
+      "ru": "абсцесс, нарыв"
+    },
+    {
+      "w": "WART",
+      "p": "n",
+      "c": "A small hard lump growing on the skin",
+      "ru": "бородавка"
+    },
+    {
+      "w": "ACNE",
+      "p": "n",
+      "c": "Red spots on the face, common among teenagers",
+      "ru": "акне, угревая сыпь"
+    },
+    {
+      "w": "DANDRUFF",
+      "p": "n",
+      "c": "Small white flakes of dead skin in the hair",
+      "ru": "перхоть"
+    },
+    {
+      "w": "NAUSEA",
+      "p": "n",
+      "c": "The feeling that you are about to be sick",
+      "ru": "тошнота"
+    },
+    {
+      "w": "FATIGUE",
+      "p": "n",
+      "c": "Extreme tiredness caused by illness or effort",
+      "ru": "сильная усталость, утомление"
+    },
+    {
+      "w": "MIGRAINE",
+      "p": "n",
+      "c": "A severe, recurring headache, often with nausea",
+      "ru": "мигрень"
+    },
+    {
+      "w": "INSOMNIA",
+      "p": "n",
+      "c": "Habitual inability to fall asleep or stay asleep",
+      "ru": "бессонница"
+    },
+    {
+      "w": "HICCUP",
+      "p": "n",
+      "c": "A sudden involuntary spasm in the chest making a short sound",
+      "ru": "икота, приступ икоты"
+    },
+    {
+      "w": "CRAMP",
+      "p": "n",
+      "c": "A sudden painful tightening of a muscle",
+      "ru": "судорога, спазм"
+    },
+    {
+      "w": "SEIZURE",
+      "p": "n",
+      "c": "A sudden attack of illness, especially an epileptic fit",
+      "ru": "приступ, припадок"
+    },
+    {
+      "w": "STROKE",
+      "p": "n",
+      "c": "Sudden brain damage from a blocked or burst blood vessel",
+      "ru": "инсульт"
+    },
+    {
+      "w": "HANGOVER",
+      "p": "n",
+      "c": "Headache and sickness after drinking too much alcohol",
+      "ru": "похмелье"
+    },
+    {
+      "w": "HEARTBURN",
+      "p": "n",
+      "c": "Painful hot feeling in the chest caused by stomach acid rising",
+      "ru": "изжога"
+    },
+    {
+      "w": "DEHYDRATION",
+      "p": "n",
+      "c": "A harmful loss of too much water from the body",
+      "ru": "обезвоживание"
+    },
+    {
+      "w": "CONCUSSION",
+      "p": "n",
+      "c": "Temporary brain injury caused by a blow to the head",
+      "ru": "сотрясение мозга"
+    },
+    {
+      "w": "WHIPLASH",
+      "p": "n",
+      "c": "A neck injury from a sudden jerk, as in a car crash",
+      "ru": "хлыстовая травма шеи"
+    },
+    {
+      "w": "PARALYSIS",
+      "p": "n",
+      "c": "Loss of the ability to move part of the body",
+      "ru": "паралич"
+    },
+    {
+      "w": "MEASLES",
+      "p": "n",
+      "c": "An infectious disease causing fever and red spots",
+      "ru": "корь"
+    },
+    {
+      "w": "MUMPS",
+      "p": "n",
+      "c": "A disease causing painful swelling of glands in the neck",
+      "ru": "свинка (эпидемический паротит)"
+    },
+    {
+      "w": "SMALLPOX",
+      "p": "n",
+      "c": "A deadly disease wiped out worldwide by vaccination",
+      "ru": "натуральная оспа"
+    },
+    {
+      "w": "RABIES",
+      "p": "n",
+      "c": "A deadly viral disease passed on by animal bites",
+      "ru": "бешенство"
+    },
+    {
+      "w": "SCURVY",
+      "p": "n",
+      "c": "A disease caused by a lack of vitamin C",
+      "ru": "цинга"
+    },
+    {
+      "w": "RICKETS",
+      "p": "n",
+      "c": "A childhood bone disease caused by lack of vitamin D",
+      "ru": "рахит"
+    },
+    {
+      "w": "PLAGUE",
+      "p": "n",
+      "c": "A deadly epidemic disease spread by rat fleas",
+      "ru": "чума"
+    },
+    {
+      "w": "DIABETES",
+      "p": "n",
+      "c": "A condition in which the body cannot control blood sugar",
+      "ru": "диабет"
+    },
+    {
+      "w": "ASTHMA",
+      "p": "n",
+      "c": "A condition causing attacks of difficult breathing",
+      "ru": "астма"
+    },
+    {
+      "w": "ARTHRITIS",
+      "p": "n",
+      "c": "Painful inflammation and stiffness of the joints",
+      "ru": "артрит"
+    },
+    {
+      "w": "JAUNDICE",
+      "p": "n",
+      "c": "Yellowing of the skin and eyes due to liver trouble",
+      "ru": "желтуха"
+    },
+    {
+      "w": "GOUT",
+      "p": "n",
+      "c": "Painful swelling of the joints, especially the big toe",
+      "ru": "подагра"
+    },
+    {
+      "w": "CHOLESTEROL",
+      "p": "n",
+      "c": "A fatty substance in the blood linked to heart disease",
+      "ru": "холестерин"
+    },
+    {
+      "w": "CAVITY",
+      "p": "n",
+      "c": "A hole in a tooth caused by decay",
+      "ru": "кариозная полость, дупло"
+    },
+    {
+      "w": "PLAQUE",
+      "p": "n",
+      "c": "A sticky film of bacteria that builds up on teeth",
+      "ru": "зубной налёт"
+    },
+    {
+      "w": "DENTURE",
+      "p": "n",
+      "c": "A removable plate holding one or more false teeth",
+      "ru": "зубной протез"
+    },
+    {
+      "w": "PHLEGM",
+      "p": "n",
+      "c": "Thick mucus coughed up from the throat and chest",
+      "ru": "мокрота"
+    },
+    {
+      "w": "CHICKENPOX",
+      "p": "n",
+      "c": "A mild infectious disease causing itchy spots, mainly in children",
+      "ru": "ветрянка, ветряная оспа"
+    },
+    {
+      "w": "CHILBLAIN",
+      "p": "n",
+      "c": "A painful itchy swelling on toes or fingers caused by cold",
+      "ru": "ознобление, лёгкое обморожение"
+    },
+    {
+      "w": "KIDNEY",
+      "p": "n",
+      "c": "One of two organs that filter the blood and make urine",
+      "ru": "почка"
+    },
+    {
+      "w": "BLADDER",
+      "p": "n",
+      "c": "The organ in which urine is stored",
+      "ru": "мочевой пузырь"
+    },
+    {
+      "w": "WINDPIPE",
+      "p": "n",
+      "c": "The tube carrying air from the throat to the lungs",
+      "ru": "трахея, дыхательное горло"
+    },
+    {
+      "w": "TENDON",
+      "p": "n",
+      "c": "A tough cord that joins a muscle to a bone",
+      "ru": "сухожилие"
+    },
+    {
+      "w": "EARDRUM",
+      "p": "n",
+      "c": "A thin membrane inside the ear that vibrates with sound",
+      "ru": "барабанная перепонка"
+    },
+    {
+      "w": "EYELID",
+      "p": "n",
+      "c": "The fold of skin that closes over the eye",
+      "ru": "веко"
+    },
+    {
+      "w": "KNUCKLE",
+      "p": "n",
+      "c": "One of the joints where your fingers bend",
+      "ru": "костяшка (пальца)"
+    },
+    {
+      "w": "WOMB",
+      "p": "n",
+      "c": "The organ in which a baby grows before birth",
+      "ru": "матка, утроба"
+    },
+    {
+      "w": "GLAND",
+      "p": "n",
+      "c": "An organ that releases hormones, sweat or saliva",
+      "ru": "железа"
+    },
+    {
+      "w": "LIMB",
+      "p": "n",
+      "c": "An arm or a leg",
+      "ru": "конечность"
+    },
+    {
+      "w": "CHRONIC",
+      "p": "adj",
+      "c": "Of an illness: lasting a long time or constantly recurring",
+      "ru": "хронический"
+    },
+    {
+      "w": "ACUTE",
+      "p": "adj",
+      "c": "Of an illness: severe and sudden but short-lasting",
+      "ru": "острый"
+    },
+    {
+      "w": "BENIGN",
+      "p": "adj",
+      "c": "Of a tumour: not cancerous and not dangerous",
+      "ru": "доброкачественный"
+    },
+    {
+      "w": "MALIGNANT",
+      "p": "adj",
+      "c": "Of a tumour: cancerous and likely to spread",
+      "ru": "злокачественный"
+    },
+    {
+      "w": "POTENT",
+      "p": "adj",
+      "c": "Of a drug: very strong and powerful in effect",
+      "ru": "сильнодействующий, мощный"
+    },
+    {
+      "w": "TOXIC",
+      "p": "adj",
+      "c": "Poisonous; harmful to living things",
+      "ru": "токсичный, ядовитый"
+    },
+    {
+      "w": "LETHAL",
+      "p": "adj",
+      "c": "Able to cause death; deadly",
+      "ru": "смертельный, летальный"
+    },
+    {
+      "w": "INFECTIOUS",
+      "p": "adj",
+      "c": "Of a disease: easily passed from one person to another",
+      "ru": "инфекционный, заразный"
+    },
+    {
+      "w": "STERILE",
+      "p": "adj",
+      "c": "Completely free from germs and bacteria",
+      "ru": "стерильный"
+    },
+    {
+      "w": "FRAIL",
+      "p": "adj",
+      "c": "Physically weak and delicate, especially from old age",
+      "ru": "хрупкий, немощный"
+    },
+    {
+      "w": "FEEBLE",
+      "p": "adj",
+      "c": "Lacking strength, especially through illness or age",
+      "ru": "слабый, немощный"
+    },
+    {
+      "w": "HALE",
+      "p": "adj",
+      "c": "Of an old person: strong and well (___ and hearty)",
+      "ru": "крепкий, бодрый"
+    },
+    {
+      "w": "BEDRIDDEN",
+      "p": "adj",
+      "c": "Unable to get out of bed because of illness or age",
+      "ru": "прикованный к постели"
+    },
+    {
+      "w": "QUEASY",
+      "p": "adj",
+      "c": "Feeling slightly sick, as if you might vomit",
+      "ru": "испытывающий тошноту"
+    },
+    {
+      "w": "FEVERISH",
+      "p": "adj",
+      "c": "Having a high temperature because of illness",
+      "ru": "лихорадочный, с температурой"
+    },
+    {
+      "w": "PALLID",
+      "p": "adj",
+      "c": "Unhealthily pale in appearance",
+      "ru": "бледный, болезненно-бледный"
+    },
+    {
+      "w": "SALLOW",
+      "p": "adj",
+      "c": "Of skin: yellowish and unhealthy-looking",
+      "ru": "землистый, нездорово-жёлтый"
+    },
+    {
+      "w": "LETHARGIC",
+      "p": "adj",
+      "c": "Sluggish and lacking energy, often due to illness",
+      "ru": "вялый, апатичный"
+    },
+    {
+      "w": "TOPICAL",
+      "p": "adj",
+      "c": "Of a medicine: applied directly to the skin",
+      "ru": "местный, наружный"
+    },
+    {
+      "w": "MEDICINAL",
+      "p": "adj",
+      "c": "Having healing properties; used as a cure",
+      "ru": "лекарственный, лечебный"
+    },
+    {
+      "w": "HOLISTIC",
+      "p": "adj",
+      "c": "Treating the whole person, not just the symptoms",
+      "ru": "целостный, холистический"
+    },
+    {
+      "w": "INVASIVE",
+      "p": "adj",
+      "c": "Of a procedure: involving cutting into the body",
+      "ru": "инвазивный"
+    },
+    {
+      "w": "PREVENTIVE",
+      "p": "adj",
+      "c": "Intended to stop a disease before it starts",
+      "ru": "профилактический"
+    },
+    {
+      "w": "SEDENTARY",
+      "p": "adj",
+      "c": "Involving much sitting and little physical activity",
+      "ru": "сидячий, малоподвижный"
+    },
+    {
+      "w": "OBESE",
+      "p": "adj",
+      "c": "Extremely overweight, in a way that harms health",
+      "ru": "страдающий ожирением, тучный"
+    },
+    {
+      "w": "EMACIATED",
+      "p": "adj",
+      "c": "Abnormally thin and weak from illness or hunger",
+      "ru": "истощённый, изнурённый"
+    },
+    {
+      "w": "GAUNT",
+      "p": "adj",
+      "c": "Very thin and bony-faced, as from illness or hunger",
+      "ru": "измождённый, исхудалый"
+    },
+    {
+      "w": "NUMB",
+      "p": "adj",
+      "c": "Unable to feel anything in a part of the body",
+      "ru": "онемевший"
+    },
+    {
+      "w": "BLOODSHOT",
+      "p": "adj",
+      "c": "Of eyes: red because of tiredness or irritation",
+      "ru": "налитый кровью (о глазах)"
+    },
+    {
+      "w": "HOARSE",
+      "p": "adj",
+      "c": "Of a voice: rough and croaky, e.g. from a cold",
+      "ru": "хриплый, сиплый"
+    },
+    {
+      "w": "CONGESTED",
+      "p": "adj",
+      "c": "Of the nose: blocked with mucus, as during a cold",
+      "ru": "заложенный (о носе)"
+    },
+    {
+      "w": "INFLAMED",
+      "p": "adj",
+      "c": "Red, hot, swollen and painful",
+      "ru": "воспалённый"
+    },
+    {
+      "w": "GENERIC",
+      "p": "adj",
+      "c": "Of a drug: sold without a brand name, and cheaper",
+      "ru": "непатентованный (о лекарстве)"
+    },
+    {
+      "w": "UNWELL",
+      "p": "adj",
+      "c": "Feeling ill, often only slightly",
+      "ru": "нездоровый, приболевший"
+    },
+    {
+      "w": "INCURABLE",
+      "p": "adj",
+      "c": "Impossible to heal or treat successfully",
+      "ru": "неизлечимый"
+    },
+    {
+      "w": "SQUEAMISH",
+      "p": "adj",
+      "c": "Easily upset or made to feel ill by the sight of blood",
+      "ru": "брезгливый, слабонервный"
+    },
+    {
+      "w": "AIRBORNE",
+      "p": "adj",
+      "c": "Of a virus: carried and spread through the air",
+      "ru": "передающийся по воздуху"
+    },
+    {
+      "w": "SICKLY",
+      "p": "adj",
+      "c": "Often ill; looking weak and unhealthy",
+      "ru": "болезненный, хилый"
+    },
+    {
+      "w": "FLUSHED",
+      "p": "adj",
+      "c": "Of the face: red and hot, e.g. from fever",
+      "ru": "раскрасневшийся"
+    },
+    {
+      "w": "PUFFY",
+      "p": "adj",
+      "c": "Of eyes or face: swollen and soft",
+      "ru": "опухший, отёкший"
+    },
+    {
+      "w": "ACHY",
+      "p": "adj",
+      "c": "Suffering from a dull, continuous pain all over",
+      "ru": "ноющий, с ломотой"
+    },
+    {
+      "w": "BLOATED",
+      "p": "adj",
+      "c": "Uncomfortably swollen, especially in the stomach",
+      "ru": "вздутый (о животе)"
+    },
+    {
+      "w": "PRESCRIBE",
+      "p": "v",
+      "c": "Of a doctor: to officially order a medicine for a patient",
+      "ru": "прописывать, назначать"
+    },
+    {
+      "w": "DISPENSE",
+      "p": "v",
+      "c": "Of a pharmacist: to prepare and hand out medicines",
+      "ru": "отпускать (лекарства)"
+    },
+    {
+      "w": "ADMINISTER",
+      "p": "v",
+      "c": "To give a drug or treatment to someone",
+      "ru": "вводить, давать (лекарство)"
+    },
+    {
+      "w": "INJECT",
+      "p": "v",
+      "c": "To put a drug into the body with a needle",
+      "ru": "вводить, делать укол"
+    },
+    {
+      "w": "INOCULATE",
+      "p": "v",
+      "c": "To protect someone against disease with a vaccine",
+      "ru": "прививать, делать прививку"
+    },
+    {
+      "w": "CONVULSE",
+      "p": "v",
+      "c": "Of the body: to shake violently and uncontrollably",
+      "ru": "биться в судорогах, содрогаться"
+    },
+    {
+      "w": "ALLEVIATE",
+      "p": "v",
+      "c": "To make pain or suffering less severe",
+      "ru": "облегчать, смягчать"
+    },
+    {
+      "w": "RECUPERATE",
+      "p": "v",
+      "c": "To recover health and strength after illness",
+      "ru": "выздоравливать, восстанавливаться"
+    },
+    {
+      "w": "SUCCUMB",
+      "p": "v",
+      "c": "To die from, or give way to, a disease",
+      "ru": "поддаться (болезни), умереть от"
+    },
+    {
+      "w": "CONTRACT",
+      "p": "v",
+      "c": "To catch or become ill with a disease",
+      "ru": "заразиться, подхватить"
+    },
+    {
+      "w": "FESTER",
+      "p": "v",
+      "c": "Of a wound: to become infected and fill with pus",
+      "ru": "гноиться, нарывать"
+    },
+    {
+      "w": "ITCH",
+      "p": "v",
+      "c": "To have a tingling skin feeling that makes you scratch",
+      "ru": "чесаться, зудеть"
+    },
+    {
+      "w": "THROB",
+      "p": "v",
+      "c": "Of pain: to beat with a strong, steady rhythm",
+      "ru": "пульсировать (о боли)"
+    },
+    {
+      "w": "LIMP",
+      "p": "v",
+      "c": "To walk unevenly because of an injured leg or foot",
+      "ru": "хромать"
+    },
+    {
+      "w": "FAINT",
+      "p": "v",
+      "c": "To lose consciousness briefly and fall down",
+      "ru": "падать в обморок"
+    },
+    {
+      "w": "VOMIT",
+      "p": "v",
+      "c": "To bring food back up from the stomach through the mouth",
+      "ru": "рвать (о рвоте), вырвать"
+    },
+    {
+      "w": "RETCH",
+      "p": "v",
+      "c": "To make the movements of vomiting without bringing anything up",
+      "ru": "испытывать рвотные позывы"
+    },
+    {
+      "w": "WHEEZE",
+      "p": "v",
+      "c": "To breathe noisily with a whistling sound in the chest",
+      "ru": "хрипеть, дышать со свистом"
+    },
+    {
+      "w": "SNIFFLE",
+      "p": "v",
+      "c": "To keep drawing air noisily up a runny nose",
+      "ru": "шмыгать носом"
+    },
+    {
+      "w": "PERSPIRE",
+      "p": "v",
+      "c": "To sweat (a more formal word)",
+      "ru": "потеть"
+    },
+    {
+      "w": "CLOT",
+      "p": "v",
+      "c": "Of blood: to thicken into a semi-solid lump",
+      "ru": "свёртываться (о крови)"
+    },
+    {
+      "w": "RESUSCITATE",
+      "p": "v",
+      "c": "To revive someone whose heart or breathing has stopped",
+      "ru": "реанимировать, откачать"
+    },
+    {
+      "w": "AMPUTATE",
+      "p": "v",
+      "c": "To cut off a limb in a surgical operation",
+      "ru": "ампутировать"
+    },
+    {
+      "w": "DISINFECT",
+      "p": "v",
+      "c": "To clean something with chemicals to kill germs",
+      "ru": "дезинфицировать"
+    },
+    {
+      "w": "DETERIORATE",
+      "p": "v",
+      "c": "Of health: to become gradually worse",
+      "ru": "ухудшаться"
+    },
+    {
+      "w": "HOBBLE",
+      "p": "v",
+      "c": "To walk awkwardly because of pain or injury",
+      "ru": "ковылять"
+    },
+    {
+      "w": "REVIVE",
+      "p": "v",
+      "c": "To bring someone back to consciousness or health",
+      "ru": "приводить в чувство, оживлять"
+    },
+    {
+      "w": "MEDICATE",
+      "p": "v",
+      "c": "To treat someone with drugs",
+      "ru": "лечить лекарствами"
+    },
+    {
+      "w": "TAPER",
+      "p": "v",
+      "c": "To ___ off a drug: reduce the dose gradually",
+      "ru": "постепенно снижать (дозу)"
+    },
+    {
+      "w": "EXPIRE",
+      "p": "v",
+      "c": "Of a medicine: to pass its use-by date",
+      "ru": "истекать (о сроке годности)"
+    },
+    {
+      "w": "GARGLE",
+      "p": "v",
+      "c": "To rinse your throat with liquid, then spit it out",
+      "ru": "полоскать горло"
+    },
+    {
+      "w": "EXACERBATE",
+      "p": "v",
+      "c": "To make an illness or pain worse",
+      "ru": "обострять, усугублять"
+    },
+    {
+      "w": "DISLOCATE",
+      "p": "v",
+      "c": "To force a bone out of its normal position in a joint",
+      "ru": "вывихнуть"
+    },
+    {
+      "w": "UNDERGO",
+      "p": "v",
+      "c": "To go through surgery, treatment or tests",
+      "ru": "перенести, пройти (лечение)"
+    },
+    {
+      "w": "DEBILITATE",
+      "p": "v",
+      "c": "Of illness: to make someone very weak",
+      "ru": "ослаблять, истощать"
+    },
+    {
+      "w": "CHOKE",
+      "p": "v",
+      "c": "To struggle to breathe because the throat is blocked",
+      "ru": "давиться, задыхаться"
+    },
+    {
+      "w": "FLARE",
+      "p": "v",
+      "c": "___ up: of an illness, to suddenly get worse again",
+      "ru": "обостряться"
+    },
+    {
+      "w": "STITCH",
+      "p": "v",
+      "c": "To close a wound by sewing it",
+      "ru": "зашивать (рану)"
+    },
+    {
+      "w": "ORALLY",
+      "p": "adv",
+      "c": "Of medicine: taken by mouth",
+      "ru": "перорально, внутрь"
+    },
+    {
+      "w": "FATALLY",
+      "p": "adv",
+      "c": "In a way that causes death",
+      "ru": "смертельно"
+    },
+    {
+      "w": "GINGERLY",
+      "p": "adv",
+      "c": "Very carefully, so as to avoid pain or injury",
+      "ru": "осторожно, бережно"
+    },
+    {
+      "w": "HEALTHILY",
+      "p": "adv",
+      "c": "In a way that is good for your body",
+      "ru": "с пользой для здоровья, правильно"
+    },
+    {
+      "w": "TERMINALLY",
+      "p": "adv",
+      "c": "___ ill: dying of a disease that cannot be cured",
+      "ru": "неизлечимо, смертельно (болен)"
+    },
+    {
+      "w": "PAINLESSLY",
+      "p": "adv",
+      "c": "Without causing any physical hurt",
+      "ru": "безболезненно"
+    },
+    {
+      "w": "CLINICALLY",
+      "p": "adv",
+      "c": "In a medically tested way, as in '___ proven'",
+      "ru": "клинически"
+    }
+  ]
+}

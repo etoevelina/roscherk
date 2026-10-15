@@ -14,8 +14,7 @@ import {
   createTimer,
   createUndoStack,
   doneCount,
-  WINDOW,
-} from '../src/core/progress.js';
+  WINDOW, starsFor, levelStars } from '../src/core/progress.js';
 
 const levels = Array.from({ length: 10 }, (_, i) => ({ id: `L${i}`, chapter: i < 5 ? 1 : 2 }));
 const statusList = (progress, skipped = []) => levelStatuses(levels, progress, skipped).map((s) => s.status);
@@ -72,11 +71,24 @@ test('звезда — за попытку без подсказки и perfect;
 
 test('recordWin: лучшее время — минимум, звезда сохраняется навсегда', () => {
   let p = recordWin({}, 'L0', false, 50000);
-  assert.deepEqual(p.L0, { star: false, bestMs: 50000 });
+  assert.deepEqual(p.L0, { star: false, bestMs: 50000, stars: 1, nh: false });
+  p = recordWin(p, 'L0', false, 55000, 2);
+  assert.deepEqual(p.L0, { star: false, bestMs: 50000, stars: 2, nh: false }, 'звёзды 1–3 — максимум');
   p = recordWin(p, 'L0', true, 60000);
-  assert.deepEqual(p.L0, { star: true, bestMs: 50000 });
-  p = recordWin(p, 'L0', false, 41000.4);
-  assert.deepEqual(p.L0, { star: true, bestMs: 41000 }, 'звезда не теряется при повторе без звезды');
+  assert.deepEqual(p.L0, { star: true, bestMs: 50000, stars: 3, nh: true });
+  p = recordWin(p, 'L0', false, 41000.4, 1);
+  assert.deepEqual(p.L0, { star: true, bestMs: 41000, stars: 3, nh: true }, 'звезда и три звезды не теряются при повторе без звезды');
+});
+
+test('starsFor / levelStars: 1 — пройден, +1 без подсказок, +1 идеально; старые записи', () => {
+  assert.equal(starsFor({ hintUsed: true }, false), 1);
+  assert.equal(starsFor({ hintUsed: false }, false), 2);
+  assert.equal(starsFor({ hintUsed: true }, true), 2);
+  assert.equal(starsFor({ hintUsed: false }, true), 3);
+  assert.equal(levelStars(undefined), 0);
+  assert.equal(levelStars({ star: true, bestMs: 1 }), 3);
+  assert.equal(levelStars({ star: false, bestMs: 1 }), 1);
+  assert.equal(levelStars({ star: false, bestMs: 1, stars: 2 }), 2);
 });
 
 test('«Пропустить» после 3 сбросов или 90 с простоя; подсказка пульсирует через 60 с', () => {
@@ -114,4 +126,18 @@ test('undo-стек ограничен глубиной 50', () => {
   u.clear();
   assert.equal(u.size, 0);
   assert.equal(u.pop(), undefined);
+});
+
+test('byChapter (§2.5): окно из 3 уровней считается в каждой главе отдельно, index сквозной', () => {
+  const lv = Array.from({ length: 10 }, (_, i) => ({ id: `W${i}`, chapter: i < 5 ? 1 : 2 }));
+  const st = levelStatuses(lv, {}, [], { byChapter: true });
+  assert.deepEqual(st.map((s) => s.status), ['open', 'open', 'open', 'locked', 'locked', 'open', 'open', 'open', 'locked', 'locked']);
+  assert.deepEqual(st.map((s) => s.index), [...Array(10).keys()]);
+  const progress = { W5: { star: true, bestMs: 5 } };
+  const st2 = levelStatuses(lv, progress, [], { byChapter: true });
+  assert.deepEqual(st2.slice(5).map((s) => s.status), ['done', 'open', 'open', 'open', 'locked']);
+  assert.equal(nextLevelIndex(lv, progress, [], { byChapter: true }), 0, 'первый открытый непройденный — в первой теме');
+  const all = Object.fromEntries(lv.slice(0, 5).map((l) => [l.id, { star: false, bestMs: 9 }]));
+  assert.equal(nextLevelIndex(lv, all, [], { byChapter: true }), 5, 'первая тема пройдена — следующая');
+  assert.deepEqual(levelStatuses(lv, {}, []).map((s) => s.status).slice(3, 6), ['locked', 'locked', 'locked'], 'без byChapter — как раньше');
 });

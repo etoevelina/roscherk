@@ -14,8 +14,27 @@ export function defaultSettings() {
     flowNumbers: false,
     installCardClosed: false,
     installReminderShown: false,
+    introSeen: [], // режимы, для которых показано знакомство (§2.5)
+    // WORDS (docs/DESIGN.md): онбординг, имя в приветствии и профиле, специальные возможности.
+    onboarded: false,
+    name: '',
+    lastMode: '', // режим последней партии кампании — для «Продолжить путь» на главной
+    a11y: defaultA11y(),
   };
 }
+
+/** Специальные возможности (экран «Специальные возможности», docs/DESIGN.md). */
+export function defaultA11y() {
+  return {
+    largeText: false, // крупнее буквы и номера в головоломке
+    reduceMotion: false, // меньше движения поверх системной настройки
+    contrastNumbers: false, // контрастные номера клеток
+    haptics: 'light', // 'light' | 'off'
+  };
+}
+
+export const NAME_MAX = 24;
+export const ACTIVITY_DAYS = 400;
 
 /** Чистое состояние с пустыми секциями для перечисленных режимов. */
 export function defaultState(modeIds = DEFAULT_MODES) {
@@ -36,6 +55,9 @@ export function defaultState(modeIds = DEFAULT_MODES) {
     settings: defaultSettings(),
     daily: { streak: 0, bestStreak: 0, lastDate: null, history: [] },
     endless: { best },
+    // Решённые головоломки по дням (кампания, ежедневная, бесконечность): { 'YYYY-MM-DD': n } —
+    // для графика и итогов «Статистики» (docs/DESIGN.md). Не больше ACTIVITY_DAYS дней.
+    activity: {},
   };
 }
 
@@ -59,9 +81,14 @@ export function normalize(raw, modeIds = DEFAULT_MODES) {
       for (const [id, rec] of Object.entries(levels)) {
         if (!isObject(rec)) continue;
         const bestMs = Number(rec.bestMs);
+        const star = rec.star === true;
+        const stars = Number(rec.stars);
         entry[id] = {
-          star: rec.star === true,
+          star,
           bestMs: Number.isFinite(bestMs) && bestMs > 0 ? bestMs : 0,
+          // 1–3 звезды (docs/DESIGN.md): пройден · без подсказок · идеально. Старые записи: star → 3, иначе 1.
+          stars: Number.isInteger(stars) && stars >= 1 && stars <= 3 ? Math.max(stars, star ? 3 : 1) : star ? 3 : 1,
+          nh: rec.nh === true || star, // пройден без подсказок (старые записи: только по звезде)
         };
       }
       out.progress[mode] = entry;
@@ -102,6 +129,18 @@ export function normalize(raw, modeIds = DEFAULT_MODES) {
     out.settings.flowNumbers = s.flowNumbers === true;
     out.settings.installCardClosed = s.installCardClosed === true;
     out.settings.installReminderShown = s.installReminderShown === true;
+    out.settings.introSeen = Array.isArray(s.introSeen) ? s.introSeen.filter((x) => typeof x === 'string').slice(0, 16) : [];
+    // Кто уже играл до онбординга (есть прогресс) — онбординг не показываем.
+    out.settings.onboarded = s.onboarded === true;
+    out.settings.lastMode = typeof s.lastMode === 'string' && modeIds.includes(s.lastMode) ? s.lastMode : '';
+    out.settings.name = typeof s.name === 'string' ? s.name.replace(/\s+/g, ' ').trim().slice(0, NAME_MAX) : '';
+    const a = isObject(s.a11y) ? s.a11y : {};
+    out.settings.a11y = {
+      largeText: a.largeText === true,
+      reduceMotion: a.reduceMotion === true,
+      contrastNumbers: a.contrastNumbers === true,
+      haptics: a.haptics === 'off' ? 'off' : 'light',
+    };
   }
 
   if (isObject(raw.daily)) {
@@ -113,6 +152,20 @@ export function normalize(raw, modeIds = DEFAULT_MODES) {
     out.daily.history = Array.isArray(d.history)
       ? d.history.filter((x) => typeof x === 'string').slice(-60)
       : [];
+  }
+
+  if (isObject(raw.activity)) {
+    const days = Object.entries(raw.activity)
+      .filter(([d, n]) => /^\d{4}-\d{2}-\d{2}$/.test(d) && Number.isFinite(Number(n)) && Number(n) > 0)
+      .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+      .slice(-ACTIVITY_DAYS);
+    for (const [d, n] of days) out.activity[d] = Math.min(9999, Number(n) | 0);
+  } else if (!('activity' in raw)) {
+    // Состояние/код до редизайна: активности ещё не было — восстанавливаем её
+    // из того, что знает даты (решённые ежедневные), чтобы статистика не спорила с серией.
+    for (const d of out.daily.history) {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(d)) out.activity[d] = (out.activity[d] || 0) + 1;
+    }
   }
 
   if (isObject(raw.endless) && isObject(raw.endless.best)) {

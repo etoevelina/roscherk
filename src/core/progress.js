@@ -26,11 +26,23 @@ export function lastPassedIndex(levels, progress, skipped = []) {
 }
 
 /**
- * levelStatuses(levels, progress, skipped) → [{ index, id, status, star, bestMs, skipped }],
+ * levelStatuses(levels, progress, skipped, { byChapter }) → [{ index, id, status, star, bestMs, skipped }],
  * status ∈ 'done' | 'open' | 'locked'. Открыты все уровни до lastPassed + WINDOW включительно;
- * уровень, открытый однажды, обратно не закрывается.
+ * уровень, открытый однажды, обратно не закрывается. byChapter (§2.5, «Слова») — окно считается
+ * отдельно в каждой главе (подряд идущие уровни с одинаковым chapter), index остаётся сквозным.
  */
-export function levelStatuses(levels, progress, skipped = []) {
+export function levelStatuses(levels, progress, skipped = [], { byChapter = false } = {}) {
+  if (byChapter) {
+    const out = [];
+    let start = 0;
+    while (start < levels.length) {
+      let end = start + 1;
+      while (end < levels.length && levels[end].chapter === levels[start].chapter) end++;
+      for (const s of levelStatuses(levels.slice(start, end), progress, skipped)) out.push({ ...s, index: s.index + start });
+      start = end;
+    }
+    return out;
+  }
   const skip = new Set(skipped);
   const last = lastPassedIndex(levels, progress, skipped);
   const openUntil = last + WINDOW;
@@ -58,8 +70,8 @@ export function isOpen(levels, progress, skipped, index) {
  * первый открытый непройденный и непропущенный; если таких нет — первый непройденный
  * (пропущенный); если всё пройдено — −1.
  */
-export function nextLevelIndex(levels, progress, skipped = []) {
-  const statuses = levelStatuses(levels, progress, skipped);
+export function nextLevelIndex(levels, progress, skipped = [], opts = {}) {
+  const statuses = levelStatuses(levels, progress, skipped, opts);
   const fresh = statuses.find((s) => s.status === 'open' && !s.skipped);
   if (fresh) return fresh.index;
   const anyOpen = statuses.find((s) => s.status === 'open');
@@ -81,13 +93,34 @@ export function starFor(attempt, perfect = true) {
 }
 
 /**
- * recordWin(progress, levelId, star, ms) → новый объект progress для режима.
- * Звезда, полученная однажды, сохраняется; лучшее время — минимум.
+ * recordWin(progress, levelId, star, ms, stars) → новый объект progress для режима.
+ * Звезда, полученная однажды, сохраняется; лучшее время — минимум; звёзды 1–3 — максимум.
  */
-export function recordWin(progress, levelId, star, ms) {
+export function recordWin(progress, levelId, star, ms, stars = star ? 3 : 1, noHint = star) {
   const prev = progress[levelId];
   const bestMs = prev && prev.bestMs > 0 ? Math.min(prev.bestMs, ms) : ms;
-  return { ...progress, [levelId]: { star: !!(prev?.star || star), bestMs: Math.max(1, Math.round(bestMs)) } };
+  const best = Math.max(prev?.stars || (prev?.star ? 3 : prev ? 1 : 0), clampStars(stars), star ? 3 : 1);
+  // nh — хоть раз пройден без подсказок (для «Без подсказок» в статистике; звёзды этого не говорят:
+  // у режимов с perfect()=true подсказанная победа — тоже 2 звезды).
+  const nh = !!(prev?.nh || prev?.star || star || noHint);
+  return { ...progress, [levelId]: { star: !!(prev?.star || star), bestMs: Math.max(1, Math.round(bestMs)), stars: best, nh } };
+}
+
+const clampStars = (n) => (Number.isInteger(n) ? Math.min(3, Math.max(1, n)) : 1);
+
+/**
+ * starsFor(attempt, perfect) → 1–3 звезды итога (docs/DESIGN.md): 1 — уровень пройден,
+ * +1 — без подсказок, +1 — идеально (perfect режима: без тупиков, чернила ≤ par, без ошибок…).
+ * Три звезды ⇔ star (starFor): звезда за уровень в прогрессе — это «все три».
+ */
+export function starsFor(attempt, perfect = true) {
+  return 1 + (attempt.hintUsed ? 0 : 1) + (perfect === true ? 1 : 0);
+}
+
+/** Звёзды уровня из записи прогресса (0 — не пройден). */
+export function levelStars(rec) {
+  if (!rec) return 0;
+  return clampStars(rec.stars || (rec.star ? 3 : 1));
 }
 
 /** Пропуск: уровень остаётся без галочки, следующий открывается. */

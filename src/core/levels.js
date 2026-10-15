@@ -67,16 +67,40 @@ export function decodeLevels(data) {
   return data;
 }
 
-/** Прочитать уровни из вшитого <script type="application/json" id="levels">. */
+/**
+ * Прочитать уровни из вшитого <script type="application/json" id="levels">, уровни «Слов» (§2.5)
+ * из <script id="words"> (→ levels.words) и «Карандаша» (§2.6) из <script id="draw"> (→ levels.draw).
+ */
 export function readEmbeddedLevels(doc = document) {
   const el = doc.getElementById('levels');
-  if (!el) return { meta: {} };
-  try {
-    return decodeLevels(JSON.parse(el.textContent));
-  } catch (err) {
-    console.error('levels.json не разобран', err);
-    return { meta: {} };
+  let levels = { meta: {} };
+  if (el) {
+    try {
+      levels = decodeLevels(JSON.parse(el.textContent));
+    } catch (err) {
+      console.error('levels.json не разобран', err);
+      levels = { meta: {} };
+    }
   }
+  const drawEl = doc.getElementById('draw');
+  if (drawEl) {
+    try {
+      const data = JSON.parse(drawEl.textContent);
+      if (data && data.draw && typeof data.draw === 'object') levels.draw = data.draw;
+    } catch (err) {
+      console.error('draw.json не разобран', err);
+    }
+  }
+  const wordsEl = doc.getElementById('words');
+  if (wordsEl) {
+    try {
+      const data = JSON.parse(wordsEl.textContent);
+      if (data && data.words && typeof data.words === 'object') levels.words = data.words;
+    } catch (err) {
+      console.error('words.json не разобран', err);
+    }
+  }
+  return levels;
 }
 
 /** Наборы уровней режима с гарантированными массивами. */

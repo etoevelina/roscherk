@@ -9,7 +9,7 @@
 //   выбор старта (для тоста тупика), _cache — статический слой (offscreen-canvas), не сериализуется.
 
 import { buildGraph, canComplete, edgeBetween, findCompletion, canTraverse } from './stroke.solve.js';
-import { createOffscreen, pixelRatio } from '../core/canvas.js';
+import { createOffscreen, pixelRatio, roundRect } from '../core/canvas.js';
 
 const HINT_BUDGET = 200_000; // лимит узлов солвера на одну подсказку
 const HINT_MS = 2500;
@@ -157,8 +157,10 @@ export default {
     ru: 'Проведи по каждому отрезку ровно один раз, не отрывая пальца. Через точки можно проходить несколько раз.',
     en: 'Trace every segment exactly once without lifting your finger. Dots may be visited many times.',
   },
-  color: '#F2A33C',
-  colorLight: '#C97A12',
+  // WORDS: румяно-медное семейство (docs/DESIGN.md §5.3, --w-blush-2). Светлая — ≥ 4:1 к бумаге и
+  // белый текст ≥ 4.5:1, тёмная — пастель ≥ 7:1. Отличается от терракоты «Карандаша» оттенком (27° / 15°).
+  color: '#D3A57E',
+  colorLight: '#9A6B45',
 
   create(levelData, saved) {
     const g = buildGraph(levelData);
@@ -483,7 +485,7 @@ export default {
       ctx.beginPath();
       ctx.moveTo(px[path[0]], py[path[0]]);
       for (let i = 1; i < path.length; i++) ctx.lineTo(px[path[i]], py[path[i]]);
-      ctx.globalAlpha = alpha * 0.45;
+      ctx.globalAlpha = alpha * (theme.id === 'dark' ? 0.28 : 0.45); // тёмная: ореол тише, без серой каймы
       ctx.strokeStyle = theme.lineGlow;
       ctx.lineWidth = lineW * 2.6 * widthScale;
       ctx.stroke();
@@ -567,13 +569,25 @@ export default {
   },
 };
 
-/** Статический слой: все отрезки (приглушённо), стрелки, узлы, отметка фиксированного старта. */
+/**
+ * Статический слой (WORDS, docs/DESIGN.md §5.6): поле — бумага со скруглением и волосяной обводкой
+ * по рамке фигуры, непройденные отрезки — мягкий графит (theme.track, ≥ 3:1 к бумаге), стрелки и
+ * узлы — графит потемнее, фиксированный старт — кольцо цвета режима.
+ */
 function drawStatic(ctx, state, layout, theme) {
-  const { px, py, lineW, nodeR } = layout;
+  const { px, py, lineW, nodeR, bx, by, bw, bh } = layout;
   const { edges, start } = state.level;
+  if (bw > 0 && bh > 0) {
+    ctx.fillStyle = theme.paper || theme.surface;
+    roundRect(ctx, bx + 0.5, by + 0.5, bw - 1, bh - 1, Math.min(24, Math.max(10, Math.min(bw, bh) * 0.08)));
+    ctx.fill();
+    ctx.strokeStyle = theme.hairline || theme.grid;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
-  ctx.strokeStyle = theme.textMuted;
+  ctx.strokeStyle = theme.track || theme.textMuted;
   ctx.lineWidth = Math.max(2, lineW * 0.45);
   ctx.beginPath();
   for (let e = 0; e < edges.length; e++) {

@@ -1,0 +1,219 @@
+/* WORDS — Онбординг (ob-), Главная (hm-), Испытания (ch-): docs/DESIGN.md §5.1, §5.2, §5.12.
+   Только свои классы; компоненты и токены — 05-kit.css / 00-tokens.css. */
+
+/* ===================================================================== Онбординг */
+.ob {
+  overflow: hidden;
+  background:
+    radial-gradient(90% 55% at 92% 18%, rgba(170, 167, 198, 0.2), transparent 62%),
+    linear-gradient(180deg, transparent 55%, rgba(232, 216, 200, 0.4)),
+    var(--w-canvas);
+}
+:root[data-theme="dark"] .ob {
+  background:
+    radial-gradient(90% 55% at 92% 18%, rgba(163, 157, 201, 0.14), transparent 62%),
+    linear-gradient(180deg, transparent 55%, rgba(120, 104, 90, 0.14)),
+    var(--w-canvas);
+}
+.ob .ob-art {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  left: 11%;
+  bottom: -11%;
+  filter: drop-shadow(0 30px 40px rgba(62, 68, 62, 0.14));
+}
+:root[data-theme="dark"] .ob .ob-art { opacity: 0.78; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.4)); }
+/* На коротких экранах (SE, 667pt) лента сжимается и уезжает под текст — якорим её справа. */
+@media (max-height: 700px) { .ob .ob-art { left: auto; right: -30vh; } }
+.ob .w-scroll {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: calc(var(--safe-top) + 34px) 28px calc(var(--safe-bottom) + clamp(40px, 17vh, 170px));
+}
+.ob .ob-mark { font-size: 15px; font-weight: 500; letter-spacing: 0.52em; margin-right: -0.52em; }
+.ob .ob-title {
+  margin-top: clamp(36px, 8.5vh, 84px);
+  font-size: 46px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  max-width: 330px;
+}
+.ob .ob-title > span { display: block; }
+.ob .ob-title > .soft { margin-top: 0.08em; color: var(--w-muted); font-weight: 400; } /* ≥ 4.5:1 на холсте */
+:root[data-theme="dark"] .ob .ob-title > .soft { color: #8f948f; }
+.ob .ob-sub { margin-top: 22px; max-width: 250px; font-size: 15px; line-height: 1.55; text-shadow: 0 0 2px var(--w-canvas), 0 0 12px var(--w-canvas); }
+.ob .ob-cta {
+  margin-top: auto;
+  width: min(100%, max(236px, 76%));
+  min-height: 60px;
+  padding: 0 24px 0 26px;
+  font-size: 17px;
+  font-weight: 500;
+  box-shadow: 0 14px 30px rgba(17, 19, 17, 0.16);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ob.ob-anim .ob-art { animation: ob-float 900ms var(--w-ease) both; }
+}
+@keyframes ob-float { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+:root[data-theme="dark"] .ob.ob-anim .ob-art { animation-name: ob-float-dark; }
+@keyframes ob-float-dark { from { opacity: 0; transform: translateY(18px); } to { opacity: 0.78; transform: none; } }
+
+/* ===================================================================== Главная */
+.hm .w-scroll { padding-top: calc(var(--safe-top) + 14px); }
+
+/* Шапка: приветствие слева, серия и профиль справа. */
+.hm-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 0 0 22px; }
+.hm-greet { margin: 0; min-width: 0; display: flex; flex-direction: column; padding-top: 2px; }
+.hm-greet .hm-hello { font-size: 22px; line-height: 1.15; font-weight: 400; letter-spacing: -0.025em; color: var(--w-muted); }
+.hm-greet .hm-name { font-size: 26px; line-height: 1.15; font-weight: 500; letter-spacing: -0.03em; color: var(--w-ink); overflow-wrap: anywhere; }
+.hm-greet.solo { padding-top: 6px; }
+.hm-greet.solo .hm-name { font-size: 28px; }
+.hm-head-right { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.hm-head .w-pill { background: transparent; box-shadow: none; min-height: 44px; padding: 0 8px; gap: 5px; font-size: 17px; font-weight: 500; }
+.hm-head .w-pill svg { width: 20px; height: 20px; }
+.hm-avatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(17, 19, 17, 0.06);
+  color: var(--w-ink);
+  font-size: 18px;
+  font-weight: 500;
+  transition: transform var(--w-t-press) ease-out, background var(--w-t-press) ease-out;
+}
+.hm-avatar svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.hm-avatar:active { transform: scale(0.94); background: rgba(17, 19, 17, 0.1); }
+:root[data-theme="dark"] .hm-avatar { background: rgba(241, 239, 234, 0.09); }
+
+/* Общие подписи карточек. */
+.hm .hm-card-title { display: block; font-size: 22px; line-height: 1.15; font-weight: 500; letter-spacing: -0.03em; color: var(--w-ink); }
+.hm .hm-card-sub { display: block; margin-top: 6px; font-size: 15px; line-height: 1.35; color: var(--w-muted); }
+
+/* Ежедневная: бумага, мини-сетка 5×5, стрелка. */
+.hm .hm-daily {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 122px;
+  margin: 0 0 14px;
+  padding: 20px 14px 20px 22px;
+  background: linear-gradient(135deg, var(--w-paper), color-mix(in srgb, var(--w-paper) 70%, var(--w-canvas)));
+}
+.hm .hm-daily-text { flex: 1 1 auto; min-width: 0; }
+.hm-mini { flex: 0 0 auto; display: grid; grid-template-columns: repeat(5, 17px); grid-auto-rows: 17px; margin-right: 2px; }
+.hm-mini i { display: block; position: relative; font-style: normal; font-size: 6px; line-height: 1; font-weight: 600; color: var(--w-muted); padding: 1.5px 0 0 2px; }
+.hm-mini i.paper { background: #fbfaf8; box-shadow: 0 0 0 0.5px rgba(17, 19, 17, 0.16); }
+.hm-mini i.ink { background: var(--w-ink); box-shadow: inset 0 0 0 1.5px #fbfaf8, 0 0 0 0.5px rgba(17, 19, 17, 0.16); }
+:root[data-theme="dark"] .hm-mini i.paper { background: #383a35; box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.5); }
+:root[data-theme="dark"] .hm-mini i.ink { background: #0a0b0a; box-shadow: inset 0 0 0 1.5px #383a35, 0 0 0 0.5px rgba(0, 0, 0, 0.5); }
+.hm .hm-daily .w-arrow { margin-left: 2px; }
+.hm .hm-daily .hm-check { background: var(--w-sage-2); color: var(--w-sage-ink); }
+.hm .hm-daily .hm-check svg { stroke-width: 2.2; }
+.hm .hm-daily-done { display: block; margin-top: 4px; font-size: 13px; line-height: 1.35; font-weight: 500; color: var(--w-sage-ink); }
+
+/* Продолжить путь: графит, стеклянные ступени справа, светлый прогресс. */
+.hm .hm-journey {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: clamp(168px, 21vh, 196px);
+  margin: 0 0 12px;
+  padding: 24px 24px 24px;
+  background: linear-gradient(112deg, #232526 0%, #2a2c2e 46%, #46484a 100%);
+  color: #f4f2ee;
+  box-shadow: 0 1px 2px rgba(12, 17, 13, 0.08), 0 16px 34px rgba(30, 36, 30, 0.16);
+}
+:root[data-theme="dark"] .hm .hm-journey {
+  background: linear-gradient(112deg, #0d0e0d 0%, #171918 46%, #2c2e30 100%);
+  box-shadow: inset 0 0 0 1px var(--w-line);
+}
+.hm .hm-journey .hm-journey-art { width: 306px; right: -42px; bottom: -40px; opacity: 0.96; filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.35)); }
+.hm-journey-title { display: flex; flex-direction: column; font-size: 24px; line-height: 1.2; font-weight: 400; letter-spacing: -0.025em; color: #f4f2ee; max-width: 62%; }
+.hm-journey-meta { display: flex; flex-direction: column; margin-top: 12px; font-size: 15px; line-height: 1.4; color: rgba(244, 242, 238, 0.84); max-width: 62%; }
+.hm .hm-journey .w-progress { width: 42%; max-width: 170px; margin-top: 12px; background: rgba(255, 255, 255, 0.16); }
+.hm .hm-journey .w-progress > i { background: #dbe5d6; }
+
+/* Две высокие плитки: «Слова» (шалфей) и «Испытания» (лаванда). */
+.hm-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.hm .hm-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: clamp(172px, 28vh, 260px);
+  padding: 22px 16px 20px 18px;
+}
+.hm .hm-tile.sage { background: linear-gradient(160deg, #e3e8df 0%, #d9e1d6 55%, #cfd9cc 100%); }
+.hm .hm-tile.lav { background: linear-gradient(160deg, #e9e7f2 0%, #dedbec 55%, #d3cfe6 100%); }
+:root[data-theme="dark"] .hm .hm-tile.sage { background: linear-gradient(160deg, #262d25 0%, #2a3329 55%, #323d30 100%); }
+:root[data-theme="dark"] .hm .hm-tile.lav { background: linear-gradient(160deg, #27253a 0%, #2c2a3b 55%, #353247 100%); }
+.hm-tile-title { display: block; font-size: 22px; line-height: 1.15; font-weight: 500; letter-spacing: -0.03em; color: var(--w-ink); }
+.hm-tile-sub { display: block; margin-top: 8px; font-size: 15px; line-height: 1.35; color: var(--w-muted); max-width: 150px; }
+.hm-tile.sage .hm-tile-sub { color: #4f5a4f; }
+.hm-tile.lav .hm-tile-sub { color: #545069; }
+:root[data-theme="dark"] .hm-tile.sage .hm-tile-sub { color: #b9c6b5; }
+:root[data-theme="dark"] .hm-tile.lav .hm-tile-sub { color: #c3bedc; }
+.hm .hm-tile-stage { position: relative; display: block; flex: 1 1 auto; align-self: stretch; min-height: 88px; margin: 6px -16px -20px -18px; }
+.hm .hm-tile-stage .hm-tile-art.sage-loop { height: calc(100% + 52px); width: auto; max-width: none; left: -18px; bottom: -42px; transform: rotate(-12deg); }
+.hm .hm-tile-stage .hm-tile-art.lavender-orb { height: calc(100% + 34px); width: auto; max-width: none; right: -30px; bottom: -36px; }
+
+/* Установка PWA: компактная бумажная карточка с крестиком. */
+.hm .hm-install { display: flex; align-items: flex-start; gap: 12px; margin-top: 14px; padding: 14px 6px 14px 16px; }
+.hm-install-icon { flex: 0 0 40px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--w-sage-2); color: var(--w-sage-ink); margin-top: 2px; }
+.hm-install-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.hm-install-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; padding-top: 2px; }
+.hm-install-text b { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.hm-install-text span { font-size: 13px; line-height: 1.4; color: var(--w-muted); }
+.hm .hm-install-close { margin-top: -6px; color: var(--w-muted); }
+.hm .hm-install-close svg { width: 18px; height: 18px; }
+
+/* ===================================================================== Испытания */
+.ch .ch-scene {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: clamp(228px, 30vh, 290px);
+  padding: 24px 22px 26px;
+  border-radius: var(--w-r-lg);
+  background:
+    radial-gradient(70% 70% at 88% 82%, rgba(255, 255, 255, 0.55), transparent 70%),
+    linear-gradient(155deg, #ecebf3 0%, #e0ddee 50%, #d4d0e7 100%);
+}
+:root[data-theme="dark"] .ch .ch-scene {
+  background:
+    radial-gradient(70% 70% at 88% 82%, rgba(163, 157, 201, 0.16), transparent 70%),
+    linear-gradient(155deg, #25233a 0%, #2c2a3b 50%, #34314a 100%);
+}
+.ch .ch-scene .ch-orb { width: 224px; right: -52px; bottom: -58px; }
+.ch .ch-eyebrow { color: var(--w-lav-ink); }
+.ch .ch-scene-title { margin: 10px 0 0; font-size: 30px; line-height: 1.05; font-weight: 500; letter-spacing: -0.045em; }
+.ch .ch-scene-body { margin: 12px 0 0; max-width: 54%; font-size: 15px; line-height: 1.45; color: #4f4b63; }
+:root[data-theme="dark"] .ch .ch-scene-body { color: #c3bedc; }
+.ch .ch-label { margin: 26px 0 10px 2px; }
+.ch .w-seg button { min-height: 44px; padding: 4px 2px; font-size: 13px; letter-spacing: -0.02em; line-height: 1.15; white-space: nowrap; }
+
+.ch .ch-best { margin-top: 14px; padding: 18px 18px 16px; }
+.ch-best-label { display: block; font-size: 13px; color: var(--w-muted); }
+.ch-best-num { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 34px; line-height: 1; font-weight: 600; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.ch-best-num svg { width: 24px; height: 24px; fill: #e98a4a; stroke: #c8653b; stroke-width: 1.6; stroke-linejoin: round; }
+.ch-ladder { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 18px; }
+.ch-step { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.ch-step-bar { height: 36px; display: flex; align-items: flex-end; }
+.ch-step-bar i { display: block; width: 100%; border-radius: 8px; background: var(--w-line); }
+.ch-step.on .ch-step-bar i { background: var(--w-lav); }
+.ch-step.top .ch-step-bar i { background: var(--w-lav-ink); }
+.ch-step b { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ch-step span { font-size: 12px; line-height: 1.25; color: var(--w-muted); }
+.ch .ch-note { margin: 14px 2px 0; }
+
+.ch-foot { flex: 0 0 auto; padding: 10px var(--w-gutter) calc(var(--safe-bottom) + 18px); background: var(--w-canvas); }
+.ch-resume { margin: 0 0 10px 4px; font-size: 13px; line-height: 1.35; color: var(--w-muted); }
+.ch-resume:empty { display: none; }
+.ch-foot .w-btn { min-height: 56px; }

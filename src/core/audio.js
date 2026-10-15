@@ -91,8 +91,27 @@ export function createAudio(isEnabled = () => true) {
  * Вибрация, если поддерживается (на iOS Safari — нет; вызов безвреден). Chrome до первого
  * жеста пользователя блокирует вызов с ошибкой в консоли — проверяем userActivation.
  */
+/**
+ * Вибрация: в нативной оболочке (Capacitor, App Store) — через плагин Haptics, который задаёт
+ * window.__roscherkHaptic (см. src/native.js); в браузере — navigator.vibrate (на iPhone его нет).
+ * pattern — число мс или массив [мс, пауза, мс…]; сила: ≤ 15 — light, ≤ 25 — medium, иначе heavy.
+ */
+let hapticsOn = true;
+/** Вибрация из «Специальных возможностей» (settings.a11y.haptics): 'off' — тишина. */
+export function setHaptics(on) {
+  hapticsOn = on !== false;
+}
+
 export function vibrate(pattern) {
+  if (!hapticsOn) return;
   try {
+    const haptic = typeof window !== 'undefined' ? window.__roscherkHaptic : null;
+    if (typeof haptic === 'function') {
+      const first = Array.isArray(pattern) ? pattern[0] : pattern;
+      const strength = first <= 15 ? 'light' : first <= 25 ? 'medium' : 'heavy';
+      haptic(Array.isArray(pattern) && pattern.length > 1 ? 'success' : strength);
+      return;
+    }
     if (typeof navigator === 'undefined' || typeof navigator.vibrate !== 'function') return;
     if (navigator.userActivation && navigator.userActivation.hasBeenActive === false) return;
     navigator.vibrate(pattern);

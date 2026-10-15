@@ -1,0 +1,60 @@
+/* Токены Lumin (~/Downloads/lumin-word-design-system, §4.4) — прежняя палитра; с 2026-10-15 их
+   значения переназначены на WORDS в src/styles/00-tokens.css. Светлая тема — значения Lumin; тёмная —
+   производная. Формы из assets/lumin/*.svg подставляет tools/build.mjs (__LUMIN_*__ → data:image/svg+xml). */
+
+:root {
+  --lm-ink: #111311;
+  --lm-ink2: #2d302d;
+  --lm-on-ink: #ffffff;
+  --lm-muted: #5f655f; /* Lumin #6E746F затемнён до AA: 5.4:1 на canvas, 4.6:1 на sage2 */
+  --lm-num: #5a605b; /* номера клеток: ≥ 4.9:1 на любой заливке плитки */
+  --lm-line: rgba(17, 19, 17, 0.1);
+  --lm-canvas: #f3f4ef;
+  --lm-paper: #fbfcf9;
+  --lm-tile: #ffffff;
+  --lm-sage: #b9c8b3;
+  --lm-sage2: #dce5d8;
+  --lm-lav: #c9c4df;
+  --lm-lav2: #ebe8f4;
+  --lm-lav-strong: #8f88a7; /* кольцо выделения: контраст рамки ≥ 3:1 на белой плитке */
+  --lm-lav-text: #6f6890; /* лавандовый текст (перевод по подсказке): 4.7:1 на canvas */
+  --lm-mist: #d9e3e6;
+  --lm-success: #56705a; /* Lumin #5F795E чуть темнее — текст перевода ≥ 4.5:1 */
+  --lm-danger: #9a5e5e;
+  --lm-danger-bg: #f1e3e3;
+  --lm-key: #eceee9;
+  --lm-shadow1: 0 1px 2px rgba(12, 17, 13, 0.05), 0 10px 30px rgba(30, 36, 30, 0.06);
+  --lm-shadow2: 0 30px 80px rgba(25, 31, 25, 0.12);
+  --lm-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --lm-sage-form: url(__LUMIN_SAGE_FORM__);
+  --lm-lavender-form: url(__LUMIN_LAVENDER_FORM__);
+  --lm-glass-loop: url(__LUMIN_GLASS_LOOP__);
+}
+:root[data-theme="dark"] {
+  --lm-ink: #eef0ea;
+  --lm-ink2: #d3d8d0;
+  --lm-on-ink: #111311;
+  --lm-muted: #a1a8a2;
+  --lm-num: #a1a8a2;
+  --lm-line: rgba(238, 240, 234, 0.13);
+  --lm-canvas: #121412;
+  --lm-paper: #1a1d1a;
+  --lm-tile: #232723;
+  --lm-sage: #7f9478;
+  --lm-sage2: #2b3829;
+  --lm-lav: #9a93c2;
+  --lm-lav2: #2e2b40;
+  --lm-lav-strong: #b8b1e0;
+  --lm-lav-text: #b8b1e0;
+  --lm-mist: #233031;
+  --lm-success: #a9c8a2;
+  --lm-danger: #e0a3a3;
+  --lm-danger-bg: #3d2828;
+  --lm-key: #2a2e29;
+  --lm-shadow1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.25);
+  --lm-shadow2: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+/* Экран игры, вид «Слов», клавиатура, шторки, знакомство и итог уровня перенесены в
+   src/styles/60-game.css (WORDS 1.2, docs/DESIGN.md §5.6–5.7); здесь остаются токены Lumin, на
+   которые опираются холсты режимов (readTheme) и переназначения в 00-tokens.css. */

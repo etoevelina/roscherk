@@ -1,17 +1,19 @@
-// Экран игры (§3.1 п.3–4, §2.1, §3.3, §4.1–4.3). Оболочка общается с режимом только через
-// контракт §5.1: create/serialize/layout/render/pointer/isSolved/reset/hint/stats/perfect/ghost/
-// nextLabel/footer. Здесь — холст, ввод, таймер, undo, подсказка, сброс, пропуск, current, победа.
+// Экран игры (§3.1 п.3–4, §2.1, §3.3, §4.1–4.3; оформление — WORDS 1.2, docs/DESIGN.md §5.6–5.7).
+// Оболочка общается с режимом только через контракт §5.1: create/serialize/layout/render/pointer/
+// isSolved/reset/hint/stats/perfect/ghost/nextLabel/footer. Здесь — шапка («‹ · Уровень N · 💡 ⚙»),
+// холст, ввод, таймер, undo, шторка подсказок, быстрые настройки, сброс, пропуск, current, итог.
 import { h, icon } from './dom.js';
+import { iconButton, seg, switchControl } from './kit.js';
 import { t, tr } from '../core/i18n.js';
 import { createCanvas, createRenderLoop, boardRect, createFrameBudget } from '../core/canvas.js';
 import { createPointerTracker, attachPointer } from '../core/input.js';
 import { vibrate } from '../core/audio.js';
-import { createConfetti } from '../core/particles.js';
 import { createGhost, pulse } from '../core/anim.js';
 import { findLevel } from '../core/levels.js';
 import {
   startAttempt,
   starFor,
+  starsFor,
   recordWin,
   recordSkip,
   skipAvailable,
@@ -19,17 +21,70 @@ import {
   createTimer,
   createUndoStack,
   doneCount,
+  isDone,
+  levelStatuses,
 } from '../core/progress.js';
-import { recordDailyWin } from '../core/daily.js';
-import { updateBest, createStreakTracker } from '../core/endless.js';
-import { buildWinOverlay } from './win.js';
+import { recordDailyWin, displayStreak } from '../core/daily.js';
+import { recordActivity } from '../core/stats.js';
+import { updateBest, createStreakTracker, pickEndlessLevel, MIX } from '../core/endless.js';
+import { hash32 } from '../core/rng.js';
+import { buildWinOverlay, splitStatLine } from './win.js';
 
-const HINT_ARM_MS = 2000;
+/** Статистика попытки, которую undo не откатывает (§2.1): тупики stroke, подсказки и вводы «Слов». */
+const ATTEMPT_STATS = ['deadEnds', 'hints', 'ent', 'bad'];
 const RESET_TOAST_MS = 5000;
-const CONFETTI_MS = 1200;
-const CONFETTI_STRONG_MS = 1800;
+// WORDS «Level complete»: финал спокойный — мягкое свечение поля ≤ 700 мс, без конфетти (§3.1 п.4).
+const WIN_GLOW_MS = 700;
+const WIN_OVERLAY_DELAY_MS = 420;
 const FRAME_BUDGET_MS = 4;
+const FRAME_BUDGET_CONTINUOUS_MS = 8; // режимы с физикой (§2.6): шаги симуляции внутри кадра
 const FRAME_WARMUP = 3; // кадров без предупреждения о бюджете после смены уровня/темы/размера
+const BOARD_TOP_SHARE = 0.42; // доля свободной высоты над полем: чуть выше центра, как в эталоне
+
+// Тексты экрана (docs/DESIGN.md §5.6): шапка, шторка подсказок, быстрые настройки.
+const COPY = {
+  level: (n) => `Уровень ${n}`,
+  streak: (n) => `серия ${n}`,
+  hintTitle: 'Подсказка',
+  hintPrice: 'снимет звезду «без подсказок»',
+  hintNote: 'Подсказка снимает звезду «без подсказок». Две другие — за прохождение и идеальное решение.',
+  hintNoteUsed: 'Звезда «без подсказок» в этой попытке уже снята — подсказки бесплатны.',
+  hintStreakPrice: (n) => `оборвёт серию ${n}`,
+  hintStreakNote: (n) => `Подсказка обрывает серию Бесконечности (${n}). Рекорд сохранится.`,
+  hintDailyNote: 'В ежедневной звёзды не считаются — подсказки бесплатны.',
+  nextMove: 'Следующий ход',
+  settings: 'Настройки',
+  sound: 'Звук',
+  theme: 'Тема',
+  themes: [
+    { id: 'system', label: 'Системная' },
+    { id: 'light', label: 'Светлая' },
+    { id: 'dark', label: 'Тёмная' },
+  ],
+  haptics: 'Вибрация',
+  hapticsModes: [
+    { id: 'light', label: 'Лёгкая' },
+    { id: 'off', label: 'Выкл' },
+  ],
+  a11y: 'Специальные возможности',
+  nextLevel: 'Следующий уровень',
+  toMap: 'К карте',
+  onward: 'Дальше',
+  homeBtn: 'На главную',
+  statsBtn: 'Статистика',
+  challengesBtn: 'Испытания',
+  keyFallback: 'Тупиков',
+  accuracy: 'Точность',
+};
+/** Что делает «Следующий ход» в каждом режиме (подпись строки в шторке). */
+const MOVE_DETAILS = {
+  zip: 'Покажет следующие клетки дорожки',
+  flow: 'Проведёт один поток целиком',
+  stroke: 'Подскажет следующий отрезок или старт',
+  draw: 'Покажет штрих из решения',
+};
+/** Иконки вариантов подсказки «Слов» (как в эталоне: лампочка, ластик, перемешать, мишень). */
+const HINT_ICONS = { letter: 'hint', check: 'eraser', translate: 'sparkle', word: 'target', shuffle: 'shuffle' };
 
 const now = () => performance.now();
 
@@ -49,17 +104,27 @@ export function mountGame(app, params) {
     return { el: h('div', { class: 'screen' }), destroy() {} };
   }
   const { level, index: levelIndex } = found;
-  const kind = params.kind;
+  // Разработка (localhost, tools/shot.mjs): ?dev=win,hint,gear,daily,endless — сразу итог, шторка
+  // подсказки или настроек, вид ежедневной/бесконечности. В вебе и в App Store не работает.
+  const devFlags = app.dev && params.dev ? String(params.dev).split(',') : [];
+  const kind = devFlags.includes('daily') ? 'daily' : devFlags.includes('endless') ? 'endless' : params.kind;
+  if (kind !== params.kind && devFlags.includes('endless') && !params.endless) params = { ...params, endless: { streak: 7, modeChoice: mode.id } };
   const campaign = app.modeSets(mode.id).campaign;
   const isCampaign = kind === 'campaign';
   const isEndless = kind === 'endless';
   const isDaily = kind === 'daily';
+  // «Продолжить путь» на главной ведёт в режим последней партии кампании.
+  if (isCampaign && state.settings.lastMode !== mode.id) {
+    state.settings.lastMode = mode.id;
+    app.save();
+  }
 
   let theme = app.applyModeTheme(mode);
 
   // --- Восстановление незавершённой партии ---------------------------------------------
   const cur = state.current;
-  const resume = !!cur && cur.kind === kind && cur.mode === mode.id && cur.levelId === level.id;
+  const resume =
+    !!cur && cur.kind === kind && cur.mode === mode.id && cur.levelId === level.id && (!isDaily || !params.date || cur.date === params.date);
   let gameState = mode.create(level, resume && cur.state ? cur.state : undefined);
   const t0 = now();
   const attempt = resume
@@ -83,57 +148,102 @@ export function mountGame(app, params) {
   let strokeChanged = false;
   let strokeSteps = 0;
   let appeared = false; // состояние получено undo/restore: анимацию появления не повторять
-  let hintArmedUntil = 0;
-  let confetti = null;
   let winAt = 0;
   let ghost = null;
   let ghostStart = 0;
-  let ghostDismissed = resume; // обучение — до первого касания (§3.1 п.7)
+  // Обучение — до первого касания (§3.1 п.7); следующий уровень Бесконечности, записанный в current
+  // при победе (state ещё нет), — новая партия, а не продолжение.
+  let ghostDismissed = resume && cur.state != null;
+  // Партия «тронута» (было касание, клавиша, undo, сброс, подсказка) или продолжена: только тогда
+  // она записывается в current. Иначе просто открытый и закрытый уровень затирал бы начатую партию
+  // другого уровня (слот current один, §3.3). Бесконечность с серией > 0 пишет current всегда.
+  let touched = resume;
+  let introOpen = Array.isArray(mode.intro) && mode.intro.length > 0 && !(state.settings.introSeen || []).includes(mode.id);
   let ghostTimer = null;
   let pendingHint = null; // подсказка kind:'rollback' с кнопкой «Укоротить до неё» (zip)
   let hintToast = null;
-  let armToast = null;
 
   // --- DOM -------------------------------------------------------------------------------
-  const titleText = isCampaign
-    ? `${tr(mode.name)} · ${levelIndex + 1}`
-    : isDaily
-      ? `${t('daily')} · ${tr(mode.name)}`
-      : `${t('endless')} · ${tr(mode.name)}`;
-  const subEl = h('span', { class: 'sub' });
+  const isDom = !!mode.dom; // §2.5: режим рисует себя DOM-разметкой (view), холста нет
+  // Шапка (docs/DESIGN.md §5.6): «Уровень 12» по центру, под ним тихо — режим или тема «Слов».
+  // Ежедневная — «Ежедневная», Бесконечность — «Бесконечность · серия N» (серия меняется на ходу).
+  const sameChapter = mode.openByChapter ? campaign.filter((l) => l.chapter === level.chapter) : null;
+  const levelNo = sameChapter ? sameChapter.findIndex((l) => l.id === level.id) + 1 : levelIndex + 1;
+  const captionText = isCampaign && mode.openByChapter && typeof mode.chapterTitle === 'function' ? tr(mode.chapterTitle(level.chapter, level)) : tr(mode.name);
+  // Бесконечность: «Бесконечность» и под ней «серия N · режим» — в одну строку на 375pt не влезает.
+  const headTitle = () => (isCampaign ? COPY.level(levelNo) : isDaily ? t('daily') : t('endless'));
+  const headCaption = () => (isEndless ? `${COPY.streak(endlessInfo.streak)} · ${captionText}` : captionText);
+  const titleEl = h('h1', { class: 'g-title', text: headTitle() });
+  const captionEl = h('span', { class: 'g-caption', text: headCaption() });
+  const nextEl = h('span', { class: 'g-next', 'aria-live': 'polite' });
   const board = h('div', { class: 'board' });
   const tipEl = h('div', { class: 'tip' });
   const footerEl = h('span', { class: 'footer-text' });
+  // Режим с кнопками действий держит под них строку всегда: иначе поле прыгает, когда кнопка исчезает.
+  const actionsEl = h('div', { class: typeof mode.actions === 'function' ? 'mode-actions reserve' : 'mode-actions' });
   const undoBtn = barButton('undo', t('undo'), () => doUndo());
   const resetBtn = barButton('reset', t('reset'), () => doReset());
-  const hintBtn = barButton('hint', t('hint'), () => doHint());
   const skipBtn = barButton('skip', t('skip'), () => doSkip());
   skipBtn.classList.add('skip');
   skipBtn.style.display = 'none';
 
   const tip = level.tip ? tr(level.tip) : isCampaign && levelIndex < 3 ? tr(mode.helpText) : '';
   tipEl.textContent = tip;
+  // Режим с клавиатурой (§2.5): место по высоте дорого — пустая строка совета не занимает его.
+  if (!tip) tipEl.classList.add('empty');
+  const kbd = mode.keyboard ? buildKeyboard((k) => onKey(k), { onHint: () => (app.audio.tap(), doHint()) }) : null;
+  // Тосты над клавиатурой перекрывали бы клавиши — с клавиатурой они показываются сверху.
+  if (kbd) document.body.classList.add('kbd-open');
+  // Строка кнопок режима («Пуск», «Заново») над панелью — тосты поднимаются над ней, а не накрывают её.
+  if (typeof mode.actions === 'function') document.body.classList.add('mode-actions-on');
 
+  // Шапка: «‹» · заголовок · пилюля подсказки (лампочка) и шестерёнка быстрых настроек.
+  const hintPill = h(
+    'button',
+    { class: 'g-hint-pill', type: 'button', 'aria-label': COPY.hintTitle, onClick: () => (app.audio.tap(), doHint()) },
+    hintBulb(),
+  );
+  const gearBtn = iconButton('gear', COPY.settings, () => (app.audio.tap(), openQuickSettings()));
   const el = h(
-    'div',
-    { class: 'screen game-screen', style: { '--mode-color': theme.accent } },
+    'section',
+    { class: `screen game-screen g-screen${isDom ? ' dom' : ''}${kbd ? ' has-kbd' : ''}`, style: { '--mode-color': theme.accent } },
     h(
-      'div',
-      { class: 'topbar accent' },
-      h('button', { class: 'icon-btn', 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
-      h('span', { class: 'title', text: titleText }),
-      subEl,
+      'header',
+      { class: 'g-header' },
+      iconButton('back', t('back'), () => goBack()),
+      h('div', { class: 'g-head-center' }, titleEl, captionEl),
+      h('div', { class: 'g-head-right' }, hintPill, gearBtn),
     ),
     board,
     tipEl,
-    h('div', { class: 'bottombar' }, undoBtn, resetBtn, hintBtn, skipBtn, footerEl),
+    h(
+      'div',
+      { class: 'bottombar' },
+      undoBtn,
+      resetBtn,
+      skipBtn,
+      actionsEl,
+      h('div', { class: 'g-status' }, nextEl, footerEl),
+    ),
+    kbd,
   );
+
+  /** «‹»: кампания — карта уровней (у «Слов» — карта темы), ежедневная — её вкладка, бесконечность — «Испытания». */
+  function goBack() {
+    if (isCampaign) app.go('levels', mapParams());
+    else if (isDaily) app.go('daily');
+    else app.go('challenges');
+  }
+  function mapParams() {
+    return mode.openByChapter ? { modeId: mode.id, pack: level.slug || String(level.chapter) } : { modeId: mode.id };
+  }
 
   function barButton(name, label, onClick) {
     return h(
       'button',
       {
         class: 'bar-btn',
+        type: 'button',
         onClick: () => {
           app.audio.tap();
           // Кнопка нажата вторым пальцем посреди росчерка: сначала штатно завершаем росчерк
@@ -153,7 +263,18 @@ export function mountGame(app, params) {
   // --- Холст и рендер --------------------------------------------------------------------
   // Цикл рендера объявлен до холста: createCanvas измеряет контейнер синхронно и зовёт invalidate().
   const loop = createRenderLoop((tt) => {
-    if (destroyed || !layout) return false;
+    if (destroyed) return false;
+    // Под оверлеем «Поверни телефон» физика не идёт (§2.6): рой не съест банку, пока поле закрыто.
+    if (mode.continuous && !won && app.isLandscape()) return false;
+    if (isDom) {
+      try {
+        view.update(gameState, { t: tt, reducedMotion: app.reducedMotion(), won });
+      } catch (err) {
+        console.error('view режима упал', err);
+      }
+      return false;
+    }
+    if (!layout) return false;
     cv.begin();
     const ctx = cv.ctx;
     const started = app.dev ? now() : 0;
@@ -165,29 +286,44 @@ export function mountGame(app, params) {
     }
     if (ghost && !won) more = drawGhost(ctx, tt) || more;
     if (won) more = drawWinFx(ctx, tt) || more;
+    // Режим с симуляцией (§2.6): события, случившиеся во время кадра (проигрыш, укус, победа).
+    if (typeof mode.drainEvents === 'function' && !won && !ended) {
+      const evs = mode.drainEvents(gameState) || [];
+      if (evs.length) queueMicrotask(() => !destroyed && !won && handleEvents(evs));
+      // Обратный отсчёт атаки — в такт симуляции, а не раз в секунду.
+      const next = mode.nextLabel(gameState) || '';
+      if (nextEl.textContent !== next) nextEl.textContent = next;
+    }
     if (app.dev) {
       const dt = now() - started;
-      if (frameBudget.check(dt)) console.warn(`кадр ${dt.toFixed(1)} мс > ${FRAME_BUDGET_MS} мс`);
+      if (frameBudget.check(dt)) console.warn(`кадр ${dt.toFixed(1)} мс > ${mode.continuous ? FRAME_BUDGET_CONTINUOUS_MS : FRAME_BUDGET_MS} мс`);
     }
     return more;
   });
   // Первые кадры после открытия уровня, смены темы или размера строят статический слой и играют
   // появление — это не проблема производительности, предупреждение для них не выводим.
-  const frameBudget = createFrameBudget(FRAME_BUDGET_MS, FRAME_WARMUP);
+  const frameBudget = createFrameBudget(mode.continuous ? FRAME_BUDGET_CONTINUOUS_MS : FRAME_BUDGET_MS, FRAME_WARMUP);
 
-  const cv = createCanvas(board, (rect) => {
-    frameBudget.reset();
-    relayout(rect);
-    loop.invalidate();
-  });
+  // DOM-режим (§2.5): вид сам следит за размером; тапы приходят как api.tap(target).
+  const view = isDom
+    ? mode.view(board, { tap: (target) => onTap(target), invalidate: () => loop.invalidate(), reducedMotion: () => app.reducedMotion() })
+    : null;
+  const cv = isDom
+    ? null
+    : createCanvas(board, (rect) => {
+        frameBudget.reset();
+        relayout(rect);
+        loop.invalidate();
+      });
 
   /**
    * Пересчёт layout; rect передаётся явно, пока cv ещё создаётся (синхронный первый замер).
-   * Поле поднято к верху холста (boardRect): при победе оверлей снизу не закрывает нижние ряды.
+   * Поле — чуть выше оптического центра холста (boardRect, BOARD_TOP_SHARE): итог уровня теперь
+   * закрывает экран целиком, поднимать поле к верху под оверлей больше не нужно.
    */
-  function relayout(rect = cv.rect()) {
-    if (rect.w < 2 || rect.h < 2) return;
-    layout = mode.layout(gameState, boardRect(rect), theme);
+  function relayout(rect = cv ? cv.rect() : null) {
+    if (isDom || !rect || rect.w < 2 || rect.h < 2) return;
+    layout = mode.layout(gameState, mode.worldRect ? rect : boardRect(rect, { topShare: BOARD_TOP_SHARE }), theme);
     // Призрак обучения: уровень 1 режима, до первого касания; после касания не возвращается
     // ни при смене размера/темы, ни после undo. Смена layout лишь пересчитывает его точки.
     if (!isCampaign || levelIndex !== 0 || ghostDismissed || won) return;
@@ -253,25 +389,34 @@ export function mountGame(app, params) {
   function drawWinFx(ctx, tt) {
     if (app.reducedMotion()) return false;
     const dt = tt - winAt;
-    const dur = confetti ? confetti.dur : CONFETTI_MS;
+    const dur = WIN_GLOW_MS;
     let more = false;
     if (dt < dur) {
-      // «Сияние» поля — пульс цвета режима поверх холста.
+      // Lumin «soft radial bloom»: мягкое свечение цвета режима из центра поля, гаснет за 700 мс.
       const rect = cv.rect();
+      const cx = rect.w / 2;
+      // Центр поля: сетка (zip/flow — y0 + size) или bbox фигуры (stroke — by + bh).
+      const cy = !layout ? rect.h / 2 : layout.size ? layout.y0 + layout.size / 2 : layout.bh != null ? layout.by + layout.bh / 2 : rect.h / 2;
+      const r = Math.max(rect.w, rect.h) * 0.6;
+      const fade = 1 - dt / dur;
       ctx.save();
-      ctx.globalAlpha = 0.08 + 0.1 * pulse(tt, 400, winAt);
-      ctx.fillStyle = theme.accent;
+      ctx.globalAlpha = (0.12 + 0.1 * pulse(tt, 400, winAt)) * fade;
+      const g = ctx.createRadialGradient ? ctx.createRadialGradient(cx, cy, 0, cx, cy, r) : null;
+      if (g) {
+        g.addColorStop(0, theme.accent);
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+      } else ctx.fillStyle = theme.accent;
       ctx.fillRect(0, 0, rect.w, rect.h);
       ctx.restore();
       more = true;
     }
-    if (confetti && confetti.draw(ctx, tt)) more = true;
     return more;
   }
 
   // --- Ввод ------------------------------------------------------------------------------
   const tracker = createPointerTracker();
-  const detachInput = attachPointer(cv.canvas, tracker, onPointer, { onRawDown: () => app.audio.unlock() });
+  const detachInput = cv ? attachPointer(cv.canvas, tracker, onPointer, { onRawDown: () => app.audio.unlock() }) : () => {};
 
   function onPointer(ev) {
     if (destroyed || !layout) return;
@@ -296,6 +441,7 @@ export function mountGame(app, params) {
     }
     handleEvents(events);
     if (finishing) {
+      touched = true;
       strokeActive = false;
       if (strokeChanged && strokeSnapshot) undo.push(strokeSnapshot);
       strokeSnapshot = null;
@@ -305,8 +451,59 @@ export function mountGame(app, params) {
     loop.invalidate();
   }
 
+  /**
+   * Клавиша экранной/физической клавиатуры (§2.5): снимок до нажатия, изменившая поле клавиша —
+   * отдельный шаг undo; смена выделения шагом не считается. Начатый росчерк сначала завершается.
+   */
+  function onKey(k) {
+    if (destroyed || (!layout && !isDom) || won || ended || app.isLandscape() || typeof mode.key !== 'function') return;
+    if (tracker.active) {
+      const end = tracker.abort();
+      if (end) onPointer(end);
+    }
+    dismissGhost();
+    const snapshot = mode.serialize(gameState);
+    strokeChanged = false;
+    let events = [];
+    try {
+      events = mode.key(gameState, k, now()) || [];
+    } catch (err) {
+      console.error('key режима упал', err);
+    }
+    handleEvents(events);
+    if (strokeChanged) undo.push(snapshot);
+    strokeChanged = false;
+    if (events.length) {
+      touched = true;
+      saveCurrent();
+    }
+    updateHud();
+    loop.invalidate();
+  }
+
+  /** Тап DOM-режима (§2.5): только выделение — без шага undo; партия сохраняется. */
+  function onTap(target) {
+    if (destroyed || won || ended || app.isLandscape() || typeof mode.tap !== 'function') return;
+    dismissGhost();
+    let events = [];
+    try {
+      events = mode.tap(gameState, target) || [];
+    } catch (err) {
+      console.error('tap режима упал', err);
+    }
+    handleEvents(events);
+    if (events.length) {
+      touched = true;
+      saveCurrent();
+    }
+    loop.invalidate();
+  }
+
   function handleEvents(events) {
     let solved = false;
+    // Пачка событий, завершающая уровень: перевод слова уже будет в списке слов на экране победы —
+    // тост не нужен (он лёг бы поверх «Дальше»).
+    const finishing = events.some((e) => e.kind === 'solved');
     for (const ev of events) {
       switch (ev.kind) {
         case 'step':
@@ -320,6 +517,8 @@ export function mountGame(app, params) {
           shake();
           if (ev.reason === 'early-finish' && ev.remaining != null) {
             app.overlays.toast(t('remainingCells', { n: ev.remaining }), { key: 'remaining', duration: 1800 });
+          } else if (ev.message) {
+            app.overlays.toast(tr(ev.message), { key: 'reject', duration: 2600 });
           }
           break;
         case 'cut':
@@ -327,6 +526,32 @@ export function mountGame(app, params) {
           break;
         case 'complete':
           app.audio.complete();
+          if (ev.clue != null) vibrate(20); // Lumin: средняя вибрация на отгаданное слово (не flow)
+          if (ev.message && !finishing) app.overlays.toast(tr(ev.message), { key: `complete-${ev.clue ?? 0}`, duration: 2600 });
+          break;
+        case 'miss':
+          // Lumin «Errors stay local»: лёгкая вибрация, без тряски и звука отказа.
+          vibrate(10);
+          break;
+        case 'notice':
+          if (ev.message) app.overlays.toast(tr(ev.message), { key: 'notice', duration: 2600 });
+          break;
+        case 'lost':
+          // Проигрыш в физике (§2.6): тост и кнопка «Заново» в панели; попытка продолжается.
+          app.audio.reject();
+          vibrate(30);
+          if (ev.message) app.overlays.toast(tr(ev.message), { key: 'lost', duration: 3200 });
+          attempt.lastChangeAt = now();
+          saveCurrent();
+          updateHud();
+          break;
+        case 'bite':
+          app.audio.reject();
+          vibrate(15);
+          break;
+        case 'launch':
+        case 'pop':
+          app.audio.tap();
           break;
         case 'deadend':
           // startMatters === false — цикл или фиксированный старт: совет «другую точку старта» ложный,
@@ -358,12 +583,58 @@ export function mountGame(app, params) {
 
   function updateHud() {
     const next = mode.nextLabel(gameState);
-    subEl.textContent = next || '';
+    nextEl.textContent = next || '';
     const footer = mode.footer(gameState);
     footerEl.textContent = footer ? tr(footer) : '';
     undoBtn.disabled = undo.size === 0 && !strokeChanged;
     skipBtn.style.display = isDaily || won ? 'none' : isEndless || skipAvailable(attempt, now()) ? '' : 'none';
-    hintBtn.classList.toggle('pulse', !won && hintShouldPulse(attempt, now()));
+    syncActions();
+    // 60 с без изменений — подсказка мягко пульсирует (§3.1 п.7): пилюля в шапке и клавиша «Слов».
+    const pulsing = !won && hintShouldPulse(attempt, now());
+    hintPill.classList.toggle('pulse', pulsing);
+    kbd?.hintKey?.classList.toggle('pulse', pulsing);
+    if (captionEl.textContent !== headCaption()) captionEl.textContent = headCaption();
+  }
+
+  /** Кнопки режима в нижней панели («Выпустить рой», «Заново», §2.6): перерисовка при смене набора. */
+  let actionsKey = '';
+  function syncActions() {
+    if (typeof mode.actions !== 'function') return;
+    const list = won || ended ? [] : mode.actions(gameState) || [];
+    const key = list.map((a) => a.id).join(',');
+    if (key === actionsKey) return;
+    actionsKey = key;
+    actionsEl.replaceChildren(
+      ...list.map((a) =>
+        h('button', {
+          class: `btn mode-action${a.primary ? ' primary' : ' tonal'}`,
+          type: 'button',
+          text: tr(a.label),
+          onClick: () => {
+            app.audio.tap();
+            if (won || ended) return;
+            if (tracker.active) {
+              const end = tracker.abort();
+              if (end) onPointer(end);
+            }
+            const before = mode.serialize(gameState);
+            let evs = [];
+            try {
+              evs = mode.act(gameState, a.id, now()) || [];
+            } catch (err) {
+              console.error('act режима упал', err);
+            }
+            if (a.undoable !== false && evs.some((e) => e.kind === 'changed')) undo.push(before);
+            touched = true;
+            handleEvents(evs);
+            attempt.lastChangeAt = now();
+            updateHud();
+            saveCurrent();
+            loop.invalidate();
+          },
+        }),
+      ),
+    );
   }
 
   // --- Снимки, undo, сброс, подсказка, пропуск ------------------------------------------
@@ -376,8 +647,15 @@ export function mountGame(app, params) {
     const prev = gameState;
     // Счётчик тупиков за попытку (stroke, §2.1) undo не откатывает: иначе порог «второй тупик →
     // пульс нечётных точек» обходился бы кнопкой «Отменить». Для zip/flow поле лишнее и игнорируется.
-    const snap =
-      prev && Number.isInteger(prev.deadEnds) ? { ...snapshot, deadEnds: Math.max(snapshot.deadEnds ?? 0, prev.deadEnds) } : snapshot;
+    // Статистика попытки undo не откатывает (§2.1, §2.5): тупики stroke, подсказки и точность «Слов»
+    // только растут; hintUsed, раз поставленный, остаётся. Поля, которых у режима нет, не трогаются.
+    let snap = snapshot;
+    if (prev) {
+      for (const f of ATTEMPT_STATS) {
+        if (Number.isInteger(prev[f])) snap = { ...snap, [f]: Math.max(snapshot[f] ?? 0, prev[f]) };
+      }
+      if (prev.hintUsed === true && Object.prototype.hasOwnProperty.call(snapshot, 'hintUsed')) snap = { ...snap, hintUsed: true };
+    }
     gameState = mode.create(level, snap);
     if (prev && prev._cache) gameState._cache = prev._cache;
     appeared = true;
@@ -394,12 +672,14 @@ export function mountGame(app, params) {
     if (ended) return;
     const snap = undo.pop();
     if (!snap) return;
+    touched = true;
     restore(snap);
     saveCurrent();
   }
 
   function doReset() {
     if (ended) return;
+    touched = true;
     const before = mode.serialize(gameState);
     undo.push(before);
     mode.reset(gameState);
@@ -416,17 +696,63 @@ export function mountGame(app, params) {
     });
   }
 
+  /**
+   * Цена подсказки в строке шторки: «−★», пока звезда «без подсказок» ещё не снята. В Бесконечности
+   * звёзд нет — первая подсказка обрывает серию (§3.2): «−🔥»; в ежедневной звёзды не считаются.
+   */
+  const streakAtRisk = () => isEndless && !attempt.hintUsed && streak.streak > 0;
+  function hintPrice() {
+    if (attempt.hintUsed || isDaily || (isEndless && !streakAtRisk())) return null;
+    if (isEndless) return h('span', { class: 'g-price flame' }, '−', icon('flame'));
+    return h('span', { class: 'g-price' }, '−', icon('star'));
+  }
+  function hintNote() {
+    if (isDaily) return COPY.hintDailyNote;
+    if (isEndless) return streakAtRisk() ? COPY.hintStreakNote(streak.streak) : null;
+    return attempt.hintUsed ? COPY.hintNoteUsed : COPY.hintNote;
+  }
+
+  /**
+   * Подсказка (docs/DESIGN.md §5.6): шторка «Подсказка ×» для всех режимов — строки «иконка ·
+   * название · −★». «Слова» — свои варианты (hintOptions); остальные режимы — «Следующий ход».
+   * Выбор в шторке и есть подтверждение: прежнего «второго тапа за 2 с» больше нет.
+   */
   function doHint() {
-    if (ended) return;
-    const tt = now();
-    if (!attempt.hintUsed && tt > hintArmedUntil) {
-      hintArmedUntil = tt + HINT_ARM_MS;
-      armToast = app.overlays.toast(t('hintConfirm'), { key: 'hint', duration: HINT_ARM_MS });
-      return;
+    if (ended || destroyed) return;
+    if (tracker.active) {
+      const end = tracker.abort();
+      if (end) onPointer(end);
     }
-    hintArmedUntil = 0;
-    armToast?.close();
-    armToast = null;
+    const price = hintPrice();
+    const priceLabel = price ? (isEndless ? COPY.hintStreakPrice(streak.streak) : COPY.hintPrice) : null;
+    const options =
+      typeof mode.hintOptions === 'function'
+        ? (mode.hintOptions(gameState) || []).map((o) => ({
+            icon: (HINT_ICONS[o.id] || 'hint') === 'hint' ? hintBulb() : HINT_ICONS[o.id],
+            label: tr(o.label),
+            detail: tr(o.detail),
+            disabled: !!o.disabled,
+            price: o.disabled ? null : hintPrice(),
+            priceLabel: o.disabled ? null : priceLabel,
+            onPick: () => applyHint(o.id),
+          }))
+        : [{ icon: hintBulb(), label: COPY.nextMove, detail: MOVE_DETAILS[mode.id] || '', price, priceLabel, onPick: () => applyMoveHint() }];
+    app.overlays.sheet({
+      title: COPY.hintTitle,
+      className: 'g-hint-sheet',
+      options,
+      note: hintNote(),
+    });
+  }
+
+  /** «Следующий ход» (zip, flow, stroke, draw): прежняя подсказка режима, теперь без «второго тапа». */
+  function applyMoveHint() {
+    if (ended || destroyed) return;
+    if (tracker.active) {
+      const end = tracker.abort();
+      if (end) onPointer(end);
+    }
+    const tt = now();
     const before = mode.serialize(gameState);
     const result = mode.hint(gameState, tt) || { kind: 'none' };
     if (result.kind === 'none') {
@@ -438,6 +764,7 @@ export function mountGame(app, params) {
       return;
     }
     undo.push(before);
+    touched = true;
     const firstHint = !attempt.hintUsed;
     attempt.hintUsed = true;
     gameState.hintUsed = true;
@@ -468,11 +795,98 @@ export function mountGame(app, params) {
         },
       });
     }
+    attempt.lastChangeAt = now();
     updateHud();
     loop.invalidate();
     saveCurrent();
     // Подсказка flow раскрывает поток целиком и может закрыть поле — победа без звезды.
     if (mode.isSolved(gameState)) onSolved();
+  }
+
+  /**
+   * Быстрые настройки (шестерёнка, §5.6): звук, тема, вибрация и ссылка на «Специальные
+   * возможности». Партия при переходе туда сохраняется (destroy → current) и продолжается по «Готово».
+   */
+  function openQuickSettings() {
+    const settings = state.settings;
+    const a11y = settings.a11y || (settings.a11y = {});
+    const field = (iconName, label, control) =>
+      h('div', { class: 'g-qs-field' }, h('div', { class: 'g-qs-label' }, h('span', { class: 'g-qs-icon', 'aria-hidden': 'true' }, icon(iconName)), h('span', { text: label })), control);
+    const soundRow = h(
+      'div',
+      { class: 'g-qs-row' },
+      h('span', { class: 'g-qs-icon', 'aria-hidden': 'true' }, icon('sound')),
+      h('span', { class: 'g-qs-text', text: COPY.sound }),
+      switchControl(settings.sound !== false, (on) => {
+        settings.sound = on;
+        app.save();
+        if (on) app.audio.tap();
+      }, COPY.sound),
+    );
+    const themeSeg = seg(COPY.themes, settings.theme || 'system', (id) => {
+      settings.theme = id;
+      app.save();
+      app.applyTheme();
+    }, COPY.theme);
+    const hapticSeg = seg(COPY.hapticsModes, a11y.haptics === 'off' ? 'off' : 'light', (id) => {
+      a11y.haptics = id;
+      app.save();
+      app.applyA11y();
+      if (id !== 'off') vibrate(10);
+    }, COPY.haptics);
+    let sheetRef = null;
+    const a11yRow = h(
+      'button',
+      {
+        class: 'g-qs-row g-qs-link',
+        type: 'button',
+        onClick: () => {
+          sheetRef?.close();
+          // «Готово» на экране возможностей возвращает в эту же партию (она сохранена в current).
+          const back = { kind, modeId: mode.id, levelId: level.id };
+          if (dailyDate) back.date = dailyDate;
+          if (endlessInfo) back.endless = { ...endlessInfo };
+          app.go('a11y', { back: { name: 'game', params: back } });
+        },
+      },
+      h('span', { class: 'g-qs-icon', 'aria-hidden': 'true' }, icon('access')),
+      h('span', { class: 'g-qs-text', text: COPY.a11y }),
+      h('span', { class: 'g-qs-chev', 'aria-hidden': 'true' }, icon('chevron')),
+    );
+    sheetRef = app.overlays.sheet({
+      title: COPY.settings,
+      className: 'g-qs-sheet',
+      content: [soundRow, field('palette', COPY.theme, themeSeg), field('vibrate', COPY.haptics, hapticSeg), a11yRow],
+    });
+  }
+
+  /** Применить выбранный в шторке вариант подсказки (§2.5). */
+  function applyHint(id) {
+    if (ended || destroyed) return;
+    const tt = now();
+    const before = mode.serialize(gameState);
+    const result = mode.hint(gameState, tt, id) || { kind: 'none' };
+    if (result.kind === 'none') {
+      app.overlays.toast(t('hintUnavailable'), { key: 'hint' });
+      loop.invalidate();
+      return;
+    }
+    undo.push(before);
+    touched = true;
+    const firstHint = !attempt.hintUsed;
+    attempt.hintUsed = true;
+    gameState.hintUsed = true;
+    if (isEndless && firstHint) breakStreak();
+    if (result.kind === 'check') {
+      app.overlays.toast(result.wrong ? t('checkWrong', { n: result.wrong }) : t('checkOk'), { key: 'hint' });
+    }
+    // Открытая буква могла дорешать слова: тост с переводом и звук, как при вводе.
+    if (Array.isArray(result.events)) handleEvents(result.events.filter((ev) => ev.kind === 'complete'));
+    attempt.lastChangeAt = now();
+    updateHud();
+    loop.invalidate();
+    saveCurrent();
+    if (!won && mode.isSolved(gameState)) onSolved();
   }
 
   /** Снять кнопку «Укоротить до неё»: подсказка привязана к дорожке на момент показа. */
@@ -502,7 +916,7 @@ export function mountGame(app, params) {
       app.save();
       const next = campaign[levelIndex + 1];
       if (next) app.go('game', { kind: 'campaign', modeId: mode.id, levelId: next.id });
-      else app.go('levels', { modeId: mode.id });
+      else app.go('levels', mapParams());
     } else if (isEndless) {
       breakStreak();
       state.current = null;
@@ -514,6 +928,9 @@ export function mountGame(app, params) {
   // --- current ---------------------------------------------------------------------------
   function saveCurrent() {
     if (ended || destroyed) return;
+    // Нетронутая Бесконечность пишет current, только если есть серия: открытая и закрытая на
+    // серии 0 не затирает начатую партию кампании (слот current один, §3.3).
+    if (!touched && !(isEndless && endlessInfo.streak > 0)) return;
     const snapshot = { ...mode.serialize(gameState) };
     const record = {
       kind,
@@ -532,6 +949,19 @@ export function mountGame(app, params) {
   }
 
   // --- Победа ----------------------------------------------------------------------------
+  /**
+   * Ключевая метрика режима для итога (◎, docs/DESIGN.md §5.7): «Слова» — точность; иначе первая
+   * строка mode.stats («Возвратов: 2», «Ходов 5 / 5», «Потрачено чернил: 42 %»); у «Одного штриха»
+   * строк нет — тупики попытки.
+   */
+  function keyStat(stats) {
+    if (stats && Number.isFinite(stats.accuracy)) return { value: `${stats.accuracy}%`, label: COPY.accuracy };
+    const first = stats?.lines?.[0];
+    if (first) return splitStatLine(tr(first));
+    if (Number.isInteger(gameState.deadEnds)) return { value: String(gameState.deadEnds), label: COPY.keyFallback };
+    return { value: attempt.hintUsed ? '1+' : '0', label: t('statHints') };
+  }
+
   function onSolved() {
     if (won) return;
     won = true;
@@ -541,20 +971,30 @@ export function mountGame(app, params) {
     const elapsedMs = Math.max(1, Math.round(timer.elapsed(tt)));
     const perfect = mode.perfect(gameState);
     const star = starFor(attempt, perfect);
+    // 1–3 звезды (docs/DESIGN.md §6): пройден · без подсказок · идеально; три ⇔ star.
+    const stars = starsFor(attempt, perfect);
     let prevBestMs = 0;
     let chapterDone = null;
     let endlessStreak = null;
     let endlessRecord = false;
+    let nextEndless = null;
 
+    let chapterLabel = null;
     if (isCampaign) {
       const progress = state.progress[mode.id] || {};
       prevBestMs = progress[level.id]?.bestMs || 0;
-      state.progress[mode.id] = recordWin(progress, level.id, star, elapsedMs);
-      // Пройденный уровень больше не «пропущенный» (пунктирная рамка в списке).
+      const wasDone = isDone(progress, level.id);
+      state.progress[mode.id] = recordWin(progress, level.id, star, elapsedMs, stars, !attempt.hintUsed);
+      // Пройденный уровень больше не «пропущенный» (пунктирная рамка на карте).
       const skipped = state.skipped[mode.id] || [];
       if (skipped.includes(level.id)) state.skipped[mode.id] = skipped.filter((id) => id !== level.id);
-      const nextLevel = campaign[levelIndex + 1];
-      if (!nextLevel || nextLevel.chapter !== level.chapter) chapterDone = level.chapter;
+      // «Глава/тема пройдена» — один раз, на победе, которая закрыла последний непройденный уровень
+      // главы (темы): в любом порядке (окно по темам, §2.5) и не раньше, чем пройдены пропущенные.
+      const chapterComplete = campaign.filter((l) => l.chapter === level.chapter).every((l) => isDone(state.progress[mode.id], l.id));
+      if (chapterComplete && !wasDone) {
+        chapterDone = level.chapter;
+        if (typeof mode.chapterTitle === 'function') chapterLabel = t('themeDone', { name: tr(mode.chapterTitle(level.chapter, level)) });
+      }
     } else if (isDaily) {
       state.daily = recordDailyWin(state.daily, dailyDate);
     } else if (isEndless) {
@@ -565,71 +1005,146 @@ export function mountGame(app, params) {
       endlessRecord = endlessInfo.streak > prevBest;
       state.endless.best = updateBest(state.endless.best, endlessInfo.modeChoice, endlessInfo.streak);
       app.endlessUsed.add(level.id);
+      nextEndless = pickNextEndless();
     }
-    state.current = null;
+    // Активность по дням — для графика и итогов «Статистики» (кампания, ежедневная, бесконечность).
+    state.activity = recordActivity(state.activity, app.today());
+    // Бесконечность: следующий уровень серии выбран сразу и записан в current — любой выход с итога
+    // («Испытания», «‹», закрытие приложения) продолжает живую серию (§3.2), а не начинает с нуля.
+    state.current = nextEndless
+      ? {
+          kind: 'endless',
+          mode: nextEndless.mode,
+          levelId: nextEndless.level.id,
+          elapsedMs: 0,
+          hintUsed: false,
+          resets: 0,
+          startedAt: 0,
+          state: null,
+          endless: { streak: endlessInfo.streak, modeChoice: endlessInfo.modeChoice },
+        }
+      : null;
     app.save();
 
-    // Напоминание об установке после 3-го пройденного уровня во вкладке Safari.
+    // Напоминание об установке после 3-го пройденного уровня во вкладке Safari — не поверх итога
+    // (второй тёмной пилюлей над «Следующий уровень»), а после выхода с экрана игры (destroy).
     if (!app.isStandalone && !state.settings.installReminderShown) {
       const total = app.modes.reduce((acc, m) => acc + doneCount(app.modeSets(m.id).campaign, state.progress[m.id] || {}), 0);
-      if (total >= 3) {
-        state.settings.installReminderShown = true;
-        app.save();
-        setTimeout(() => app.overlays.toast(t('installReminder'), { duration: 5000 }), 1500);
-      }
+      if (total >= 3) app.pendingInstallReminder = true;
     }
 
     app.audio.win();
     vibrate([30, 40, 30]);
+    app.overlays.closeDialog?.(); // открытая шторка (подсказка, настройки) не висит над итогом
+    if (kbd) {
+      kbd.style.display = 'none';
+      document.body.classList.remove('kbd-open');
+    }
+    document.body.classList.add('toasts-top'); // поле уже не в игре — тосты не над кнопками итога
     updateHud();
     winAt = tt;
     const reduced = app.reducedMotion();
-    if (!reduced) {
-      const rect = cv.rect();
-      confetti = createConfetti(rect.w, rect.h, tt, {
-        strong: !!chapterDone,
-        colors: [theme.accent, theme.hint, theme.ok, theme.text, ...theme.flow.slice(0, 4)],
-        seed: (level.seed || 1) >>> 0,
-      });
-    }
     loop.invalidate();
 
     const stats = mode.stats(gameState);
+    const next = isCampaign ? nextCampaignLevel() : null;
+    const toMap = () => {
+      app.audio.tap();
+      app.go('levels', mapParams());
+    };
     const overlay = buildWinOverlay(app, {
       kind,
       mode,
       star,
+      stars,
       perfect,
+      hintUsed: attempt.hintUsed,
       elapsedMs,
       prevBestMs,
       statsLines: stats?.lines || [],
+      keyStat: keyStat(stats),
+      vocab: stats?.vocab || null,
+      quote: stats?.quote || null,
       chapterDone,
+      chapterLabel,
       endlessStreak,
       endlessRecord,
-      dailyWon: isDaily,
+      streak: displayStreak(state.daily, app.today()),
+      reducedMotion: reduced,
+      nextLabel: isDaily ? COPY.homeBtn : isCampaign && !next ? COPY.onward : COPY.nextLevel,
       onNext: () => {
         app.audio.tap();
         if (isCampaign) {
-          const next = campaign[levelIndex + 1];
           if (next) app.go('game', { kind: 'campaign', modeId: mode.id, levelId: next.id });
-          else app.go('campaignDone', { modeId: mode.id });
+          else if (doneCount(campaign, state.progress[mode.id] || {}) === campaign.length) app.go('campaignDone', { modeId: mode.id });
+          else app.go('levels', mapParams());
         } else if (isDaily) {
           app.go('home');
+        } else if (nextEndless) {
+          app.go('game', { kind: 'endless', modeId: nextEndless.mode, levelId: nextEndless.level.id, endless: { streak: endlessInfo.streak, modeChoice: endlessInfo.modeChoice } });
         } else {
           app.startEndless(endlessInfo.modeChoice, endlessInfo.streak);
         }
       },
-      onRepeat: () => {
-        app.audio.tap();
-        // «Повторить» возвращает серию, с которой уровень открыли; после обрыва — 0.
-        if (isEndless) app.go('game', { kind, modeId: mode.id, levelId: level.id, endless: { ...endlessInfo, streak: streak.before } });
-        else app.go('game', { kind, modeId: mode.id, levelId: level.id, date: dailyDate });
-      },
+      // Вторая кнопка: кампания — «К карте», ежедневная — «Статистика», бесконечность — «Испытания».
+      mapLabel: isCampaign ? COPY.toMap : isDaily ? COPY.statsBtn : COPY.challengesBtn,
+      onMap: isCampaign ? toMap : () => (app.audio.tap(), app.go(isDaily ? 'stats' : 'challenges')),
+      onBack: () => (app.audio.tap(), goBack()),
+      // Решённую ежедневную не переигрывают (вкладка показывает «Решена ✓», docs/DESIGN.md §5.8).
+      onRepeat: isDaily
+        ? null
+        : () => {
+            app.audio.tap();
+            // «Повторить» возвращает серию, с которой уровень открыли; после обрыва — 0.
+            if (isEndless) app.go('game', { kind, modeId: mode.id, levelId: level.id, endless: { ...endlessInfo, streak: streak.before } });
+            else app.go('game', { kind, modeId: mode.id, levelId: level.id, date: dailyDate });
+          },
     });
-    const delay = reduced ? 0 : chapterDone ? CONFETTI_STRONG_MS : CONFETTI_MS;
+    const delay = reduced ? 0 : WIN_OVERLAY_DELAY_MS;
     setTimeout(() => {
-      if (!destroyed) el.appendChild(overlay);
+      if (destroyed) return;
+      el.appendChild(overlay);
+      document.body.classList.add('result-open');
+      // Фокус на заголовок итога: VoiceOver объявляет результат, Tab идёт по кнопкам диалога.
+      overlay.querySelector('.g-res-title')?.focus?.({ preventScroll: true });
     }, delay);
+  }
+
+  /**
+   * Следующий уровень Бесконечности для живой серии — тот же выбор, что app.startEndless (main.js):
+   * пулы режимов ротации, сложность по серии, без уровней этой сессии. null — пул пуст.
+   */
+  function pickNextEndless() {
+    const ids = app.rotationModes.map((m) => m.id);
+    const pools = {};
+    for (const id of ids) pools[id] = app.modeSets(id).pool;
+    const choice = endlessInfo.modeChoice;
+    const used = new Set(app.endlessUsed);
+    const picked = pickEndlessLevel({
+      pools,
+      modeIds: ids,
+      modeChoice: ids.includes(choice) ? choice : ids.length > 1 ? MIX : ids[0],
+      streak: endlessInfo.streak,
+      usedIds: used,
+      seed: hash32(Date.now(), used.size),
+    });
+    if (picked) app.endlessUsed.add(picked.level.id);
+    return picked;
+  }
+
+  /**
+   * «Дальше» в кампании: линейные режимы — следующий уровень по порядку. С окном по темам
+   * (openByChapter, §2.5) — следующий открытый непройденный уровень этой темы, иначе первый
+   * открытый непройденный в любой теме; null — всё пройдено (или открытых нет).
+   */
+  function nextCampaignLevel() {
+    if (!mode.openByChapter) return campaign[levelIndex + 1] || null;
+    const progress = state.progress[mode.id] || {};
+    const statuses = levelStatuses(campaign, progress, state.skipped[mode.id] || [], { byChapter: true });
+    const open = (s) => s.status === 'open' && s.id !== level.id;
+    const same = statuses.find((s) => open(s) && campaign[s.index].chapter === level.chapter && !s.skipped);
+    const any = same || statuses.find((s) => open(s) && !s.skipped) || statuses.find(open);
+    return any ? campaign[any.index] : null;
   }
 
   // --- Таймер, видимость, тема ----------------------------------------------------------
@@ -638,7 +1153,7 @@ export function mountGame(app, params) {
       timer.pause(now());
       saveCurrent();
     } else {
-      timer.start(now());
+      if (!introOpen) timer.start(now());
       ghostStart = now();
       loop.invalidate();
     }
@@ -649,6 +1164,31 @@ export function mountGame(app, params) {
   }
   document.addEventListener('visibilitychange', onVisibility);
   window.addEventListener('pagehide', onPageHide);
+  // Поворот обратно в портрет: продолжить кадры непрерывного режима (физика стояла под оверлеем).
+  const orientMq = typeof matchMedia === 'function' ? matchMedia('(orientation: landscape) and (pointer: coarse)') : null;
+  const onOrient = () => loop.invalidate();
+  orientMq?.addEventListener?.('change', onOrient);
+
+  // Физическая клавиатура (Mac, iPad с клавиатурой) — только для режимов с вводом букв.
+  // Не перехватывает клавиши, пока открыт диалог (шторка, знакомство, подтверждение, победа) или
+  // фокус на кнопке/поле: Tab/Enter/пробел там работают как обычно (WCAG 2.1.1/2.1.2).
+  function onKeyDown(e) {
+    if (!kbd || won || ended || destroyed || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (document.querySelector('.sheet-backdrop, .intro-backdrop, .dialog-backdrop, .win-overlay')) return;
+    const tgt = e.target;
+    const tag = tgt && tgt.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if ((e.key === 'Enter' || e.key === 'Tab' || e.key === ' ') && tgt && tgt.closest && tgt.closest('button, a') && !tgt.closest('.kbd')) return;
+    if (e.key === 'Tab' && e.shiftKey) return;
+    // Русская (и любая не латинская) раскладка: буква по физической клавише (e.code «KeyA» → A).
+    const code = /^Key([A-Z])$/.exec(e.code || '');
+    const latin = /^[a-zA-Z]$/.test(e.key) ? e.key.toUpperCase() : null;
+    const key = KEY_MAP[e.key] || latin || (code && e.key && e.key.length === 1 ? code[1] : null);
+    if (!key) return;
+    e.preventDefault();
+    onKey(key);
+  }
+  if (kbd) document.addEventListener('keydown', onKeyDown);
 
   // Смена темы: режимы сами перерисовывают статический слой по theme.id (§4.3), кэш не трогаем.
   const unwatchTheme = app.onThemeChange(() => {
@@ -663,10 +1203,37 @@ export function mountGame(app, params) {
     if (!destroyed && !won) updateHud();
   }, 1000);
 
-  if (document.visibilityState !== 'hidden') timer.start(t0);
+  if (!introOpen && document.visibilityState !== 'hidden') timer.start(t0);
   relayout();
   updateHud();
   loop.invalidate();
+
+  // Знакомство с режимом при первом входе (Lumin «Onboarding», §2.5) — один раз; таймер уровня
+  // стоит, пока оно на экране.
+  if (introOpen) {
+    setTimeout(() => {
+      if (destroyed) return;
+      app.overlays
+        .intro(mode.intro.map((c) => ({ title: tr(c.title), text: tr(c.text) })), { next: t('next'), done: t('introStart'), skip: t('skip') })
+        .then(() => {
+          introOpen = false;
+          state.settings.introSeen = [...(state.settings.introSeen || []), mode.id];
+          app.save();
+          if (!destroyed && !won && document.visibilityState !== 'hidden') timer.start(now());
+          attempt.lastChangeAt = now();
+        });
+    }, 200);
+  }
+
+  // Разработка: сразу итог / шторка (скриншоты tools/shot.mjs, см. devFlags выше).
+  if (devFlags.length) {
+    setTimeout(() => {
+      if (destroyed) return;
+      if (devFlags.includes('win')) onSolved();
+      else if (devFlags.includes('hint')) doHint();
+      else if (devFlags.includes('gear')) openQuickSettings();
+    }, 300);
+  }
 
   return {
     el,
@@ -681,10 +1248,83 @@ export function mountGame(app, params) {
       clearInterval(ticker);
       detachInput();
       loop.stop();
-      cv.destroy();
+      cv?.destroy();
+      view?.destroy();
       unwatchTheme();
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('pagehide', onPageHide);
+      orientMq?.removeEventListener?.('change', onOrient);
+      if (kbd) {
+        document.removeEventListener('keydown', onKeyDown);
+        document.body.classList.remove('kbd-open');
+      }
+      document.body.classList.remove('toasts-top');
+      document.body.classList.remove('result-open');
+      document.body.classList.remove('mode-actions-on');
+      // Напоминание об установке, отложенное с итога: флаг ставится, только когда тост показан.
+      if (app.pendingInstallReminder) {
+        app.pendingInstallReminder = false;
+        state.settings.installReminderShown = true;
+        app.save();
+        setTimeout(() => app.overlays.toast(t('installReminder'), { duration: 5000 }), 600);
+      }
     },
   };
+}
+
+const KEY_MAP = { Backspace: 'Backspace', Delete: 'Backspace', ArrowLeft: 'Left', ArrowRight: 'Right', Enter: 'Next', Tab: 'Next' };
+const KEY_ROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+
+/** Лампочка подсказки: тёплая жёлтая колба с тёмным цоколем (как в эталоне WORDS). */
+export function hintBulb() {
+  const svg = icon('hint');
+  svg.classList.add('g-bulb');
+  return svg;
+}
+
+/**
+ * Экранная клавиатура QWERTY (§2.5, WORDS «Keyboard»): светлые клавиши, слева в нижнем ряду —
+ * шалфейная «Подсказка» с лампочкой (opts.onHint), справа — тёмная ⌫. Буква — на pointerdown (без
+ * задержки click и без фокуса), подсветка .down до отпускания; системная клавиатура iOS не появляется.
+ * Подсказка открывает шторку по click — тап не «проваливается» в фон шторки.
+ */
+export function buildKeyboard(onKey, opts = {}) {
+  let hintKey = null;
+  const rows = KEY_ROWS.map((letters, r) => {
+    const keys = [...letters].map((ch) => h('button', { class: 'key', type: 'button', dataset: { k: ch }, 'aria-label': ch, text: ch }));
+    if (r === 2) {
+      if (typeof opts.onHint === 'function') {
+        hintKey = h('button', { class: 'key hint-key', type: 'button', 'aria-label': t('hint'), onClick: () => opts.onHint() }, hintBulb(), h('span', { 'aria-hidden': 'true', text: t('hint') }));
+        keys.unshift(hintKey);
+      }
+      keys.push(h('button', { class: 'key wide back-key', type: 'button', dataset: { k: 'Backspace' }, 'aria-label': t('backspace') }, icon('backspace')));
+    }
+    return h('div', { class: `kbd-row${r === 2 ? ' last' : ''}` }, keys);
+  });
+  const el = h('div', { class: 'kbd', role: 'group', 'aria-label': t('keyboard') }, rows);
+  el.hintKey = hintKey;
+  let pressed = null;
+  const release = () => {
+    if (pressed) pressed.classList.remove('down');
+    pressed = null;
+  };
+  el.addEventListener('pointerdown', (e) => {
+    const btn = e.target.closest ? e.target.closest('.key') : null;
+    if (!btn) return;
+    e.preventDefault();
+    release();
+    pressed = btn;
+    btn.classList.add('down');
+    if (btn.dataset.k) onKey(btn.dataset.k);
+  });
+  el.addEventListener('pointerup', release);
+  el.addEventListener('pointercancel', release);
+  el.addEventListener('pointerleave', release);
+  // Клик без pointerdown (VoiceOver, клавиатурная навигация) — тоже нажатие.
+  el.addEventListener('click', (e) => {
+    if (e.detail !== 0) return;
+    const btn = e.target.closest ? e.target.closest('.key') : null;
+    if (btn && btn.dataset.k) onKey(btn.dataset.k);
+  });
+  return el;
 }

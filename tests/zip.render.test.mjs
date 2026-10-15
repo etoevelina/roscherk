@@ -71,7 +71,7 @@ test('render без OffscreenCanvas и document: рисует статическ
   assert.equal(typeof more, 'boolean');
   assert.equal(st._cache, null);
   assert.equal(called(calls, 'drawImage'), 0);
-  assert.ok(called(calls, 'strokeRect') >= 1, 'рамка поля нарисована напрямую');
+  assert.ok(called(calls, 'arcTo') >= 1, 'карточка поля нарисована напрямую');
   assert.equal(called(calls, 'fillText'), 3, 'все числа нарисованы');
   assert.equal(called(calls, 'strokeText'), 3, 'числа с обводкой');
   assert.ok(calls.some((c) => c[0] === 'set:font' && /\b1[6-9]px|\b[2-9]\dpx/.test(c[1][0])), 'шрифт цифр ≥ 16px');
@@ -100,7 +100,7 @@ test('render кэширует статический слой в state._cache ч
   assert.equal(st._cache.dpr, 2, 'масштаб взят из матрицы ctx');
   assert.equal(called(calls, 'drawImage'), 1, 'статический слой скопирован одним drawImage');
   assert.equal(called(calls, 'strokeRect'), 0, 'рамка — только в кэше');
-  assert.ok(called(offscreenCalls, 'strokeRect') >= 1);
+  assert.ok(called(offscreenCalls, 'arcTo') >= 1);
 
   zip.render(ctx, st, LAYOUT, THEME, 16, {});
   assert.equal(created, 1, 'тот же layout и тема — без перерисовки');

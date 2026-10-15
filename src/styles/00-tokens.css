@@ -1,0 +1,138 @@
+/* Дизайн-система WORDS 1.2 (~/Downloads/outputs/words-design-system, docs/DESIGN.md) — токены.
+   Тёплый фарфор (champagne), стеклянные ленты, мягкие тени; чёрный — только для главного действия,
+   активного прогресса и завершения. Светлая тема — значения системы; тёмная — производная.
+   Старые переменные оболочки (--bg, --surface…, --lm-*) переназначены на эти токены ниже, чтобы
+   холсты режимов и прежние компоненты сразу жили в новой палитре. */
+
+:root,
+:root[data-theme="light"] {
+  --w-canvas: #e9e4de; /* фон приложения */
+  --w-paper: #f4f1ec; /* карточки на фоне */
+  --w-surface: #fbfaf7; /* шторки, белые карточки */
+  --w-white: #ffffff;
+  --w-ink: #111311;
+  --w-ink-2: #2d302d;
+  --w-on-ink: #ffffff;
+  --w-muted: #5b605c; /* #6E746F затемнён до AA: 5.0:1 на canvas */
+  --w-faint: #8a8f8a; /* только декоративные подписи ≥ 18px и неактивные иконки */
+  --w-line: rgba(17, 19, 17, 0.1);
+  --w-line-2: rgba(17, 19, 17, 0.16);
+  --w-sage: #9eaa9f;
+  --w-sage-2: #dfe6dd;
+  --w-sage-3: #c9d4c7;
+  --w-sage-ink: #4f6a50; /* текст на шалфее, ≥ 4.5:1 на sage-2 */
+  --w-lav: #aaa7c6;
+  --w-lav-2: #e7e4f0;
+  --w-lav-ink: #5e5887;
+  --w-blue-2: #dde3ea; /* «Природа» */
+  --w-blush-2: #f0dfdb; /* «Искусство» */
+  --w-mist: #d8d9d8;
+  --w-key: #f6f4f0; /* клавиши */
+  --w-success: #5f795e;
+  --w-warning: #8a7048;
+  --w-danger: #9a5e5e;
+  --w-danger-2: #f2e2e0;
+  --w-r-xs: 8px;
+  --w-r-sm: 12px;
+  --w-r-md: 20px;
+  --w-r-card: 24px;
+  --w-r-lg: 32px;
+  --w-shadow-1: 0 1px 2px rgba(12, 17, 13, 0.05), 0 10px 30px rgba(30, 36, 30, 0.06);
+  --w-shadow-2: 0 30px 80px rgba(25, 31, 25, 0.12);
+  --w-shadow-art: drop-shadow(0 24px 30px rgba(62, 68, 62, 0.16));
+  --w-gutter: 20px;
+  --w-tabbar-h: 64px;
+  --w-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --w-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --w-t-press: 120ms;
+  --w-t-prop: 220ms;
+  --w-t-sheet: 360ms;
+  --w-t-complete: 700ms;
+  --w-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --w-spring: cubic-bezier(0.3, 1.25, 0.5, 1);
+}
+
+:root[data-theme="dark"] {
+  --w-canvas: #141513;
+  --w-paper: #1d1e1b;
+  --w-surface: #232521;
+  --w-white: #2a2c28;
+  --w-ink: #f1efea;
+  --w-ink-2: #d6d4ce;
+  --w-on-ink: #141513;
+  --w-muted: #a6aba6;
+  --w-faint: #7d827d;
+  --w-line: rgba(241, 239, 234, 0.12);
+  --w-line-2: rgba(241, 239, 234, 0.2);
+  --w-sage: #8a9a88;
+  --w-sage-2: #2a3329;
+  --w-sage-3: #364235;
+  --w-sage-ink: #b4c8af;
+  --w-lav: #a39dc9;
+  --w-lav-2: #2c2a3b;
+  --w-lav-ink: #c4bee6;
+  --w-blue-2: #252c34;
+  --w-blush-2: #362b29;
+  --w-mist: #2e302e;
+  --w-key: #2a2c28;
+  --w-success: #a9c8a2;
+  --w-warning: #d6b27a;
+  --w-danger: #e0a3a3;
+  --w-danger-2: #3d2828;
+  --w-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.25);
+  --w-shadow-2: 0 30px 80px rgba(0, 0, 0, 0.45);
+  --w-shadow-art: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.35));
+}
+
+/* Прежние переменные оболочки и Lumin → токены WORDS (холсты режимов читают --bg/--surface/--text…). */
+:root[data-theme="light"] {
+  --bg: var(--w-canvas);
+  --surface: var(--w-paper);
+  --surface2: #ece8e2;
+  --surface3: #e0dbd4;
+  --text: var(--w-ink);
+  --text-muted: var(--w-muted);
+  --grid: #ddd8d1;
+  --wall: var(--w-ink);
+  --shadow: var(--w-shadow-1);
+  --lm-ink: var(--w-ink);
+  --lm-muted: var(--w-muted);
+  --lm-num: #575c58;
+  --lm-line: var(--w-line);
+  --lm-canvas: var(--w-canvas);
+  --lm-paper: var(--w-paper);
+  --lm-tile: var(--w-white);
+  --lm-sage2: var(--w-sage-2);
+  --lm-lav2: var(--w-lav-2);
+  --lm-key: var(--w-key);
+  --lm-shadow1: var(--w-shadow-1);
+  --lm-shadow2: var(--w-shadow-2);
+}
+:root[data-theme="dark"] {
+  --bg: var(--w-canvas);
+  --surface: var(--w-paper);
+  --surface2: #262823;
+  --surface3: #2f322d;
+  --text: var(--w-ink);
+  --text-muted: var(--w-muted);
+  --grid: #2f322d;
+  --shadow: var(--w-shadow-1);
+  --lm-ink: var(--w-ink);
+  --lm-muted: var(--w-muted);
+  --lm-line: var(--w-line);
+  --lm-canvas: var(--w-canvas);
+  --lm-paper: var(--w-paper);
+  --lm-tile: var(--w-white);
+  --lm-sage2: var(--w-sage-2);
+  --lm-lav2: var(--w-lav-2);
+  --lm-key: var(--w-key);
+  --lm-shadow1: var(--w-shadow-1);
+  --lm-shadow2: var(--w-shadow-2);
+}
+
+body { font-family: var(--w-font); background: var(--w-canvas); color: var(--w-ink); }
+
+/* Специальные возможности (settings.a11y → классы на <body>, src/main.js). */
+body.a11y-motion *,
+body.a11y-motion *::before,
+body.a11y-motion *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }

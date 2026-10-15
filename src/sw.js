@@ -2,7 +2,8 @@
 // (подставляет tools/build.mjs), старые кэши удаляются на activate, skipWaiting + clients.claim.
 const CONTENT_HASH = '__CONTENT_HASH__';
 const CACHE = 'roscherk-' + CONTENT_HASH;
-const PRECACHE = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-512.png'];
+// В конец списка tools/build.mjs подставляет ./art/*.webp (3D-графика дизайн-системы).
+const PRECACHE = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-512.png', /*__ART_FILES__*/];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

@@ -1,6 +1,7 @@
-// Растеризация иконок (§4.6): assets/icon.svg → dist/icon-180.png и dist/icon-512.png.
-// Основной путь — qlmanage -t -s 1024 + sips (macOS); запасной — Pillow (python3), рисующий ту же
-// композицию примитивами (фон + толстая линия), если qlmanage недоступен.
+// Растеризация иконок (§4.6): мастер — assets/icon.png (квадрат ≥ 1024, без прозрачности; он же —
+// иконка App Store), иначе assets/icon.svg → dist/icon-180.png и dist/icon-512.png.
+// PNG — уменьшение через sips (macOS) или Pillow; SVG — qlmanage -t -s 1024 + sips, запасной путь —
+// Pillow, рисующий ту же композицию примитивами (фон + толстая линия).
 //   node tools/icon.mjs [--out dist]
 import { existsSync, mkdirSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
 import { dirname, resolve, join } from 'node:path';
@@ -10,6 +11,7 @@ import { tmpdir } from 'node:os';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SVG = resolve(ROOT, 'assets/icon.svg');
+export const PNG = resolve(ROOT, 'assets/icon.png');
 export const SIZES = [180, 512];
 
 function run(cmd, args) {
@@ -62,10 +64,34 @@ for size in (${SIZES.join(', ')}):
   return r.status === 0;
 }
 
-/** rasterizeIcons(outDir) → 'qlmanage' | 'pillow'; бросает, если оба пути недоступны. */
+/** PNG-мастер → иконки нужных размеров: sips (macOS), иначе Pillow. */
+function fromPng(outDir) {
+  if (run('which', ['sips'])) {
+    let ok = true;
+    for (const size of SIZES) {
+      const out = resolve(outDir, `icon-${size}.png`);
+      ok = ok && run('sips', ['-s', 'format', 'png', '-z', String(size), String(size), PNG, '--out', out]);
+    }
+    if (ok) return 'sips';
+  }
+  const script = `
+import sys
+from PIL import Image
+src, out_dir = sys.argv[1], sys.argv[2]
+img = Image.open(src).convert('RGB')
+for size in (${SIZES.join(', ')}):
+    img.resize((size, size), Image.LANCZOS).save(f'{out_dir}/icon-{size}.png')
+`;
+  const r = spawnSync('python3', ['-I', '-c', script, PNG, outDir], { encoding: 'utf8' });
+  if (r.status === 0) return 'pillow';
+  throw new Error('не удалось уменьшить assets/icon.png: нет ни sips, ни Pillow');
+}
+
+/** rasterizeIcons(outDir) → 'sips' | 'qlmanage' | 'pillow'; бросает, если ни один путь недоступен. */
 export function rasterizeIcons(outDir = resolve(ROOT, 'dist')) {
-  if (!existsSync(SVG)) throw new Error(`нет ${SVG}`);
   mkdirSync(outDir, { recursive: true });
+  if (existsSync(PNG)) return fromPng(outDir);
+  if (!existsSync(SVG)) throw new Error(`нет ${SVG}`);
   if (viaQuickLook(outDir)) return 'qlmanage';
   if (viaPillow(outDir)) return 'pillow';
   throw new Error('не удалось растеризовать иконку: нет ни qlmanage+sips, ни Pillow');

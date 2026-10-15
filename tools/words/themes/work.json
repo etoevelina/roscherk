@@ -1,0 +1,969 @@
+{
+  "slug": "work",
+  "ru": "Работа и карьера",
+  "en": "Work & Career",
+  "quotes": [
+    {
+      "q": "A bad workman blames his tools.",
+      "a": "Proverb",
+      "src": "Proverb",
+      "ru": "Плохой мастер винит свои инструменты."
+    },
+    {
+      "q": "The labourer is worthy of his hire.",
+      "a": "The Bible (King James Version)",
+      "src": "Luke 10:7 (1611)",
+      "ru": "Работник достоин своей платы."
+    },
+    {
+      "q": "Diligence is the mother of good luck.",
+      "a": "Benjamin Franklin",
+      "src": "The Way to Wealth (1758)",
+      "ru": "Усердие — мать удачи."
+    },
+    {
+      "q": "The reward of a thing well done is to have done it.",
+      "a": "Ralph Waldo Emerson",
+      "src": "New England Reformers, Essays: Second Series (1844)",
+      "ru": "Награда за хорошо сделанное дело — в том, что оно сделано."
+    },
+    {
+      "q": "Work is no disgrace: it is idleness which is a disgrace.",
+      "a": "Hesiod",
+      "src": "Works and Days, line 311 (c. 700 BC), tr. H. G. Evelyn-White (1914)",
+      "ru": "Труд не позор: позор — это праздность."
+    },
+    {
+      "q": "Blessed is he who has found his work; let him ask no other blessedness.",
+      "a": "Thomas Carlyle",
+      "src": "Past and Present, Book III, ch. 11 (1843)",
+      "ru": "Блажен тот, кто нашёл своё дело; пусть не ищет он иного блаженства."
+    },
+    {
+      "q": "When work is a pleasure, life is a joy! When work is a duty, life is slavery.",
+      "a": "Maxim Gorky",
+      "src": "The Lower Depths, Act I (1902)",
+      "ru": "Когда труд — удовольствие, жизнь — хороша! Когда труд — обязанность, жизнь — рабство!"
+    },
+    {
+      "q": "Plough deep, while sluggards sleep, and you shall have corn to sell and to keep.",
+      "a": "Benjamin Franklin",
+      "src": "The Way to Wealth (1758)",
+      "ru": "Паши глубоко, пока лентяи спят, — и будет у тебя зерно и на продажу, и про запас."
+    },
+    {
+      "q": "It is not enough to be industrious; so are the ants. What are you industrious about?",
+      "a": "Henry David Thoreau",
+      "src": "Letter to H. G. O. Blake, 16 November 1857",
+      "ru": "Мало быть трудолюбивым — муравьи тоже трудолюбивы. Ради чего ты трудишься?"
+    },
+    {
+      "q": "Far and away the best prize that life offers is the chance to work hard at work worth doing.",
+      "a": "Theodore Roosevelt",
+      "src": "Labor Day address ('The Square Deal'), New York State Fair, Syracuse (7 September 1903)",
+      "ru": "Безусловно, лучшая награда, какую предлагает жизнь, — возможность усердно трудиться над делом, которое того стоит."
+    },
+    {
+      "q": "No race can prosper till it learns that there is as much dignity in tilling a field as in writing a poem.",
+      "a": "Booker T. Washington",
+      "src": "Atlanta Exposition Address (1895), reprinted in Up from Slavery (1901)",
+      "ru": "Ни один народ не может процветать, пока не поймёт, что возделывать поле так же достойно, как писать стихи."
+    },
+    {
+      "q": "Seest thou a man diligent in his business? he shall stand before kings; he shall not stand before mean men.",
+      "a": "The Bible (King James Version)",
+      "src": "Proverbs 22:29 (1611)",
+      "ru": "Видишь ли человека, усердного в своём деле? Он будет стоять перед царями, а не перед людьми незнатными."
+    },
+    {
+      "q": "Every man's work, whether it be literature or music or pictures or architecture or anything else, is always a portrait of himself.",
+      "a": "Samuel Butler",
+      "src": "The Way of All Flesh, ch. XIV (1903)",
+      "ru": "Работа любого человека — будь то литература, музыка, живопись, архитектура или что-то ещё, — всегда его автопортрет."
+    }
+  ],
+  "words": [
+    {
+      "w": "WORKLOAD",
+      "p": "n",
+      "c": "How much a person or team is expected to get done",
+      "ru": "рабочая нагрузка, объём работы"
+    },
+    {
+      "w": "DEADLINE",
+      "p": "n",
+      "c": "The latest time or date by which a task must be finished",
+      "ru": "крайний срок, дедлайн"
+    },
+    {
+      "w": "PROMOTION",
+      "p": "n",
+      "c": "A move up to a higher rank or more important job",
+      "ru": "повышение (в должности)"
+    },
+    {
+      "w": "DEMOTION",
+      "p": "n",
+      "c": "A move down to a lower rank or less important job",
+      "ru": "понижение в должности"
+    },
+    {
+      "w": "APPRENTICE",
+      "p": "n",
+      "c": "Someone learning a skilled trade by working for an expert",
+      "ru": "ученик, подмастерье"
+    },
+    {
+      "w": "INTERNSHIP",
+      "p": "n",
+      "c": "A short period of work, often unpaid, to gain experience",
+      "ru": "стажировка"
+    },
+    {
+      "w": "MENTOR",
+      "p": "n",
+      "c": "An experienced adviser who guides a less experienced person",
+      "ru": "наставник"
+    },
+    {
+      "w": "COLLEAGUE",
+      "p": "n",
+      "c": "A person you work with in the same job or company",
+      "ru": "коллега"
+    },
+    {
+      "w": "TENURE",
+      "p": "n",
+      "c": "The period during which someone holds an official post",
+      "ru": "срок пребывания в должности"
+    },
+    {
+      "w": "SABBATICAL",
+      "p": "n",
+      "c": "A long paid break from work, often to study or travel",
+      "ru": "творческий отпуск"
+    },
+    {
+      "w": "BURNOUT",
+      "p": "n",
+      "c": "Exhaustion caused by too much stress and work over time",
+      "ru": "выгорание"
+    },
+    {
+      "w": "OVERTIME",
+      "p": "n",
+      "c": "Hours worked beyond your normal schedule, often paid extra",
+      "ru": "сверхурочная работа"
+    },
+    {
+      "w": "SHIFT",
+      "p": "n",
+      "c": "A set period of work taken in turns: the night ___",
+      "ru": "смена"
+    },
+    {
+      "w": "APPRAISAL",
+      "p": "n",
+      "c": "A formal assessment of how well an employee is doing",
+      "ru": "аттестация, оценка работы"
+    },
+    {
+      "w": "FEEDBACK",
+      "p": "n",
+      "c": "Comments on how well someone has done a piece of work",
+      "ru": "обратная связь, отзыв"
+    },
+    {
+      "w": "HIERARCHY",
+      "p": "n",
+      "c": "A system ranking people from top bosses down to juniors",
+      "ru": "иерархия"
+    },
+    {
+      "w": "CUBICLE",
+      "p": "n",
+      "c": "A small walled-off workspace in an open-plan office",
+      "ru": "кабинка, отсек (в офисе)"
+    },
+    {
+      "w": "VACANCY",
+      "p": "n",
+      "c": "A job that is open for someone to fill",
+      "ru": "вакансия"
+    },
+    {
+      "w": "APPLICANT",
+      "p": "n",
+      "c": "A person who formally asks to be considered for a job",
+      "ru": "соискатель, кандидат"
+    },
+    {
+      "w": "VOCATION",
+      "p": "n",
+      "c": "A strong feeling that a certain career is right for you",
+      "ru": "призвание"
+    },
+    {
+      "w": "LIVELIHOOD",
+      "p": "n",
+      "c": "The way a person earns enough money to support themselves",
+      "ru": "средства к существованию, заработок"
+    },
+    {
+      "w": "DRUDGERY",
+      "p": "n",
+      "c": "Hard, boring and tiring work that must be done",
+      "ru": "нудная тяжёлая работа"
+    },
+    {
+      "w": "GRIND",
+      "p": "n",
+      "c": "Hard, dull work that goes on and on: the daily ___",
+      "ru": "рутина, однообразная работа"
+    },
+    {
+      "w": "SLOG",
+      "p": "n",
+      "c": "Informal: a long, tiring stretch of hard effort",
+      "ru": "тяжкий труд, изнурительная работа"
+    },
+    {
+      "w": "MILESTONE",
+      "p": "n",
+      "c": "An important stage reached in a project or career",
+      "ru": "важный этап, веха"
+    },
+    {
+      "w": "BOTTLENECK",
+      "p": "n",
+      "c": "A point of congestion that slows the whole process down",
+      "ru": "узкое место"
+    },
+    {
+      "w": "WORKFORCE",
+      "p": "n",
+      "c": "All the people employed by a company or in a country",
+      "ru": "рабочая сила, персонал"
+    },
+    {
+      "w": "SUPERVISOR",
+      "p": "n",
+      "c": "A person who watches over workers and checks their work",
+      "ru": "руководитель, начальник"
+    },
+    {
+      "w": "FOREMAN",
+      "p": "n",
+      "c": "A worker in charge of a crew, e.g. on a building site",
+      "ru": "бригадир, мастер"
+    },
+    {
+      "w": "SUBORDINATE",
+      "p": "n",
+      "c": "A person who has a lower position than someone else at work",
+      "ru": "подчинённый"
+    },
+    {
+      "w": "NOVICE",
+      "p": "n",
+      "c": "A person who is new to a job and lacks experience",
+      "ru": "новичок"
+    },
+    {
+      "w": "VETERAN",
+      "p": "n",
+      "c": "Someone with long experience in a particular job or field",
+      "ru": "ветеран, опытный работник"
+    },
+    {
+      "w": "EXPERTISE",
+      "p": "n",
+      "c": "Special skill or knowledge in a particular field",
+      "ru": "компетентность, экспертные знания"
+    },
+    {
+      "w": "PROFICIENCY",
+      "p": "n",
+      "c": "A high degree of skill in doing something",
+      "ru": "умение, мастерство"
+    },
+    {
+      "w": "AMBITION",
+      "p": "n",
+      "c": "A strong desire to succeed and get ahead in your career",
+      "ru": "амбиции, честолюбие"
+    },
+    {
+      "w": "INITIATIVE",
+      "p": "n",
+      "c": "The ability to act and decide without being told what to do",
+      "ru": "инициатива, инициативность"
+    },
+    {
+      "w": "WORKAHOLIC",
+      "p": "n",
+      "c": "Someone addicted to their job who hardly ever rests",
+      "ru": "трудоголик"
+    },
+    {
+      "w": "SLACKER",
+      "p": "n",
+      "c": "A lazy person who avoids work or effort",
+      "ru": "лентяй, бездельник"
+    },
+    {
+      "w": "HEADHUNTER",
+      "p": "n",
+      "c": "A recruiter who lures skilled people away to fill senior posts",
+      "ru": "хедхантер, охотник за кадрами"
+    },
+    {
+      "w": "PERK",
+      "p": "n",
+      "c": "An extra benefit you get from a job besides your pay",
+      "ru": "льгота, привилегия"
+    },
+    {
+      "w": "LAYOFF",
+      "p": "n",
+      "c": "The ending of a worker's job because there is not enough work",
+      "ru": "сокращение (штата), увольнение"
+    },
+    {
+      "w": "HEADWAY",
+      "p": "n",
+      "c": "Progress: to make ___ with a difficult task",
+      "ru": "продвижение, прогресс"
+    },
+    {
+      "w": "BACKLOG",
+      "p": "n",
+      "c": "A build-up of work that is still waiting to be done",
+      "ru": "завал, накопившаяся работа"
+    },
+    {
+      "w": "KNACK",
+      "p": "n",
+      "c": "A natural ability to do something difficult easily",
+      "ru": "сноровка, умение"
+    },
+    {
+      "w": "HANDOVER",
+      "p": "n",
+      "c": "The passing of duties and responsibilities to a successor",
+      "ru": "передача дел"
+    },
+    {
+      "w": "WORKHORSE",
+      "p": "n",
+      "c": "A dependable person who does lots of hard, unglamorous labour",
+      "ru": "трудяга, рабочая лошадка"
+    },
+    {
+      "w": "BIGWIG",
+      "p": "n",
+      "c": "Informal: an important, powerful person in an organization",
+      "ru": "шишка, важная персона"
+    },
+    {
+      "w": "FIGUREHEAD",
+      "p": "n",
+      "c": "A leader in name only, with no real power",
+      "ru": "номинальный глава"
+    },
+    {
+      "w": "GRIEVANCE",
+      "p": "n",
+      "c": "A formal complaint about unfair treatment at work",
+      "ru": "жалоба, претензия"
+    },
+    {
+      "w": "STRIKE",
+      "p": "n",
+      "c": "A refusal by workers to work, as a form of protest",
+      "ru": "забастовка"
+    },
+    {
+      "w": "WALKOUT",
+      "p": "n",
+      "c": "A sudden strike in which workers leave their jobs",
+      "ru": "забастовка, демонстративный уход"
+    },
+    {
+      "w": "SIDELINE",
+      "p": "n",
+      "c": "A second job or business in addition to your main one",
+      "ru": "подработка, побочное занятие"
+    },
+    {
+      "w": "DOGSBODY",
+      "p": "n",
+      "c": "British, informal: someone given all the dull, menial jobs",
+      "ru": "мальчик на побегушках"
+    },
+    {
+      "w": "CREDENTIAL",
+      "p": "n",
+      "c": "A qualification proving that someone is suited for a job",
+      "ru": "диплом, подтверждение квалификации"
+    },
+    {
+      "w": "ABSENTEEISM",
+      "p": "n",
+      "c": "Regularly staying away from work without good reason",
+      "ru": "прогулы, невыход на работу"
+    },
+    {
+      "w": "FURLOUGH",
+      "p": "n",
+      "c": "Temporary unpaid leave given to workers when work is short",
+      "ru": "вынужденный отпуск"
+    },
+    {
+      "w": "PAPERWORK",
+      "p": "n",
+      "c": "Routine forms, letters and documents you have to deal with",
+      "ru": "документация, бумажная работа"
+    },
+    {
+      "w": "LEGWORK",
+      "p": "n",
+      "c": "Tiring practical tasks like running errands or gathering facts",
+      "ru": "черновая работа, беготня"
+    },
+    {
+      "w": "GROUNDWORK",
+      "p": "n",
+      "c": "Early preparation that makes later progress possible: lay the ___",
+      "ru": "подготовительная работа, основа"
+    },
+    {
+      "w": "TASKMASTER",
+      "p": "n",
+      "c": "A person who makes others work very hard",
+      "ru": "строгий начальник, надсмотрщик"
+    },
+    {
+      "w": "FLEXITIME",
+      "p": "n",
+      "c": "A system letting staff choose when to start and finish work",
+      "ru": "гибкий график"
+    },
+    {
+      "w": "REDUNDANCY",
+      "p": "n",
+      "c": "Dismissal because your job is no longer needed (British)",
+      "ru": "увольнение по сокращению штата"
+    },
+    {
+      "w": "NEPOTISM",
+      "p": "n",
+      "c": "Unfairly giving jobs or favours to your own relatives",
+      "ru": "кумовство, непотизм"
+    },
+    {
+      "w": "SENIORITY",
+      "p": "n",
+      "c": "Higher rank or status gained by working somewhere longer",
+      "ru": "старшинство, выслуга лет"
+    },
+    {
+      "w": "SWEATSHOP",
+      "p": "n",
+      "c": "A factory where people work long hours for very low pay",
+      "ru": "потогонное производство"
+    },
+    {
+      "w": "WORKMANSHIP",
+      "p": "n",
+      "c": "The skill with which something has been made or done",
+      "ru": "качество работы, мастерство"
+    },
+    {
+      "w": "APTITUDE",
+      "p": "n",
+      "c": "A natural ability to learn or do something well",
+      "ru": "способность, склонность"
+    },
+    {
+      "w": "PREDECESSOR",
+      "p": "n",
+      "c": "The person who held a job before the current holder",
+      "ru": "предшественник"
+    },
+    {
+      "w": "STINT",
+      "p": "n",
+      "c": "A fixed period of time spent doing a particular job",
+      "ru": "период работы, срок службы"
+    },
+    {
+      "w": "MORALE",
+      "p": "n",
+      "c": "The confidence and team spirit of a group of workers",
+      "ru": "моральный дух"
+    },
+    {
+      "w": "BENCHMARK",
+      "p": "n",
+      "c": "A standard used to measure or compare performance",
+      "ru": "эталон, ориентир"
+    },
+    {
+      "w": "COMPETENT",
+      "p": "adj",
+      "c": "Having enough skill or knowledge to do a job well",
+      "ru": "компетентный, умелый"
+    },
+    {
+      "w": "ADEPT",
+      "p": "adj",
+      "c": "Very skilled at something: ___ at handling clients",
+      "ru": "искусный, умелый"
+    },
+    {
+      "w": "DEFT",
+      "p": "adj",
+      "c": "Quick, neat and skilful in movement or action",
+      "ru": "ловкий, умелый"
+    },
+    {
+      "w": "INEPT",
+      "p": "adj",
+      "c": "Lacking skill; clumsy and incompetent",
+      "ru": "неумелый, бездарный"
+    },
+    {
+      "w": "PAINSTAKING",
+      "p": "adj",
+      "c": "Done with great care and close attention to detail",
+      "ru": "кропотливый, тщательный"
+    },
+    {
+      "w": "THOROUGH",
+      "p": "adj",
+      "c": "Careful and complete, leaving nothing out",
+      "ru": "тщательный, основательный"
+    },
+    {
+      "w": "PUNCTUAL",
+      "p": "adj",
+      "c": "Always arriving or finishing things on time",
+      "ru": "пунктуальный"
+    },
+    {
+      "w": "INDUSTRIOUS",
+      "p": "adj",
+      "c": "Working hard and steadily; always busy",
+      "ru": "трудолюбивый"
+    },
+    {
+      "w": "ASSIDUOUS",
+      "p": "adj",
+      "c": "Showing great care and constant, persistent effort",
+      "ru": "усердный, прилежный"
+    },
+    {
+      "w": "OVERWORKED",
+      "p": "adj",
+      "c": "Exhausted from having too many tasks and too little rest",
+      "ru": "перегруженный работой"
+    },
+    {
+      "w": "UNDERPAID",
+      "p": "adj",
+      "c": "Receiving less money than the work deserves",
+      "ru": "низкооплачиваемый"
+    },
+    {
+      "w": "MENIAL",
+      "p": "adj",
+      "c": "Boring, unskilled and of low status: ___ tasks",
+      "ru": "чёрный, неквалифицированный (о труде)"
+    },
+    {
+      "w": "MONOTONOUS",
+      "p": "adj",
+      "c": "Dull because it never changes or varies",
+      "ru": "монотонный, однообразный"
+    },
+    {
+      "w": "UNDERMANNED",
+      "p": "adj",
+      "c": "Having too few workers to do the job properly",
+      "ru": "недоукомплектованный (кадрами)"
+    },
+    {
+      "w": "REWARDING",
+      "p": "adj",
+      "c": "Giving satisfaction, even if it does not pay much",
+      "ru": "благодарный (о работе), стоящий"
+    },
+    {
+      "w": "FULFILLING",
+      "p": "adj",
+      "c": "Making you feel happy because you use your abilities",
+      "ru": "приносящий удовлетворение"
+    },
+    {
+      "w": "DEMANDING",
+      "p": "adj",
+      "c": "Needing a lot of skill, effort or patience: a ___ boss",
+      "ru": "требовательный, трудный"
+    },
+    {
+      "w": "MANUAL",
+      "p": "adj",
+      "c": "Done with the hands and physical strength: ___ labour",
+      "ru": "ручной, физический"
+    },
+    {
+      "w": "CLERICAL",
+      "p": "adj",
+      "c": "Relating to routine office work such as filing and typing",
+      "ru": "канцелярский, конторский"
+    },
+    {
+      "w": "SEASONED",
+      "p": "adj",
+      "c": "Having a lot of experience: a ___ professional",
+      "ru": "опытный, бывалый"
+    },
+    {
+      "w": "QUALIFIED",
+      "p": "adj",
+      "c": "Having passed the exams or training needed for a job",
+      "ru": "квалифицированный, дипломированный"
+    },
+    {
+      "w": "ELIGIBLE",
+      "p": "adj",
+      "c": "Meeting the conditions to apply for or receive something",
+      "ru": "имеющий право, подходящий"
+    },
+    {
+      "w": "HECTIC",
+      "p": "adj",
+      "c": "Full of busy, rushed activity: a ___ day at the office",
+      "ru": "суматошный, лихорадочный"
+    },
+    {
+      "w": "GRUELLING",
+      "p": "adj",
+      "c": "Extremely tiring and exhausting over a long time",
+      "ru": "изнурительный, изматывающий"
+    },
+    {
+      "w": "ARDUOUS",
+      "p": "adj",
+      "c": "Requiring great effort and endurance; very difficult",
+      "ru": "трудный, тяжкий"
+    },
+    {
+      "w": "JOBLESS",
+      "p": "adj",
+      "c": "Without paid employment; out of work",
+      "ru": "безработный"
+    },
+    {
+      "w": "IDLE",
+      "p": "adj",
+      "c": "Not working or in use: factories standing ___",
+      "ru": "простаивающий, бездействующий"
+    },
+    {
+      "w": "SALARIED",
+      "p": "adj",
+      "c": "Paid a fixed yearly amount rather than hourly wages",
+      "ru": "получающий оклад, штатный"
+    },
+    {
+      "w": "UNSKILLED",
+      "p": "adj",
+      "c": "Having no special training: ___ labour",
+      "ru": "неквалифицированный"
+    },
+    {
+      "w": "EXPENDABLE",
+      "p": "adj",
+      "c": "Not considered important and so easy to get rid of",
+      "ru": "легко заменимый, расходный"
+    },
+    {
+      "w": "SWAMPED",
+      "p": "adj",
+      "c": "Having far too much work to deal with",
+      "ru": "заваленный работой"
+    },
+    {
+      "w": "PROACTIVE",
+      "p": "adj",
+      "c": "Acting in advance to deal with expected problems",
+      "ru": "проактивный, инициативный"
+    },
+    {
+      "w": "VERSATILE",
+      "p": "adj",
+      "c": "Able to do many different jobs or tasks well",
+      "ru": "разносторонний, универсальный"
+    },
+    {
+      "w": "SLAPDASH",
+      "p": "adj",
+      "c": "Done too quickly and carelessly",
+      "ru": "небрежный, сделанный кое-как"
+    },
+    {
+      "w": "SHODDY",
+      "p": "adj",
+      "c": "Badly made or done; of poor quality",
+      "ru": "халтурный, некачественный"
+    },
+    {
+      "w": "ACCOUNTABLE",
+      "p": "adj",
+      "c": "Responsible for your decisions and expected to explain them",
+      "ru": "подотчётный, ответственный"
+    },
+    {
+      "w": "PRODUCTIVE",
+      "p": "adj",
+      "c": "Achieving a lot in a given amount of time",
+      "ru": "продуктивный, плодотворный"
+    },
+    {
+      "w": "RECRUIT",
+      "p": "v",
+      "c": "To find new people to join a company or organization",
+      "ru": "нанимать, набирать"
+    },
+    {
+      "w": "DELEGATE",
+      "p": "v",
+      "c": "To give part of your work or authority to someone else",
+      "ru": "делегировать, поручать"
+    },
+    {
+      "w": "RESIGN",
+      "p": "v",
+      "c": "To formally give up your job",
+      "ru": "уволиться, уйти в отставку"
+    },
+    {
+      "w": "DISMISS",
+      "p": "v",
+      "c": "To officially remove someone from their job",
+      "ru": "увольнять"
+    },
+    {
+      "w": "SACK",
+      "p": "v",
+      "c": "Chiefly British, informal: to dismiss someone from a job",
+      "ru": "уволить, выгнать"
+    },
+    {
+      "w": "COMMUTE",
+      "p": "v",
+      "c": "To travel regularly between home and your workplace",
+      "ru": "ездить на работу"
+    },
+    {
+      "w": "TOIL",
+      "p": "v",
+      "c": "To work very hard for a long time, usually physically",
+      "ru": "трудиться, вкалывать"
+    },
+    {
+      "w": "PRIORITIZE",
+      "p": "v",
+      "c": "To decide which tasks are most important and do them first",
+      "ru": "расставлять приоритеты"
+    },
+    {
+      "w": "MULTITASK",
+      "p": "v",
+      "c": "To do several things at the same time",
+      "ru": "делать несколько дел сразу"
+    },
+    {
+      "w": "COLLABORATE",
+      "p": "v",
+      "c": "To work together with others on a shared project",
+      "ru": "сотрудничать"
+    },
+    {
+      "w": "OUTSOURCE",
+      "p": "v",
+      "c": "To give work to an external firm rather than your own staff",
+      "ru": "передавать на аутсорсинг"
+    },
+    {
+      "w": "OVERSEE",
+      "p": "v",
+      "c": "To watch and direct work to make sure it is done well",
+      "ru": "контролировать, руководить"
+    },
+    {
+      "w": "APPOINT",
+      "p": "v",
+      "c": "To choose someone officially for a job or role",
+      "ru": "назначать"
+    },
+    {
+      "w": "SKIVE",
+      "p": "v",
+      "c": "British, informal: to avoid work by staying away or slacking",
+      "ru": "сачковать, отлынивать"
+    },
+    {
+      "w": "RETIRE",
+      "p": "v",
+      "c": "To stop working, usually because of age",
+      "ru": "уйти на пенсию"
+    },
+    {
+      "w": "DOWNSIZE",
+      "p": "v",
+      "c": "To cut the number of staff in order to reduce costs",
+      "ru": "сокращать штат"
+    },
+    {
+      "w": "MOONLIGHT",
+      "p": "v",
+      "c": "To secretly have a second job in addition to your main one",
+      "ru": "подрабатывать (тайком)"
+    },
+    {
+      "w": "EXCEL",
+      "p": "v",
+      "c": "To be extremely good at something",
+      "ru": "преуспевать, отличаться"
+    },
+    {
+      "w": "STRIVE",
+      "p": "v",
+      "c": "To make great efforts to achieve something",
+      "ru": "стремиться, добиваться"
+    },
+    {
+      "w": "HUSTLE",
+      "p": "v",
+      "c": "To work busily and pushily to get ahead",
+      "ru": "крутиться, пробиваться"
+    },
+    {
+      "w": "JUGGLE",
+      "p": "v",
+      "c": "To keep several jobs or duties going at the same time",
+      "ru": "совмещать, жонглировать"
+    },
+    {
+      "w": "BRAINSTORM",
+      "p": "v",
+      "c": "To produce lots of ideas quickly as a group",
+      "ru": "устраивать мозговой штурм"
+    },
+    {
+      "w": "UPSKILL",
+      "p": "v",
+      "c": "To train staff in the new abilities their jobs now require",
+      "ru": "повышать квалификацию"
+    },
+    {
+      "w": "BUNGLE",
+      "p": "v",
+      "c": "To do a task badly or clumsily; to mess it up",
+      "ru": "напортачить, провалить"
+    },
+    {
+      "w": "BOTCH",
+      "p": "v",
+      "c": "To spoil a job by doing it carelessly",
+      "ru": "испортить, сделать кое-как"
+    },
+    {
+      "w": "PICKET",
+      "p": "v",
+      "c": "To stand outside a workplace to protest during a strike",
+      "ru": "пикетировать"
+    },
+    {
+      "w": "NETWORK",
+      "p": "v",
+      "c": "To meet and talk with people who may help your career",
+      "ru": "заводить деловые связи"
+    },
+    {
+      "w": "ASSIGN",
+      "p": "v",
+      "c": "To give someone a particular job or duty to do",
+      "ru": "поручать, назначать"
+    },
+    {
+      "w": "OUTPERFORM",
+      "p": "v",
+      "c": "To do better than a rival or competitor",
+      "ru": "превосходить, обгонять"
+    },
+    {
+      "w": "PLOD",
+      "p": "v",
+      "c": "To work slowly and steadily at something dull",
+      "ru": "корпеть, тянуть лямку"
+    },
+    {
+      "w": "OVERHAUL",
+      "p": "v",
+      "c": "To examine and improve a whole system thoroughly",
+      "ru": "капитально перестраивать, реорганизовать"
+    },
+    {
+      "w": "DILIGENTLY",
+      "p": "adv",
+      "c": "Carefully and with steady, hard effort",
+      "ru": "усердно, старательно"
+    },
+    {
+      "w": "DUTIFULLY",
+      "p": "adv",
+      "c": "Obediently and conscientiously, as your role requires",
+      "ru": "добросовестно, исправно"
+    },
+    {
+      "w": "TIRELESSLY",
+      "p": "adv",
+      "c": "With unflagging energy and without ever stopping to rest",
+      "ru": "неутомимо"
+    },
+    {
+      "w": "FREELANCE",
+      "p": "adv",
+      "c": "To work ___: for several clients rather than one employer",
+      "ru": "внештатно, на фрилансе"
+    },
+    {
+      "w": "EFFICIENTLY",
+      "p": "adv",
+      "c": "Well and quickly, without wasting time or effort",
+      "ru": "эффективно, продуктивно"
+    },
+    {
+      "w": "HAPHAZARDLY",
+      "p": "adv",
+      "c": "In a random, disorganized way without any plan",
+      "ru": "как попало, бессистемно"
+    },
+    {
+      "w": "PROMPTLY",
+      "p": "adv",
+      "c": "Quickly and without delay",
+      "ru": "быстро, незамедлительно"
+    },
+    {
+      "w": "DEPUTY",
+      "p": "n",
+      "c": "A second-in-command who can act for the boss when needed",
+      "ru": "заместитель"
+    }
+  ]
+}

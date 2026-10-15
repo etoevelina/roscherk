@@ -26,11 +26,23 @@ export function lastPassedIndex(levels, progress, skipped = []) {
 }
 
 /**
- * levelStatuses(levels, progress, skipped) → [{ index, id, status, star, bestMs, skipped }],
+ * levelStatuses(levels, progress, skipped, { byChapter }) → [{ index, id, status, star, bestMs, skipped }],
  * status ∈ 'done' | 'open' | 'locked'. Открыты все уровни до lastPassed + WINDOW включительно;
- * уровень, открытый однажды, обратно не закрывается.
+ * уровень, открытый однажды, обратно не закрывается. byChapter (§2.5, «Слова») — окно считается
+ * отдельно в каждой главе (подряд идущие уровни с одинаковым chapter), index остаётся сквозным.
  */
-export function levelStatuses(levels, progress, skipped = []) {
+export function levelStatuses(levels, progress, skipped = [], { byChapter = false } = {}) {
+  if (byChapter) {
+    const out = [];
+    let start = 0;
+    while (start < levels.length) {
+      let end = start + 1;
+      while (end < levels.length && levels[end].chapter === levels[start].chapter) end++;
+      for (const s of levelStatuses(levels.slice(start, end), progress, skipped)) out.push({ ...s, index: s.index + start });
+      start = end;
+    }
+    return out;
+  }
   const skip = new Set(skipped);
   const last = lastPassedIndex(levels, progress, skipped);
   const openUntil = last + WINDOW;
@@ -58,8 +70,8 @@ export function isOpen(levels, progress, skipped, index) {
  * первый открытый непройденный и непропущенный; если таких нет — первый непройденный
  * (пропущенный); если всё пройдено — −1.
  */
-export function nextLevelIndex(levels, progress, skipped = []) {
-  const statuses = levelStatuses(levels, progress, skipped);
+export function nextLevelIndex(levels, progress, skipped = [], opts = {}) {
+  const statuses = levelStatuses(levels, progress, skipped, opts);
   const fresh = statuses.find((s) => s.status === 'open' && !s.skipped);
   if (fresh) return fresh.index;
   const anyOpen = statuses.find((s) => s.status === 'open');

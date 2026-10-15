@@ -19,12 +19,16 @@ import {
   createTimer,
   createUndoStack,
   doneCount,
+  isDone,
+  levelStatuses,
 } from '../core/progress.js';
 import { recordDailyWin } from '../core/daily.js';
 import { updateBest, createStreakTracker } from '../core/endless.js';
 import { buildWinOverlay } from './win.js';
 
 const HINT_ARM_MS = 2000;
+/** Статистика попытки, которую undo не откатывает (§2.1): тупики stroke, подсказки и вводы «Слов». */
+const ATTEMPT_STATS = ['deadEnds', 'hints', 'ent', 'bad'];
 const RESET_TOAST_MS = 5000;
 const CONFETTI_MS = 1200;
 const CONFETTI_STRONG_MS = 1800;
@@ -89,14 +93,23 @@ export function mountGame(app, params) {
   let ghost = null;
   let ghostStart = 0;
   let ghostDismissed = resume; // обучение — до первого касания (§3.1 п.7)
+  // Партия «тронута» (было касание, клавиша, undo, сброс, подсказка) или продолжена: только тогда
+  // она записывается в current. Иначе просто открытый и закрытый уровень затирал бы начатую партию
+  // другого уровня (слот current один, §3.3). Бесконечность пишет current всегда (серия).
+  let touched = resume;
+  let introOpen = Array.isArray(mode.intro) && mode.intro.length > 0 && !(state.settings.introSeen || []).includes(mode.id);
   let ghostTimer = null;
   let pendingHint = null; // подсказка kind:'rollback' с кнопкой «Укоротить до неё» (zip)
   let hintToast = null;
   let armToast = null;
 
   // --- DOM -------------------------------------------------------------------------------
+  const isDom = !!mode.dom; // §2.5: режим рисует себя DOM-разметкой (view), холста нет
+  const lumin = mode.skin === 'lumin'; // оформление по дизайн-системе Lumin (§2.5)
   const titleText = isCampaign
-    ? `${tr(mode.name)} · ${levelIndex + 1}`
+    ? typeof mode.titleFor === 'function'
+      ? tr(mode.titleFor(level, levelIndex, campaign))
+      : `${tr(mode.name)} · ${levelIndex + 1}`
     : isDaily
       ? `${t('daily')} · ${tr(mode.name)}`
       : `${t('endless')} · ${tr(mode.name)}`;
@@ -113,21 +126,32 @@ export function mountGame(app, params) {
 
   const tip = level.tip ? tr(level.tip) : isCampaign && levelIndex < 3 ? tr(mode.helpText) : '';
   tipEl.textContent = tip;
+  // Режим с клавиатурой (§2.5): место по высоте дорого — пустая строка совета не занимает его.
+  if (mode.keyboard && !tip) tipEl.style.display = 'none';
+  const kbd = mode.keyboard ? buildKeyboard((k) => onKey(k)) : null;
+  // Тосты над клавиатурой перекрывали бы клавиши — с клавиатурой они показываются сверху.
+  if (kbd) document.body.classList.add('kbd-open');
 
+  // Lumin: подсказка — круглая кнопка в шапке, нижняя строка — тихие «Отменить · Сбросить · слов 3/7».
+  const topHint = lumin
+    ? h('button', { class: 'icon-btn round', 'aria-label': t('hint'), onClick: () => (app.audio.tap(), doHint()) }, icon('hint'))
+    : null;
   const el = h(
     'div',
-    { class: 'screen game-screen', style: { '--mode-color': theme.accent } },
+    { class: `screen game-screen${lumin ? ' lumin' : ''}${isDom ? ' dom' : ''}`, style: { '--mode-color': theme.accent } },
     h(
       'div',
       { class: 'topbar accent' },
-      h('button', { class: 'icon-btn', 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
+      h('button', { class: `icon-btn${lumin ? ' round' : ''}`, 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
       h('span', { class: 'title', text: titleText }),
-      subEl,
+      topHint || subEl,
     ),
     board,
     tipEl,
-    h('div', { class: 'bottombar' }, undoBtn, resetBtn, hintBtn, skipBtn, footerEl),
+    h('div', { class: 'bottombar' }, undoBtn, resetBtn, lumin ? null : hintBtn, skipBtn, footerEl),
+    kbd,
   );
+  if (lumin) document.body.classList.add('lumin-on');
 
   function barButton(name, label, onClick) {
     return h(
@@ -153,7 +177,16 @@ export function mountGame(app, params) {
   // --- Холст и рендер --------------------------------------------------------------------
   // Цикл рендера объявлен до холста: createCanvas измеряет контейнер синхронно и зовёт invalidate().
   const loop = createRenderLoop((tt) => {
-    if (destroyed || !layout) return false;
+    if (destroyed) return false;
+    if (isDom) {
+      try {
+        view.update(gameState, { t: tt, reducedMotion: app.reducedMotion(), won });
+      } catch (err) {
+        console.error('view режима упал', err);
+      }
+      return false;
+    }
+    if (!layout) return false;
     cv.begin();
     const ctx = cv.ctx;
     const started = app.dev ? now() : 0;
@@ -175,18 +208,24 @@ export function mountGame(app, params) {
   // появление — это не проблема производительности, предупреждение для них не выводим.
   const frameBudget = createFrameBudget(FRAME_BUDGET_MS, FRAME_WARMUP);
 
-  const cv = createCanvas(board, (rect) => {
-    frameBudget.reset();
-    relayout(rect);
-    loop.invalidate();
-  });
+  // DOM-режим (§2.5): вид сам следит за размером; тапы приходят как api.tap(target).
+  const view = isDom
+    ? mode.view(board, { tap: (target) => onTap(target), invalidate: () => loop.invalidate(), reducedMotion: () => app.reducedMotion() })
+    : null;
+  const cv = isDom
+    ? null
+    : createCanvas(board, (rect) => {
+        frameBudget.reset();
+        relayout(rect);
+        loop.invalidate();
+      });
 
   /**
    * Пересчёт layout; rect передаётся явно, пока cv ещё создаётся (синхронный первый замер).
    * Поле поднято к верху холста (boardRect): при победе оверлей снизу не закрывает нижние ряды.
    */
-  function relayout(rect = cv.rect()) {
-    if (rect.w < 2 || rect.h < 2) return;
+  function relayout(rect = cv ? cv.rect() : null) {
+    if (isDom || !rect || rect.w < 2 || rect.h < 2) return;
     layout = mode.layout(gameState, boardRect(rect), theme);
     // Призрак обучения: уровень 1 режима, до первого касания; после касания не возвращается
     // ни при смене размера/темы, ни после undo. Смена layout лишь пересчитывает его точки.
@@ -271,7 +310,7 @@ export function mountGame(app, params) {
 
   // --- Ввод ------------------------------------------------------------------------------
   const tracker = createPointerTracker();
-  const detachInput = attachPointer(cv.canvas, tracker, onPointer, { onRawDown: () => app.audio.unlock() });
+  const detachInput = cv ? attachPointer(cv.canvas, tracker, onPointer, { onRawDown: () => app.audio.unlock() }) : () => {};
 
   function onPointer(ev) {
     if (destroyed || !layout) return;
@@ -296,6 +335,7 @@ export function mountGame(app, params) {
     }
     handleEvents(events);
     if (finishing) {
+      touched = true;
       strokeActive = false;
       if (strokeChanged && strokeSnapshot) undo.push(strokeSnapshot);
       strokeSnapshot = null;
@@ -305,8 +345,59 @@ export function mountGame(app, params) {
     loop.invalidate();
   }
 
+  /**
+   * Клавиша экранной/физической клавиатуры (§2.5): снимок до нажатия, изменившая поле клавиша —
+   * отдельный шаг undo; смена выделения шагом не считается. Начатый росчерк сначала завершается.
+   */
+  function onKey(k) {
+    if (destroyed || (!layout && !isDom) || won || ended || app.isLandscape() || typeof mode.key !== 'function') return;
+    if (tracker.active) {
+      const end = tracker.abort();
+      if (end) onPointer(end);
+    }
+    dismissGhost();
+    const snapshot = mode.serialize(gameState);
+    strokeChanged = false;
+    let events = [];
+    try {
+      events = mode.key(gameState, k, now()) || [];
+    } catch (err) {
+      console.error('key режима упал', err);
+    }
+    handleEvents(events);
+    if (strokeChanged) undo.push(snapshot);
+    strokeChanged = false;
+    if (events.length) {
+      touched = true;
+      saveCurrent();
+    }
+    updateHud();
+    loop.invalidate();
+  }
+
+  /** Тап DOM-режима (§2.5): только выделение — без шага undo; партия сохраняется. */
+  function onTap(target) {
+    if (destroyed || won || ended || app.isLandscape() || typeof mode.tap !== 'function') return;
+    dismissGhost();
+    let events = [];
+    try {
+      events = mode.tap(gameState, target) || [];
+    } catch (err) {
+      console.error('tap режима упал', err);
+    }
+    handleEvents(events);
+    if (events.length) {
+      touched = true;
+      saveCurrent();
+    }
+    loop.invalidate();
+  }
+
   function handleEvents(events) {
     let solved = false;
+    // Пачка событий, завершающая уровень: перевод слова уже будет в списке слов на экране победы —
+    // тост не нужен (он лёг бы поверх «Дальше»).
+    const finishing = events.some((e) => e.kind === 'solved');
     for (const ev of events) {
       switch (ev.kind) {
         case 'step':
@@ -320,6 +411,8 @@ export function mountGame(app, params) {
           shake();
           if (ev.reason === 'early-finish' && ev.remaining != null) {
             app.overlays.toast(t('remainingCells', { n: ev.remaining }), { key: 'remaining', duration: 1800 });
+          } else if (ev.message) {
+            app.overlays.toast(tr(ev.message), { key: 'reject', duration: 2600 });
           }
           break;
         case 'cut':
@@ -327,6 +420,15 @@ export function mountGame(app, params) {
           break;
         case 'complete':
           app.audio.complete();
+          if (ev.clue != null) vibrate(20); // Lumin: средняя вибрация на отгаданное слово (не flow)
+          if (ev.message && !finishing) app.overlays.toast(tr(ev.message), { key: `complete-${ev.clue ?? 0}`, duration: 2600 });
+          break;
+        case 'miss':
+          // Lumin «Errors stay local»: лёгкая вибрация, без тряски и звука отказа.
+          vibrate(10);
+          break;
+        case 'notice':
+          if (ev.message) app.overlays.toast(tr(ev.message), { key: 'notice', duration: 2600 });
           break;
         case 'deadend':
           // startMatters === false — цикл или фиксированный старт: совет «другую точку старта» ложный,
@@ -363,7 +465,7 @@ export function mountGame(app, params) {
     footerEl.textContent = footer ? tr(footer) : '';
     undoBtn.disabled = undo.size === 0 && !strokeChanged;
     skipBtn.style.display = isDaily || won ? 'none' : isEndless || skipAvailable(attempt, now()) ? '' : 'none';
-    hintBtn.classList.toggle('pulse', !won && hintShouldPulse(attempt, now()));
+    (topHint || hintBtn).classList.toggle('pulse', !won && hintShouldPulse(attempt, now()));
   }
 
   // --- Снимки, undo, сброс, подсказка, пропуск ------------------------------------------
@@ -376,8 +478,15 @@ export function mountGame(app, params) {
     const prev = gameState;
     // Счётчик тупиков за попытку (stroke, §2.1) undo не откатывает: иначе порог «второй тупик →
     // пульс нечётных точек» обходился бы кнопкой «Отменить». Для zip/flow поле лишнее и игнорируется.
-    const snap =
-      prev && Number.isInteger(prev.deadEnds) ? { ...snapshot, deadEnds: Math.max(snapshot.deadEnds ?? 0, prev.deadEnds) } : snapshot;
+    // Статистика попытки undo не откатывает (§2.1, §2.5): тупики stroke, подсказки и точность «Слов»
+    // только растут; hintUsed, раз поставленный, остаётся. Поля, которых у режима нет, не трогаются.
+    let snap = snapshot;
+    if (prev) {
+      for (const f of ATTEMPT_STATS) {
+        if (Number.isInteger(prev[f])) snap = { ...snap, [f]: Math.max(snapshot[f] ?? 0, prev[f]) };
+      }
+      if (prev.hintUsed === true && Object.prototype.hasOwnProperty.call(snapshot, 'hintUsed')) snap = { ...snap, hintUsed: true };
+    }
     gameState = mode.create(level, snap);
     if (prev && prev._cache) gameState._cache = prev._cache;
     appeared = true;
@@ -394,12 +503,14 @@ export function mountGame(app, params) {
     if (ended) return;
     const snap = undo.pop();
     if (!snap) return;
+    touched = true;
     restore(snap);
     saveCurrent();
   }
 
   function doReset() {
     if (ended) return;
+    touched = true;
     const before = mode.serialize(gameState);
     undo.push(before);
     mode.reset(gameState);
@@ -418,6 +529,18 @@ export function mountGame(app, params) {
 
   function doHint() {
     if (ended) return;
+    // Lumin «Hints» (§2.5): шторка с вариантами и их эффектом вместо двойного тапа.
+    if (typeof mode.hintOptions === 'function') {
+      const options = mode.hintOptions(gameState) || [];
+      app.overlays.sheet({
+        eyebrow: t('hint'),
+        title: t('hintSheetTitle'),
+        note: attempt.hintUsed ? null : t('hintSheetNote'),
+        options: options.map((o) => ({ label: tr(o.label), detail: tr(o.detail), disabled: !!o.disabled, onPick: () => applyHint(o.id) })),
+        cancel: t('cancel'),
+      });
+      return;
+    }
     const tt = now();
     if (!attempt.hintUsed && tt > hintArmedUntil) {
       hintArmedUntil = tt + HINT_ARM_MS;
@@ -438,6 +561,7 @@ export function mountGame(app, params) {
       return;
     }
     undo.push(before);
+    touched = true;
     const firstHint = !attempt.hintUsed;
     attempt.hintUsed = true;
     gameState.hintUsed = true;
@@ -473,6 +597,35 @@ export function mountGame(app, params) {
     saveCurrent();
     // Подсказка flow раскрывает поток целиком и может закрыть поле — победа без звезды.
     if (mode.isSolved(gameState)) onSolved();
+  }
+
+  /** Применить выбранный в шторке вариант подсказки (§2.5). */
+  function applyHint(id) {
+    if (ended || destroyed) return;
+    const tt = now();
+    const before = mode.serialize(gameState);
+    const result = mode.hint(gameState, tt, id) || { kind: 'none' };
+    if (result.kind === 'none') {
+      app.overlays.toast(t('hintUnavailable'), { key: 'hint' });
+      loop.invalidate();
+      return;
+    }
+    undo.push(before);
+    touched = true;
+    const firstHint = !attempt.hintUsed;
+    attempt.hintUsed = true;
+    gameState.hintUsed = true;
+    if (isEndless && firstHint) breakStreak();
+    if (result.kind === 'check') {
+      app.overlays.toast(result.wrong ? t('checkWrong', { n: result.wrong }) : t('checkOk'), { key: 'hint' });
+    }
+    // Открытая буква могла дорешать слова: тост с переводом и звук, как при вводе.
+    if (Array.isArray(result.events)) handleEvents(result.events.filter((ev) => ev.kind === 'complete'));
+    attempt.lastChangeAt = now();
+    updateHud();
+    loop.invalidate();
+    saveCurrent();
+    if (!won && mode.isSolved(gameState)) onSolved();
   }
 
   /** Снять кнопку «Укоротить до неё»: подсказка привязана к дорожке на момент показа. */
@@ -514,6 +667,7 @@ export function mountGame(app, params) {
   // --- current ---------------------------------------------------------------------------
   function saveCurrent() {
     if (ended || destroyed) return;
+    if (!touched && !isEndless) return;
     const snapshot = { ...mode.serialize(gameState) };
     const record = {
       kind,
@@ -546,6 +700,7 @@ export function mountGame(app, params) {
     let endlessStreak = null;
     let endlessRecord = false;
 
+    let chapterLabel = null;
     if (isCampaign) {
       const progress = state.progress[mode.id] || {};
       prevBestMs = progress[level.id]?.bestMs || 0;
@@ -554,7 +709,14 @@ export function mountGame(app, params) {
       const skipped = state.skipped[mode.id] || [];
       if (skipped.includes(level.id)) state.skipped[mode.id] = skipped.filter((id) => id !== level.id);
       const nextLevel = campaign[levelIndex + 1];
-      if (!nextLevel || nextLevel.chapter !== level.chapter) chapterDone = level.chapter;
+      // «Глава/тема пройдена» — только когда пройдены все её уровни (при окне по темам их можно
+      // проходить вразнобой, §2.5).
+      const chapterComplete =
+        !mode.openByChapter || campaign.filter((l) => l.chapter === level.chapter).every((l) => isDone(state.progress[mode.id], l.id));
+      if ((!nextLevel || nextLevel.chapter !== level.chapter) && chapterComplete) {
+        chapterDone = level.chapter;
+        if (typeof mode.chapterTitle === 'function') chapterLabel = t('themeDone', { name: tr(mode.chapterTitle(level.chapter, level)) });
+      }
     } else if (isDaily) {
       state.daily = recordDailyWin(state.daily, dailyDate);
     } else if (isEndless) {
@@ -581,10 +743,15 @@ export function mountGame(app, params) {
 
     app.audio.win();
     vibrate([30, 40, 30]);
+    if (kbd) {
+      kbd.style.display = 'none';
+      document.body.classList.remove('kbd-open');
+    }
     updateHud();
     winAt = tt;
     const reduced = app.reducedMotion();
-    if (!reduced) {
+    // Lumin: финал спокойный, без конфетти (§2.5).
+    if (!reduced && cv && !lumin) {
       const rect = cv.rect();
       confetti = createConfetti(rect.w, rect.h, tt, {
         strong: !!chapterDone,
@@ -603,16 +770,23 @@ export function mountGame(app, params) {
       elapsedMs,
       prevBestMs,
       statsLines: stats?.lines || [],
+      vocab: stats?.vocab || null,
+      skin: mode.skin || null,
+      quote: stats?.quote || null,
+      accuracy: stats?.accuracy,
+      hints: stats?.hints,
       chapterDone,
+      chapterLabel,
       endlessStreak,
       endlessRecord,
       dailyWon: isDaily,
       onNext: () => {
         app.audio.tap();
         if (isCampaign) {
-          const next = campaign[levelIndex + 1];
+          const next = nextCampaignLevel();
           if (next) app.go('game', { kind: 'campaign', modeId: mode.id, levelId: next.id });
-          else app.go('campaignDone', { modeId: mode.id });
+          else if (doneCount(campaign, state.progress[mode.id] || {}) === campaign.length) app.go('campaignDone', { modeId: mode.id });
+          else app.go('levels', { modeId: mode.id });
         } else if (isDaily) {
           app.go('home');
         } else {
@@ -626,10 +800,28 @@ export function mountGame(app, params) {
         else app.go('game', { kind, modeId: mode.id, levelId: level.id, date: dailyDate });
       },
     });
-    const delay = reduced ? 0 : chapterDone ? CONFETTI_STRONG_MS : CONFETTI_MS;
+    const delay = reduced ? 0 : lumin ? 360 : chapterDone ? CONFETTI_STRONG_MS : CONFETTI_MS;
     setTimeout(() => {
-      if (!destroyed) el.appendChild(overlay);
+      if (destroyed) return;
+      el.appendChild(overlay);
+      // Фокус на заголовок победы: VoiceOver объявляет результат, Tab идёт по кнопкам диалога.
+      overlay.querySelector('.lw-title, .win-card h2')?.focus?.({ preventScroll: true });
     }, delay);
+  }
+
+  /**
+   * «Дальше» в кампании: линейные режимы — следующий уровень по порядку. С окном по темам
+   * (openByChapter, §2.5) — следующий открытый непройденный уровень этой темы, иначе первый
+   * открытый непройденный в любой теме; null — всё пройдено (или открытых нет).
+   */
+  function nextCampaignLevel() {
+    if (!mode.openByChapter) return campaign[levelIndex + 1] || null;
+    const progress = state.progress[mode.id] || {};
+    const statuses = levelStatuses(campaign, progress, state.skipped[mode.id] || [], { byChapter: true });
+    const open = (s) => s.status === 'open' && s.id !== level.id;
+    const same = statuses.find((s) => open(s) && campaign[s.index].chapter === level.chapter && !s.skipped);
+    const any = same || statuses.find((s) => open(s) && !s.skipped) || statuses.find(open);
+    return any ? campaign[any.index] : null;
   }
 
   // --- Таймер, видимость, тема ----------------------------------------------------------
@@ -638,7 +830,7 @@ export function mountGame(app, params) {
       timer.pause(now());
       saveCurrent();
     } else {
-      timer.start(now());
+      if (!introOpen) timer.start(now());
       ghostStart = now();
       loop.invalidate();
     }
@@ -649,6 +841,27 @@ export function mountGame(app, params) {
   }
   document.addEventListener('visibilitychange', onVisibility);
   window.addEventListener('pagehide', onPageHide);
+
+  // Физическая клавиатура (Mac, iPad с клавиатурой) — только для режимов с вводом букв.
+  // Не перехватывает клавиши, пока открыт диалог (шторка, знакомство, подтверждение, победа) или
+  // фокус на кнопке/поле: Tab/Enter/пробел там работают как обычно (WCAG 2.1.1/2.1.2).
+  function onKeyDown(e) {
+    if (!kbd || won || ended || destroyed || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (document.querySelector('.sheet-backdrop, .intro-backdrop, .dialog-backdrop, .win-overlay')) return;
+    const tgt = e.target;
+    const tag = tgt && tgt.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if ((e.key === 'Enter' || e.key === 'Tab' || e.key === ' ') && tgt && tgt.closest && tgt.closest('button, a') && !tgt.closest('.kbd')) return;
+    if (e.key === 'Tab' && e.shiftKey) return;
+    // Русская (и любая не латинская) раскладка: буква по физической клавише (e.code «KeyA» → A).
+    const code = /^Key([A-Z])$/.exec(e.code || '');
+    const latin = /^[a-zA-Z]$/.test(e.key) ? e.key.toUpperCase() : null;
+    const key = KEY_MAP[e.key] || latin || (code && e.key && e.key.length === 1 ? code[1] : null);
+    if (!key) return;
+    e.preventDefault();
+    onKey(key);
+  }
+  if (kbd) document.addEventListener('keydown', onKeyDown);
 
   // Смена темы: режимы сами перерисовывают статический слой по theme.id (§4.3), кэш не трогаем.
   const unwatchTheme = app.onThemeChange(() => {
@@ -663,10 +876,27 @@ export function mountGame(app, params) {
     if (!destroyed && !won) updateHud();
   }, 1000);
 
-  if (document.visibilityState !== 'hidden') timer.start(t0);
+  if (!introOpen && document.visibilityState !== 'hidden') timer.start(t0);
   relayout();
   updateHud();
   loop.invalidate();
+
+  // Знакомство с режимом при первом входе (Lumin «Onboarding», §2.5) — один раз; таймер уровня
+  // стоит, пока оно на экране.
+  if (introOpen) {
+    setTimeout(() => {
+      if (destroyed) return;
+      app.overlays
+        .intro(mode.intro.map((c) => ({ title: tr(c.title), text: tr(c.text) })), { next: t('next'), done: t('introStart'), skip: t('skip') })
+        .then(() => {
+          introOpen = false;
+          state.settings.introSeen = [...(state.settings.introSeen || []), mode.id];
+          app.save();
+          if (!destroyed && !won && document.visibilityState !== 'hidden') timer.start(now());
+          attempt.lastChangeAt = now();
+        });
+    }, 200);
+  }
 
   return {
     el,
@@ -681,10 +911,56 @@ export function mountGame(app, params) {
       clearInterval(ticker);
       detachInput();
       loop.stop();
-      cv.destroy();
+      cv?.destroy();
+      view?.destroy();
+      if (lumin) document.body.classList.remove('lumin-on');
       unwatchTheme();
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('pagehide', onPageHide);
+      if (kbd) {
+        document.removeEventListener('keydown', onKeyDown);
+        document.body.classList.remove('kbd-open');
+      }
     },
   };
+}
+
+const KEY_MAP = { Backspace: 'Backspace', Delete: 'Backspace', ArrowLeft: 'Left', ArrowRight: 'Right', Enter: 'Next', Tab: 'Next' };
+const KEY_ROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+
+/**
+ * Экранная клавиатура QWERTY + ⌫ (§2.5). Нажатие — на pointerdown (без задержки click и без фокуса),
+ * подсветка .down до отпускания; системная клавиатура iOS не появляется.
+ */
+export function buildKeyboard(onKey) {
+  const rows = KEY_ROWS.map((letters, r) => {
+    const keys = [...letters].map((ch) => h('button', { class: 'key', type: 'button', dataset: { k: ch }, 'aria-label': ch, text: ch }));
+    if (r === 2) keys.push(h('button', { class: 'key wide', type: 'button', dataset: { k: 'Backspace' }, 'aria-label': t('backspace') }, icon('backspace')));
+    return h('div', { class: 'kbd-row' }, keys);
+  });
+  const el = h('div', { class: 'kbd', role: 'group', 'aria-label': t('keyboard') }, rows);
+  let pressed = null;
+  const release = () => {
+    if (pressed) pressed.classList.remove('down');
+    pressed = null;
+  };
+  el.addEventListener('pointerdown', (e) => {
+    const btn = e.target.closest ? e.target.closest('.key') : null;
+    if (!btn) return;
+    e.preventDefault();
+    release();
+    pressed = btn;
+    btn.classList.add('down');
+    onKey(btn.dataset.k);
+  });
+  el.addEventListener('pointerup', release);
+  el.addEventListener('pointercancel', release);
+  el.addEventListener('pointerleave', release);
+  // Клик без pointerdown (VoiceOver, клавиатурная навигация) — тоже нажатие.
+  el.addEventListener('click', (e) => {
+    if (e.detail !== 0) return;
+    const btn = e.target.closest ? e.target.closest('.key') : null;
+    if (btn) onKey(btn.dataset.k);
+  });
+  return el;
 }

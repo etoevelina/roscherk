@@ -115,3 +115,17 @@ test('undo-стек ограничен глубиной 50', () => {
   assert.equal(u.size, 0);
   assert.equal(u.pop(), undefined);
 });
+
+test('byChapter (§2.5): окно из 3 уровней считается в каждой главе отдельно, index сквозной', () => {
+  const lv = Array.from({ length: 10 }, (_, i) => ({ id: `W${i}`, chapter: i < 5 ? 1 : 2 }));
+  const st = levelStatuses(lv, {}, [], { byChapter: true });
+  assert.deepEqual(st.map((s) => s.status), ['open', 'open', 'open', 'locked', 'locked', 'open', 'open', 'open', 'locked', 'locked']);
+  assert.deepEqual(st.map((s) => s.index), [...Array(10).keys()]);
+  const progress = { W5: { star: true, bestMs: 5 } };
+  const st2 = levelStatuses(lv, progress, [], { byChapter: true });
+  assert.deepEqual(st2.slice(5).map((s) => s.status), ['done', 'open', 'open', 'open', 'locked']);
+  assert.equal(nextLevelIndex(lv, progress, [], { byChapter: true }), 0, 'первый открытый непройденный — в первой теме');
+  const all = Object.fromEntries(lv.slice(0, 5).map((l) => [l.id, { star: false, bestMs: 9 }]));
+  assert.equal(nextLevelIndex(lv, all, [], { byChapter: true }), 5, 'первая тема пройдена — следующая');
+  assert.deepEqual(levelStatuses(lv, {}, []).map((s) => s.status).slice(3, 6), ['locked', 'locked', 'locked'], 'без byChapter — как раньше');
+});

@@ -1,0 +1,939 @@
+{
+  "slug": "tech",
+  "ru": "Технологии",
+  "en": "Technology & Computing",
+  "quotes": [
+    {
+      "q": "But lo! men have become the tools of their tools.",
+      "a": "Henry David Thoreau",
+      "src": "Walden, ch. 1 \"Economy\" (1854)",
+      "ru": "Но взгляните: люди стали орудиями своих орудий."
+    },
+    {
+      "q": "We do not ride on the railroad; it rides upon us.",
+      "a": "Henry David Thoreau",
+      "src": "Walden, ch. 2 \"Where I Lived, and What I Lived For\" (1854)",
+      "ru": "Не мы едем по железной дороге — это она едет по нам."
+    },
+    {
+      "q": "Mr. Watson — Come here — I want to see you.",
+      "a": "Alexander Graham Bell",
+      "src": "Laboratory notebook, 10 March 1876 (first words heard over the telephone)",
+      "ru": "Мистер Ватсон, идите сюда — вы мне нужны."
+    },
+    {
+      "q": "Without tools he is nothing, with tools he is all.",
+      "a": "Thomas Carlyle",
+      "src": "Sartor Resartus, Book I, ch. 5 (1833-1834)",
+      "ru": "Без орудий он ничто, с орудиями он — всё."
+    },
+    {
+      "q": "Machines take me by surprise with great frequency.",
+      "a": "Alan Turing",
+      "src": "Computing Machinery and Intelligence, Mind (1950)",
+      "ru": "Машины весьма часто застают меня врасплох."
+    },
+    {
+      "q": "Necessity is the mother of invention.",
+      "a": "Proverb",
+      "src": "Proverb",
+      "ru": "Нужда — мать изобретений."
+    },
+    {
+      "q": "I propose to consider the question, 'Can machines think?'",
+      "a": "Alan Turing",
+      "src": "Computing Machinery and Intelligence, Mind (1950), opening sentence",
+      "ru": "Я предлагаю рассмотреть вопрос: «Могут ли машины мыслить?»"
+    },
+    {
+      "q": "What we want is a machine that can learn from experience.",
+      "a": "Alan Turing",
+      "src": "Lecture to the London Mathematical Society, 20 February 1947",
+      "ru": "Нам нужна машина, способная учиться на собственном опыте."
+    },
+    {
+      "q": "Men are grown mechanical in head and in heart, as well as in hand.",
+      "a": "Thomas Carlyle",
+      "src": "Signs of the Times, Edinburgh Review (1829)",
+      "ru": "Люди сделались механическими не только руками, но и головой, и сердцем."
+    },
+    {
+      "q": "It is the Age of Machinery, in every outward and inward sense of that word.",
+      "a": "Thomas Carlyle",
+      "src": "Signs of the Times, Edinburgh Review (1829)",
+      "ru": "Это Век Машин — во всех смыслах этого слова, внешних и внутренних."
+    },
+    {
+      "q": "On mechanical slavery, on the slavery of the machine, the future of the world depends.",
+      "a": "Oscar Wilde",
+      "src": "The Soul of Man under Socialism (1891)",
+      "ru": "От механического рабства, от рабства машины зависит будущее мира."
+    },
+    {
+      "q": "We can only see a short distance ahead, but we can see plenty there that needs to be done.",
+      "a": "Alan Turing",
+      "src": "Computing Machinery and Intelligence, Mind (1950), closing sentence",
+      "ru": "Мы видим лишь недалеко вперёд, но и там видим немало того, что предстоит сделать."
+    },
+    {
+      "q": "Our inventions are wont to be pretty toys, which distract our attention from serious things.",
+      "a": "Henry David Thoreau",
+      "src": "Walden, ch. 1 \"Economy\" (1854)",
+      "ru": "Наши изобретения обычно оказываются милыми игрушками, которые отвлекают нас от серьёзных дел."
+    },
+    {
+      "q": "We may hope that machines will eventually compete with men in all purely intellectual fields.",
+      "a": "Alan Turing",
+      "src": "Computing Machinery and Intelligence, Mind (1950)",
+      "ru": "Можно надеяться, что со временем машины смогут состязаться с людьми во всех чисто интеллектуальных областях."
+    },
+    {
+      "q": "As soon as an Analytical Engine exists, it will necessarily guide the future course of the science.",
+      "a": "Charles Babbage",
+      "src": "Passages from the Life of a Philosopher, ch. 8 (1864)",
+      "ru": "Как только Аналитическая машина появится, она неизбежно определит дальнейший путь науки."
+    },
+    {
+      "q": "On two occasions I have been asked, 'Pray, Mr. Babbage, if you put into the machine wrong figures, will the right answers come out?'",
+      "a": "Charles Babbage",
+      "src": "Passages from the Life of a Philosopher, ch. 5 (1864)",
+      "ru": "Дважды меня спрашивали: «Скажите, мистер Бэббидж, если ввести в машину неверные числа, выйдут ли из неё верные ответы?»"
+    },
+    {
+      "q": "The Analytical Engine has no pretensions whatever to originate anything. It can do whatever we know how to order it to perform.",
+      "a": "Ada Lovelace",
+      "src": "Notes on Menabrea's Sketch of the Analytical Engine, Note G (1843)",
+      "ru": "Аналитическая машина вовсе не притязает на то, чтобы создавать что-то новое. Она способна делать всё, что мы умеем ей предписать."
+    }
+  ],
+  "words": [
+    {
+      "w": "GADGET",
+      "p": "n",
+      "c": "A small clever device or tool, often electronic",
+      "ru": "гаджет, приспособление"
+    },
+    {
+      "w": "WIDGET",
+      "p": "n",
+      "c": "A small on-screen app showing live info, like a clock",
+      "ru": "виджет"
+    },
+    {
+      "w": "GIZMO",
+      "p": "n",
+      "c": "Informal: a small device whose proper name you forget",
+      "ru": "штуковина, прибамбас"
+    },
+    {
+      "w": "CONTRAPTION",
+      "p": "n",
+      "c": "A strange, complicated-looking homemade machine",
+      "ru": "хитроумное устройство, штуковина"
+    },
+    {
+      "w": "MECHANISM",
+      "p": "n",
+      "c": "A set of moving parts in a machine that work together",
+      "ru": "механизм"
+    },
+    {
+      "w": "KEYSTROKE",
+      "p": "n",
+      "c": "A single press of one button when typing",
+      "ru": "нажатие клавиши"
+    },
+    {
+      "w": "HARDWARE",
+      "p": "n",
+      "c": "The physical parts of a computer, as opposed to programs",
+      "ru": "аппаратное обеспечение, железо"
+    },
+    {
+      "w": "FIRMWARE",
+      "p": "n",
+      "c": "Permanent code stored on a device's chip to control it",
+      "ru": "встроенное ПО, прошивка"
+    },
+    {
+      "w": "MALWARE",
+      "p": "n",
+      "c": "Any program designed to damage a computer or steal data",
+      "ru": "вредоносная программа"
+    },
+    {
+      "w": "SPYWARE",
+      "p": "n",
+      "c": "A program that secretly records what a user does",
+      "ru": "шпионская программа"
+    },
+    {
+      "w": "FIREWALL",
+      "p": "n",
+      "c": "A security barrier that blocks unwanted network traffic",
+      "ru": "брандмауэр, сетевой экран"
+    },
+    {
+      "w": "BANDWIDTH",
+      "p": "n",
+      "c": "The amount of data a connection can carry per second",
+      "ru": "пропускная способность"
+    },
+    {
+      "w": "BROADBAND",
+      "p": "n",
+      "c": "A fast internet connection carrying lots of data at once",
+      "ru": "широкополосный интернет"
+    },
+    {
+      "w": "GLITCH",
+      "p": "n",
+      "c": "A sudden, usually minor fault in a system",
+      "ru": "сбой, глюк"
+    },
+    {
+      "w": "PATCH",
+      "p": "n",
+      "c": "A small update that fixes a bug or security hole",
+      "ru": "патч, исправление"
+    },
+    {
+      "w": "BACKUP",
+      "p": "n",
+      "c": "A spare copy of files kept in case they are lost",
+      "ru": "резервная копия"
+    },
+    {
+      "w": "BOOKMARK",
+      "p": "n",
+      "c": "A saved link to a web page you want to revisit",
+      "ru": "закладка"
+    },
+    {
+      "w": "BROWSER",
+      "p": "n",
+      "c": "A program used to open and view web pages",
+      "ru": "браузер"
+    },
+    {
+      "w": "CURSOR",
+      "p": "n",
+      "c": "A moving marker that shows your position on a screen",
+      "ru": "курсор"
+    },
+    {
+      "w": "PIXEL",
+      "p": "n",
+      "c": "One of the tiny dots that make up a digital image",
+      "ru": "пиксель"
+    },
+    {
+      "w": "ROBOTICS",
+      "p": "n",
+      "c": "The engineering of machines that move and act on their own",
+      "ru": "робототехника"
+    },
+    {
+      "w": "ALGORITHM",
+      "p": "n",
+      "c": "A step-by-step set of rules for solving a problem",
+      "ru": "алгоритм"
+    },
+    {
+      "w": "DATABASE",
+      "p": "n",
+      "c": "An organised collection of information stored on a computer",
+      "ru": "база данных"
+    },
+    {
+      "w": "SPREADSHEET",
+      "p": "n",
+      "c": "A program that arranges numbers in rows and columns",
+      "ru": "электронная таблица"
+    },
+    {
+      "w": "INTERFACE",
+      "p": "n",
+      "c": "The way a user sees and controls a program",
+      "ru": "интерфейс"
+    },
+    {
+      "w": "SERVER",
+      "p": "n",
+      "c": "A powerful computer that supplies data to other computers",
+      "ru": "сервер"
+    },
+    {
+      "w": "ROUTER",
+      "p": "n",
+      "c": "A box that shares one internet connection around a home",
+      "ru": "роутер, маршрутизатор"
+    },
+    {
+      "w": "PROCESSOR",
+      "p": "n",
+      "c": "The chip that carries out a computer's instructions",
+      "ru": "процессор"
+    },
+    {
+      "w": "MICROCHIP",
+      "p": "n",
+      "c": "A tiny piece of silicon carrying an electronic circuit",
+      "ru": "микрочип"
+    },
+    {
+      "w": "CIRCUIT",
+      "p": "n",
+      "c": "A closed path through which electric current flows",
+      "ru": "электрическая цепь, схема"
+    },
+    {
+      "w": "MUTE",
+      "p": "v",
+      "c": "To switch off the sound of a call or device",
+      "ru": "выключать звук"
+    },
+    {
+      "w": "GIGABYTE",
+      "p": "n",
+      "c": "A unit of data equal to about a billion bytes",
+      "ru": "гигабайт"
+    },
+    {
+      "w": "TOUCHSCREEN",
+      "p": "n",
+      "c": "A display you operate by tapping it with a finger",
+      "ru": "сенсорный экран"
+    },
+    {
+      "w": "HEADSET",
+      "p": "n",
+      "c": "Earphones combined with a small microphone",
+      "ru": "гарнитура"
+    },
+    {
+      "w": "WEBCAM",
+      "p": "n",
+      "c": "A small video device on a computer, used for online calls",
+      "ru": "веб-камера"
+    },
+    {
+      "w": "PRINTOUT",
+      "p": "n",
+      "c": "A paper copy of a computer document",
+      "ru": "распечатка"
+    },
+    {
+      "w": "DRONE",
+      "p": "n",
+      "c": "A small pilotless aircraft flown by remote control",
+      "ru": "дрон, беспилотник"
+    },
+    {
+      "w": "PROTOTYPE",
+      "p": "n",
+      "c": "The first working model of a new invention",
+      "ru": "прототип, опытный образец"
+    },
+    {
+      "w": "BLUEPRINT",
+      "p": "n",
+      "c": "A detailed technical drawing or plan for building something",
+      "ru": "чертёж, проект"
+    },
+    {
+      "w": "COGWHEEL",
+      "p": "n",
+      "c": "A gear: a disc with teeth that turns another in a machine",
+      "ru": "шестерёнка, зубчатое колесо"
+    },
+    {
+      "w": "ERGONOMIC",
+      "p": "adj",
+      "c": "Designed for comfort and ease of use: an ___ keyboard",
+      "ru": "эргономичный"
+    },
+    {
+      "w": "FOOLPROOF",
+      "p": "adj",
+      "c": "So simple to use that nobody can get it wrong",
+      "ru": "защищённый от дурака, безотказный"
+    },
+    {
+      "w": "PISTON",
+      "p": "n",
+      "c": "A part that slides up and down inside an engine cylinder",
+      "ru": "поршень"
+    },
+    {
+      "w": "TURBINE",
+      "p": "n",
+      "c": "A machine whose blades are spun by water, steam or wind",
+      "ru": "турбина"
+    },
+    {
+      "w": "DYNAMO",
+      "p": "n",
+      "c": "A machine that turns movement into electric current",
+      "ru": "динамо-машина, генератор"
+    },
+    {
+      "w": "MALFUNCTION",
+      "p": "n",
+      "c": "A failure of a machine to work as it should",
+      "ru": "неисправность, сбой"
+    },
+    {
+      "w": "CIPHER",
+      "p": "n",
+      "c": "A secret system for writing messages so others can't read them",
+      "ru": "шифр"
+    },
+    {
+      "w": "HACKER",
+      "p": "n",
+      "c": "Someone who breaks into computer systems illegally",
+      "ru": "хакер"
+    },
+    {
+      "w": "TROLL",
+      "p": "n",
+      "c": "Someone who posts insulting messages online to provoke",
+      "ru": "тролль"
+    },
+    {
+      "w": "PHISHING",
+      "p": "n",
+      "c": "The fraud of sending fake emails to steal passwords",
+      "ru": "фишинг"
+    },
+    {
+      "w": "AVATAR",
+      "p": "n",
+      "c": "A picture or figure that represents a user online",
+      "ru": "аватар"
+    },
+    {
+      "w": "HASHTAG",
+      "p": "n",
+      "c": "A word marked with a special symbol to group posts",
+      "ru": "хештег"
+    },
+    {
+      "w": "PODCAST",
+      "p": "n",
+      "c": "A series of audio episodes you can listen to online",
+      "ru": "подкаст"
+    },
+    {
+      "w": "LATENCY",
+      "p": "n",
+      "c": "The delay between sending data and its arrival",
+      "ru": "задержка (сигнала)"
+    },
+    {
+      "w": "CACHE",
+      "p": "n",
+      "c": "Fast memory that stores data for quick reuse",
+      "ru": "кэш"
+    },
+    {
+      "w": "DONGLE",
+      "p": "n",
+      "c": "A small device plugged into a computer to add a function",
+      "ru": "донгл, подключаемый адаптер"
+    },
+    {
+      "w": "JOYSTICK",
+      "p": "n",
+      "c": "A lever you tilt to control a video game or aircraft",
+      "ru": "джойстик"
+    },
+    {
+      "w": "CONSOLE",
+      "p": "n",
+      "c": "A machine plugged into a TV for playing video games",
+      "ru": "игровая приставка"
+    },
+    {
+      "w": "CHATBOT",
+      "p": "n",
+      "c": "A program that holds text conversations with people",
+      "ru": "чат-бот"
+    },
+    {
+      "w": "HOLOGRAM",
+      "p": "n",
+      "c": "A three-dimensional image produced by laser light",
+      "ru": "голограмма"
+    },
+    {
+      "w": "MAINFRAME",
+      "p": "n",
+      "c": "A large powerful computer serving a whole organisation",
+      "ru": "мейнфрейм, большая ЭВМ"
+    },
+    {
+      "w": "MOTHERBOARD",
+      "p": "n",
+      "c": "The main printed circuit in a computer, holding the processor and memory",
+      "ru": "материнская плата"
+    },
+    {
+      "w": "DOWNTIME",
+      "p": "n",
+      "c": "A period when a system or machine is not working",
+      "ru": "время простоя"
+    },
+    {
+      "w": "OUTAGE",
+      "p": "n",
+      "c": "A period when power or an online service is unavailable",
+      "ru": "отключение, перебой"
+    },
+    {
+      "w": "BLACKOUT",
+      "p": "n",
+      "c": "A failure of the electricity supply over a whole area",
+      "ru": "отключение электричества, блэкаут"
+    },
+    {
+      "w": "TELEGRAPH",
+      "p": "n",
+      "c": "An old system that sent coded messages along wires",
+      "ru": "телеграф"
+    },
+    {
+      "w": "TYPEWRITER",
+      "p": "n",
+      "c": "A machine that prints letters as you press its keys",
+      "ru": "пишущая машинка"
+    },
+    {
+      "w": "ABACUS",
+      "p": "n",
+      "c": "A frame with sliding beads, used for counting",
+      "ru": "счёты"
+    },
+    {
+      "w": "ANDROID",
+      "p": "n",
+      "c": "A robot made to look and act like a human",
+      "ru": "андроид, человекоподобный робот"
+    },
+    {
+      "w": "CYBORG",
+      "p": "n",
+      "c": "A being that is part human, part machine",
+      "ru": "киборг"
+    },
+    {
+      "w": "GEEK",
+      "p": "n",
+      "c": "A person who is obsessed with computers",
+      "ru": "гик, компьютерщик"
+    },
+    {
+      "w": "NEWBIE",
+      "p": "n",
+      "c": "A beginner, especially in computing or online",
+      "ru": "новичок"
+    },
+    {
+      "w": "TECHNOPHOBE",
+      "p": "n",
+      "c": "A person who fears or dislikes new technology",
+      "ru": "технофоб"
+    },
+    {
+      "w": "HYPERLINK",
+      "p": "n",
+      "c": "Clickable text that takes you to another page",
+      "ru": "гиперссылка"
+    },
+    {
+      "w": "THUMBNAIL",
+      "p": "n",
+      "c": "A small preview image of a larger picture",
+      "ru": "миниатюра, превью"
+    },
+    {
+      "w": "SCREENSHOT",
+      "p": "n",
+      "c": "An image capturing exactly what is shown on a display",
+      "ru": "скриншот, снимок экрана"
+    },
+    {
+      "w": "VOLTAGE",
+      "p": "n",
+      "c": "Electrical pressure that drives a current through a wire",
+      "ru": "напряжение"
+    },
+    {
+      "w": "SATELLITE",
+      "p": "n",
+      "c": "A device orbiting the Earth that relays signals",
+      "ru": "спутник"
+    },
+    {
+      "w": "WIRING",
+      "p": "n",
+      "c": "The system of electric cables in a building or device",
+      "ru": "проводка"
+    },
+    {
+      "w": "EARBUD",
+      "p": "n",
+      "c": "A tiny headphone that fits inside the ear",
+      "ru": "наушник-вкладыш"
+    },
+    {
+      "w": "VLOG",
+      "p": "n",
+      "c": "A video diary that someone posts online",
+      "ru": "видеоблог, влог"
+    },
+    {
+      "w": "TECHIE",
+      "p": "n",
+      "c": "Informal: an expert in computers and gadgets",
+      "ru": "технарь"
+    },
+    {
+      "w": "WIRELESS",
+      "p": "adj",
+      "c": "Working without cables, by means of radio signals",
+      "ru": "беспроводной"
+    },
+    {
+      "w": "HANDHELD",
+      "p": "adj",
+      "c": "Small enough to operate while carried in one palm",
+      "ru": "портативный, карманный"
+    },
+    {
+      "w": "PORTABLE",
+      "p": "adj",
+      "c": "Light enough to be carried around easily",
+      "ru": "переносной, портативный"
+    },
+    {
+      "w": "VIRTUAL",
+      "p": "adj",
+      "c": "Existing on computers rather than physically",
+      "ru": "виртуальный"
+    },
+    {
+      "w": "OBSOLETE",
+      "p": "adj",
+      "c": "No longer used because something newer exists",
+      "ru": "устаревший"
+    },
+    {
+      "w": "INGENIOUS",
+      "p": "adj",
+      "c": "Clever, original and inventive (of a device or plan)",
+      "ru": "хитроумный, изобретательный"
+    },
+    {
+      "w": "NIFTY",
+      "p": "adj",
+      "c": "Informal: neat, clever and useful",
+      "ru": "классный, удобный, ловко придуманный"
+    },
+    {
+      "w": "SLEEK",
+      "p": "adj",
+      "c": "Smooth, slim and stylish in design",
+      "ru": "гладкий, изящный"
+    },
+    {
+      "w": "INTUITIVE",
+      "p": "adj",
+      "c": "Easy to use without needing instructions",
+      "ru": "интуитивно понятный"
+    },
+    {
+      "w": "SEAMLESS",
+      "p": "adj",
+      "c": "Smooth and without any interruptions or gaps",
+      "ru": "бесшовный, плавный"
+    },
+    {
+      "w": "ROBUST",
+      "p": "adj",
+      "c": "Strong and unlikely to break or fail",
+      "ru": "надёжный, устойчивый"
+    },
+    {
+      "w": "CUMBERSOME",
+      "p": "adj",
+      "c": "Large, heavy and awkward to use",
+      "ru": "громоздкий"
+    },
+    {
+      "w": "CLUNKY",
+      "p": "adj",
+      "c": "Heavy, old-fashioned and awkward to operate",
+      "ru": "неуклюжий, топорный"
+    },
+    {
+      "w": "BUGGY",
+      "p": "adj",
+      "c": "Full of software errors",
+      "ru": "глючный, с ошибками"
+    },
+    {
+      "w": "BINARY",
+      "p": "adj",
+      "c": "Using only the digits zero and one",
+      "ru": "двоичный"
+    },
+    {
+      "w": "ANALOG",
+      "p": "adj",
+      "c": "Using continuous signals rather than digital ones",
+      "ru": "аналоговый"
+    },
+    {
+      "w": "NEWFANGLED",
+      "p": "adj",
+      "c": "Disapproving: new and needlessly complicated",
+      "ru": "новомодный"
+    },
+    {
+      "w": "FUTURISTIC",
+      "p": "adj",
+      "c": "Looking strikingly modern and ahead of its time",
+      "ru": "футуристический"
+    },
+    {
+      "w": "INTERACTIVE",
+      "p": "adj",
+      "c": "Responding to what the user does",
+      "ru": "интерактивный"
+    },
+    {
+      "w": "COMPATIBLE",
+      "p": "adj",
+      "c": "Able to work together with another system",
+      "ru": "совместимый"
+    },
+    {
+      "w": "SAVVY",
+      "p": "adj",
+      "c": "Shrewd and well informed: tech-___ teenagers",
+      "ru": "подкованный, смекалистый"
+    },
+    {
+      "w": "WEARABLE",
+      "p": "adj",
+      "c": "Designed to be worn on the body, like a smartwatch",
+      "ru": "носимый"
+    },
+    {
+      "w": "PIRATED",
+      "p": "adj",
+      "c": "Copied and sold illegally (of films or software)",
+      "ru": "пиратский"
+    },
+    {
+      "w": "AUTONOMOUS",
+      "p": "adj",
+      "c": "Able to operate without human control",
+      "ru": "автономный"
+    },
+    {
+      "w": "VIRAL",
+      "p": "adj",
+      "c": "Spreading rapidly online from person to person",
+      "ru": "вирусный"
+    },
+    {
+      "w": "MECHANICAL",
+      "p": "adj",
+      "c": "Operated by machinery rather than by hand",
+      "ru": "механический"
+    },
+    {
+      "w": "MOTORIZED",
+      "p": "adj",
+      "c": "Equipped with an engine",
+      "ru": "моторизованный"
+    },
+    {
+      "w": "OFFLINE",
+      "p": "adj",
+      "c": "Not connected to the internet",
+      "ru": "офлайн, не в сети"
+    },
+    {
+      "w": "ENCRYPT",
+      "p": "v",
+      "c": "To convert data into a secret code",
+      "ru": "шифровать"
+    },
+    {
+      "w": "AUTOMATE",
+      "p": "v",
+      "c": "To make a process run by machines instead of people",
+      "ru": "автоматизировать"
+    },
+    {
+      "w": "REBOOT",
+      "p": "v",
+      "c": "To switch a computer off and on again",
+      "ru": "перезагружать"
+    },
+    {
+      "w": "DEBUG",
+      "p": "v",
+      "c": "To find and remove errors from a program",
+      "ru": "отлаживать"
+    },
+    {
+      "w": "TWEAK",
+      "p": "v",
+      "c": "To make small adjustments in order to improve something",
+      "ru": "подправлять, подкручивать"
+    },
+    {
+      "w": "SWIPE",
+      "p": "v",
+      "c": "To slide a finger across a touchscreen",
+      "ru": "провести пальцем, смахнуть"
+    },
+    {
+      "w": "SCROLL",
+      "p": "v",
+      "c": "To move text up or down on a screen",
+      "ru": "прокручивать"
+    },
+    {
+      "w": "TOGGLE",
+      "p": "v",
+      "c": "To switch between two settings with one control",
+      "ru": "переключать"
+    },
+    {
+      "w": "CONFIGURE",
+      "p": "v",
+      "c": "To set up a device or program for a particular use",
+      "ru": "настраивать, конфигурировать"
+    },
+    {
+      "w": "CUSTOMIZE",
+      "p": "v",
+      "c": "To adapt something to suit your personal tastes",
+      "ru": "настраивать под себя"
+    },
+    {
+      "w": "CRASH",
+      "p": "v",
+      "c": "(Of a computer) to stop working suddenly",
+      "ru": "падать, вылетать, отказывать"
+    },
+    {
+      "w": "STREAM",
+      "p": "v",
+      "c": "To play video or audio online without downloading it",
+      "ru": "транслировать, смотреть онлайн"
+    },
+    {
+      "w": "COMPILE",
+      "p": "v",
+      "c": "To turn source code into a program a machine can run",
+      "ru": "компилировать"
+    },
+    {
+      "w": "INNOVATE",
+      "p": "v",
+      "c": "To introduce new methods, ideas or products",
+      "ru": "вводить новшества"
+    },
+    {
+      "w": "DIGITIZE",
+      "p": "v",
+      "c": "To convert pictures or sound into computer data",
+      "ru": "оцифровывать"
+    },
+    {
+      "w": "BROWSE",
+      "p": "v",
+      "c": "To look through web pages in a casual way",
+      "ru": "просматривать"
+    },
+    {
+      "w": "SYNCHRONIZE",
+      "p": "v",
+      "c": "To make two devices hold the same up-to-date data",
+      "ru": "синхронизировать"
+    },
+    {
+      "w": "UNPLUG",
+      "p": "v",
+      "c": "To disconnect from the electricity supply",
+      "ru": "отключать от сети"
+    },
+    {
+      "w": "RECHARGE",
+      "p": "v",
+      "c": "To refill a battery with electrical power",
+      "ru": "перезаряжать"
+    },
+    {
+      "w": "SOLDER",
+      "p": "v",
+      "c": "To join metal parts or wires with melted metal",
+      "ru": "паять, припаивать"
+    },
+    {
+      "w": "OVERHEAT",
+      "p": "v",
+      "c": "To become dangerously hot from working too hard",
+      "ru": "перегреваться"
+    },
+    {
+      "w": "EMBED",
+      "p": "v",
+      "c": "To place a video or map inside a web page",
+      "ru": "встраивать"
+    },
+    {
+      "w": "OVERRIDE",
+      "p": "v",
+      "c": "To cancel an automatic setting by taking control",
+      "ru": "отменять, брать управление на себя"
+    },
+    {
+      "w": "ACTIVATE",
+      "p": "v",
+      "c": "To switch on or make something start working",
+      "ru": "активировать, включать"
+    },
+    {
+      "w": "TECHNICALLY",
+      "p": "adv",
+      "c": "In terms of engineering or machinery: a ___ advanced car",
+      "ru": "технически, с технической стороны"
+    },
+    {
+      "w": "MANUALLY",
+      "p": "adv",
+      "c": "By hand rather than automatically",
+      "ru": "вручную"
+    },
+    {
+      "w": "DIGITALLY",
+      "p": "adv",
+      "c": "In electronic form, as computer data",
+      "ru": "в цифровом виде"
+    },
+    {
+      "w": "SECURELY",
+      "p": "adv",
+      "c": "Safely, protected from hackers or theft",
+      "ru": "надёжно, безопасно"
+    }
+  ]
+}

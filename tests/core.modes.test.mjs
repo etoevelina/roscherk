@@ -2,13 +2,34 @@
 // иконка (поле icon), по которой оболочка рисует карточку на главном экране без карты id → иконка.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { MODES, MODE_BY_ID, MODE_IDS } from '../src/modes/index.js';
+import { MODES, MODE_BY_ID, MODE_IDS, ROTATION_IDS } from '../src/modes/index.js';
 
 const METHODS = ['create', 'serialize', 'layout', 'render', 'pointer', 'isSolved', 'reset', 'hint', 'stats', 'perfect', 'ghost', 'nextLabel', 'footer'];
 
-test('реестр: zip → flow → stroke (порядок Ежедневной), id уникальны', () => {
-  assert.deepEqual(MODE_IDS, ['zip', 'flow', 'stroke']);
+test('реестр: zip → flow → stroke (порядок Ежедневной) + words только в кампании, id уникальны', () => {
+  assert.deepEqual(MODE_IDS, ['zip', 'flow', 'stroke', 'words']);
+  assert.deepEqual(ROTATION_IDS, ['zip', 'flow', 'stroke'], 'чередование Ежедневной не меняется (§2.5)');
   for (const m of MODES) assert.equal(MODE_BY_ID[m.id], m);
+});
+
+test('words: расширения контракта §2.5 — DOM-вид, клавиатура, Lumin, шторка подсказок, только кампания, окно по темам', () => {
+  const w = MODE_BY_ID.words;
+  assert.equal(w.dom, true);
+  assert.equal(typeof w.view, 'function');
+  assert.equal(typeof w.tap, 'function');
+  assert.equal(w.keyboard, true);
+  assert.equal(typeof w.key, 'function');
+  assert.equal(w.skin, 'lumin');
+  assert.equal(typeof w.hintOptions, 'function');
+  assert.equal(w.campaignOnly, true);
+  assert.equal(w.openByChapter, true);
+  assert.equal(typeof w.chapterTitle, 'function');
+  assert.equal(typeof w.titleFor, 'function');
+  assert.ok(Array.isArray(w.intro) && w.intro.length === 3, 'знакомство из трёх карточек');
+  for (const id of ['zip', 'flow', 'stroke']) {
+    const m = MODE_BY_ID[id];
+    assert.ok(!m.dom && !m.keyboard && !m.skin && !m.campaignOnly && !m.hintOptions, `${id} не задаёт расширений`);
+  }
 });
 
 test('каждый режим: методы контракта §5.1, name/tagline/helpText {ru}, цвета, icon', () => {

@@ -13,7 +13,7 @@ export function mountHome(app) {
   const content = h('div', { class: 'content' });
 
   // Заголовок.
-  content.appendChild(h('div', { class: 'hero' }, h('h1', { text: t('appTitle') }), h('p', { text: 'Головоломки одной линией' })));
+  content.appendChild(h('div', { class: 'hero' }, h('h1', { text: t('appTitle') }), h('p', { text: t('heroSub') })));
 
   // Карточка установки (не standalone).
   if (!app.isStandalone && !state.settings.installCardClosed) {
@@ -47,7 +47,7 @@ export function mountHome(app) {
     // уровня = новый id; код прогресса с чужого билда); иначе — следующий непройденный.
     const cur = state.current;
     const resume = !!cur && cur.kind === 'campaign' && cur.mode === mode.id && !!findLevel(app.levels, mode.id, cur.levelId);
-    const next = nextLevelIndex(campaign, progress, skipped);
+    const next = nextLevelIndex(campaign, progress, skipped, { byChapter: !!mode.openByChapter });
     const color = app.theme.accentOf(mode);
 
     const play = () => {
@@ -84,7 +84,7 @@ export function mountHome(app) {
 
   // Ежедневная.
   content.appendChild(h('div', { class: 'section-title', text: t('daily') }));
-  const dailyPick = pickDaily(today, app.modes.map((m) => m.id), app.dailyPoolSize());
+  const dailyPick = pickDaily(today, app.rotationModes.map((m) => m.id), app.dailyPoolSize());
   const dailyMode = app.modeById[dailyPick.mode];
   const dailyLevel = dailyMode ? app.modeSets(dailyMode.id).daily[dailyPick.index] : null;
   const streak = displayStreak(state.daily, today);
@@ -128,8 +128,9 @@ export function mountHome(app) {
     state.current && state.current.kind === 'endless' && findLevel(app.levels, state.current.mode, state.current.levelId)
       ? state.current
       : null;
-  let choice = resumeEndless?.endless?.modeChoice || (app.modes.length === 1 ? app.modes[0].id : MIX);
-  const choices = app.modes.length > 1 ? [...app.modes.map((m) => m.id), MIX] : [app.modes[0].id];
+  const rot = app.rotationModes;
+  let choice = resumeEndless?.endless?.modeChoice || (rot.length === 1 ? rot[0].id : MIX);
+  const choices = rot.length > 1 ? [...rot.map((m) => m.id), MIX] : [rot[0].id];
   const bestLine = h('div', { class: 'muted' });
   const seg = h('div', { class: 'seg' });
   const renderSeg = () => {

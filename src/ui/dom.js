@@ -76,6 +76,8 @@ const ICONS = {
   stroke: '<path d="M4 20L12 4l8 16H4z"/><path d="M4 20l8-6 8 6"/>',
   infinity: '<path d="M12 12c-2-2.7-3.3-4-5.5-4a4 4 0 0 0 0 8c2.2 0 3.5-1.3 5.5-4s3.3-4 5.5-4a4 4 0 0 1 0 8c-2.2 0-3.5-1.3-5.5-4z"/>',
   calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  words: '<rect x="2.5" y="6" width="6" height="12" rx="1.5"/><rect x="9" y="6" width="6" height="12" rx="1.5"/><rect x="15.5" y="6" width="6" height="12" rx="1.5"/><path d="M4.5 14.5l1-5 1 5M11 9.5h2M12 9.5v5M17.5 9.5h2a1 1 0 0 1 0 2.5h-2v-2.5zM17.5 12h2a1.2 1.2 0 0 1 0 2.5h-2z"/>',
+  backspace: '<path d="M21 5H9l-6 7 6 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="M12 9l6 6M18 9l-6 6"/>',
 };
 
 /** Иконка режима: имя задаёт сам модуль режима полем icon (§5.1). */

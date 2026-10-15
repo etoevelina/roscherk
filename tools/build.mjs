@@ -19,6 +19,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = resolve(ROOT, 'dist');
 const HTML_LIMIT = 1024 * 1024;
 const LEVELS_LIMIT = 400 * 1024;
+const WORDS_LIMIT = 350 * 1024; // уровни «Слов» (§2.5) — отдельный <script id="words">
 const HASH_PLACEHOLDER = '__CONTENT_HASH__';
 
 const read = (p) => readFileSync(resolve(ROOT, p), 'utf8');
@@ -27,6 +28,15 @@ const kb = (n) => `${(n / 1024).toFixed(1)} КБ`;
 /** Безопасная вставка в HTML: закрывающий тег скрипта не должен встречаться внутри содержимого. */
 function inlineSafe(text) {
   return text.replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--');
+}
+
+/**
+ * JSON внутри <script type="application/json">: «<» → \u003c. Это валидный JSON-экранированный
+ * символ (JSON.parse вернёт «<»), и он исключает и </script, и <!-- — в отличие от inlineSafe,
+ * чьё «<\!--» — недопустимая escape-последовательность JSON.
+ */
+export function jsonInlineSafe(json) {
+  return json.replace(/</g, '\\u003c');
 }
 
 function fill(template, vars) {
@@ -64,14 +74,29 @@ export function iconPartOf({ svg = null, pngs = [] } = {}) {
     .join('\n');
 }
 
-/** Источник иконок для хэша: assets/icon.svg, иначе dist/icon-*.png из прошлой сборки. */
+/** Источник иконок для хэша: assets/icon.png (мастер), assets/icon.svg, иначе dist/icon-*.png. */
 function readIconPart() {
+  const pngPath = resolve(ROOT, 'assets/icon.png');
+  if (existsSync(pngPath)) return { part: `png\n${readFileSync(pngPath).toString('base64')}`, how: 'assets/icon.png' };
   const svgPath = resolve(ROOT, 'assets/icon.svg');
   if (existsSync(svgPath)) return { part: iconPartOf({ svg: readFileSync(svgPath, 'utf8') }), how: 'assets/icon.svg' };
   const pngs = ICON_SIZES.map((size) => `icon-${size}.png`)
     .filter((name) => existsSync(resolve(DIST, name)))
     .map((name) => ({ name, data: readFileSync(resolve(DIST, name)) }));
   return { part: iconPartOf({ pngs }), how: pngs.length ? `dist/${pngs.map((p) => p.name).join(', dist/')}` : 'нет' };
+}
+
+/**
+ * luminAssets(css) → css с подставленными формами Lumin: __LUMIN_SAGE_FORM__ → "data:image/svg+xml,…"
+ * из assets/lumin/sage-form.svg (имя — нижний регистр, «_» → «-»). Нет файла — ошибка сборки.
+ */
+export function luminAssets(css) {
+  return css.replace(/__LUMIN_([A-Z_]+)__/g, (_, name) => {
+    const file = resolve(ROOT, 'assets/lumin', `${name.toLowerCase().replace(/_/g, '-')}.svg`);
+    if (!existsSync(file)) throw new Error(`нет ${file} для __LUMIN_${name}__`);
+    const svg = readFileSync(file, 'utf8').trim().replace(/\s+/g, ' ');
+    return `"data:image/svg+xml,${encodeURIComponent(svg).replace(/'/g, '%27')}"`;
+  });
 }
 
 export async function build({ icons = true, log = console.log } = {}) {
@@ -95,8 +120,9 @@ export async function build({ icons = true, log = console.log } = {}) {
   });
   const jsRaw = bundle.outputFiles[0].text;
 
-  // CSS.
-  const css = (await esbuild.transform(read('src/styles.css'), { loader: 'css', minify: true, target: ['safari15'] })).code;
+  // CSS: оболочка + стили «Слов» по Lumin (§2.5); формы assets/lumin/*.svg — data:image/svg+xml.
+  const cssSource = `${read('src/styles.css')}\n${luminAssets(read('src/styles.lumin.css'))}`;
+  const css = (await esbuild.transform(cssSource, { loader: 'css', minify: true, target: ['safari15'] })).code;
 
   // Уровни: компактное кодирование при превышении лимита.
   let levelsJson = readFileSync(levelsPath, 'utf8');
@@ -112,17 +138,23 @@ export async function build({ icons = true, log = console.log } = {}) {
     }
   }
 
+  // Уровни «Слов» (§2.5): src/data/words.json, если собран (npm run words); иначе пусто.
+  const wordsPath = resolve(ROOT, 'src/data/words.json');
+  const wordsJson = existsSync(wordsPath) ? JSON.stringify(JSON.parse(readFileSync(wordsPath, 'utf8'))) : '{}';
+  if (Buffer.byteLength(wordsJson) > WORDS_LIMIT) throw new Error(`words.json ${kb(Buffer.byteLength(wordsJson))} > 350 КБ`);
+
   const htmlTemplate = read('src/index.html');
   const swTemplate = read('src/sw.js');
   const manifest = read('src/manifest.webmanifest');
   const icon = readIconPart();
-  const contentHash = contentHashOf({ js: jsRaw, css, levels: levelsJson, html: htmlTemplate, sw: swTemplate, manifest, icon: icon.part });
+  const contentHash = contentHashOf({ js: jsRaw, css, levels: levelsJson, words: wordsJson, html: htmlTemplate, sw: swTemplate, manifest, icon: icon.part });
   const js = fill(jsRaw, { [HASH_PLACEHOLDER]: contentHash });
 
   // index.html.
   const html = fill(htmlTemplate, {
     __CSS__: css.trim(),
-    __LEVELS__: inlineSafe(levelsJson),
+    __LEVELS__: jsonInlineSafe(levelsJson),
+    __WORDS__: jsonInlineSafe(wordsJson),
     __JS__: inlineSafe(js),
     [HASH_PLACEHOLDER]: contentHash,
   });
@@ -152,6 +184,7 @@ export async function build({ icons = true, log = console.log } = {}) {
     jsBytes: Buffer.byteLength(js),
     cssBytes: Buffer.byteLength(css),
     levelsBytes: Buffer.byteLength(levelsJson),
+    wordsBytes: Buffer.byteLength(wordsJson),
     compact,
     icons: iconsHow,
     iconSource: icon.how,
@@ -159,7 +192,7 @@ export async function build({ icons = true, log = console.log } = {}) {
   };
   log(
     `Сборка ${contentHash}: index.html ${kb(htmlBytes)} (js ${kb(report.jsBytes)}, css ${kb(report.cssBytes)}, ` +
-      `levels ${kb(report.levelsBytes)}${compact ? ', компактно' : ''}), иконки: ${iconsHow}, ${report.ms} мс`,
+      `levels ${kb(report.levelsBytes)}${compact ? ', компактно' : ''}, words ${kb(report.wordsBytes)}), иконки: ${iconsHow}, ${report.ms} мс`,
   );
   for (const w of bundle.warnings) log(`  предупреждение esbuild: ${w.text}`);
   if (statSync(resolve(DIST, 'index.html')).size !== htmlBytes) throw new Error('размер записанного index.html не совпал');

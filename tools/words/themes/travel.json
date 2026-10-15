@@ -1,0 +1,1047 @@
+{
+  "slug": "travel",
+  "ru": "Путешествия",
+  "en": "Travel & Adventure",
+  "quotes": [
+    {
+      "q": "Traveling is a fool's paradise.",
+      "a": "Ralph Waldo Emerson",
+      "src": "Self-Reliance, 1841",
+      "ru": "Путешествия — призрачный рай для глупцов."
+    },
+    {
+      "q": "When in Rome, do as the Romans do.",
+      "a": "Proverb",
+      "src": "Proverb",
+      "ru": "В Риме живи так, как живут римляне."
+    },
+    {
+      "q": "I have travelled a good deal in Concord.",
+      "a": "Henry David Thoreau",
+      "src": "Walden, 1854",
+      "ru": "Я немало попутешествовал по Конкорду."
+    },
+    {
+      "q": "He travels the fastest who travels alone.",
+      "a": "Rudyard Kipling",
+      "src": "The Winners (L'Envoi to The Story of the Gadsbys), 1888",
+      "ru": "Быстрее всех в пути тот, кто странствует один."
+    },
+    {
+      "q": "I cannot rest from travel: I will drink life to the lees.",
+      "a": "Alfred, Lord Tennyson",
+      "src": "Ulysses, 1842",
+      "ru": "Не знать мне отдыха от странствий: я выпью жизнь до самого дна."
+    },
+    {
+      "q": "A journey of a thousand miles begins with a single step.",
+      "a": "Lao Tzu",
+      "src": "Tao Te Ching, ch. 64 (traditional English rendering)",
+      "ru": "Путь в тысячу миль начинается с одного шага."
+    },
+    {
+      "q": "There is no foreign land; it is the traveller only that is foreign.",
+      "a": "Robert Louis Stevenson",
+      "src": "The Silverado Squatters, 1883",
+      "ru": "Чужих земель не бывает: чужим бывает лишь путешественник."
+    },
+    {
+      "q": "Afoot and light-hearted I take to the open road, healthy, free, the world before me.",
+      "a": "Walt Whitman",
+      "src": "Song of the Open Road, Leaves of Grass (first published 1856)",
+      "ru": "Пешком, с лёгким сердцем, выхожу я на вольную дорогу — здоровый, свободный, и весь мир передо мной."
+    },
+    {
+      "q": "Travel, in the younger sort, is a part of education; in the elder, a part of experience.",
+      "a": "Francis Bacon",
+      "src": "Essays, \"Of Travel\", 1625",
+      "ru": "Для молодых путешествие — часть образования, для старших — часть опыта."
+    },
+    {
+      "q": "To travel hopefully is a better thing than to arrive, and the true success is to labour.",
+      "a": "Robert Louis Stevenson",
+      "src": "Virginibus Puerisque, \"El Dorado\", 1881",
+      "ru": "Странствовать с надеждой лучше, чем прийти к цели, а истинный успех — в самом труде."
+    },
+    {
+      "q": "For my part, I travel not to go anywhere, but to go. I travel for travel's sake. The great affair is to move.",
+      "a": "Robert Louis Stevenson",
+      "src": "Travels with a Donkey in the Cevennes, 1879",
+      "ru": "Что до меня, я путешествую не затем, чтобы куда-то попасть, а чтобы идти. Я путешествую ради самого путешествия. Главное — двигаться."
+    },
+    {
+      "q": "Tell me, O Muse, of that ingenious hero who travelled far and wide after he had sacked the famous town of Troy.",
+      "a": "Homer",
+      "src": "Odyssey, Book I (tr. Samuel Butler, 1900)",
+      "ru": "Поведай мне, Муза, о том хитроумном герое, что долго скитался по свету, разрушив славный город Трою."
+    },
+    {
+      "q": "I am tormented with an everlasting itch for things remote. I love to sail forbidden seas, and land on barbarous coasts.",
+      "a": "Herman Melville",
+      "src": "Moby-Dick, ch. 1 \"Loomings\", 1851",
+      "ru": "Меня вечно терзает зуд — тяга ко всему далёкому. Я люблю плавать по запретным морям и высаживаться на диких берегах."
+    }
+  ],
+  "words": [
+    {
+      "w": "ITINERARY",
+      "p": "n",
+      "c": "Detailed plan of a journey with places and dates",
+      "ru": "маршрут, план поездки"
+    },
+    {
+      "w": "LAYOVER",
+      "p": "n",
+      "c": "Short wait between two connecting flights",
+      "ru": "пересадка, стыковка"
+    },
+    {
+      "w": "VOYAGE",
+      "p": "n",
+      "c": "Long journey, especially by sea or into space",
+      "ru": "плавание, морское путешествие"
+    },
+    {
+      "w": "EXPEDITION",
+      "p": "n",
+      "c": "Organized journey to explore a distant or unknown place",
+      "ru": "экспедиция"
+    },
+    {
+      "w": "PILGRIMAGE",
+      "p": "n",
+      "c": "Journey to a holy place for religious reasons",
+      "ru": "паломничество"
+    },
+    {
+      "w": "WANDERLUST",
+      "p": "n",
+      "c": "Strong, restless desire to travel the world",
+      "ru": "страсть к путешествиям"
+    },
+    {
+      "w": "DETOUR",
+      "p": "n",
+      "c": "Longer route taken to avoid a problem or see something",
+      "ru": "объезд, крюк"
+    },
+    {
+      "w": "EXCURSION",
+      "p": "n",
+      "c": "Short trip, often in a group, to visit a place",
+      "ru": "экскурсия, вылазка"
+    },
+    {
+      "w": "BACKPACKER",
+      "p": "n",
+      "c": "Budget traveller carrying all their belongings in a rucksack",
+      "ru": "турист с рюкзаком"
+    },
+    {
+      "w": "TREK",
+      "p": "n",
+      "c": "Long, hard journey, especially on foot through mountains",
+      "ru": "долгий поход, трудный переход"
+    },
+    {
+      "w": "CUSTOMS",
+      "p": "n",
+      "c": "Border point where officials inspect bags for taxable goods",
+      "ru": "таможня"
+    },
+    {
+      "w": "STOPOVER",
+      "p": "n",
+      "c": "Brief stay in a place in the middle of a long journey",
+      "ru": "остановка в пути"
+    },
+    {
+      "w": "COMPASS",
+      "p": "n",
+      "c": "Instrument with a needle that always points north",
+      "ru": "компас"
+    },
+    {
+      "w": "LANDMARK",
+      "p": "n",
+      "c": "Famous building or feature that helps you know where you are",
+      "ru": "достопримечательность, ориентир"
+    },
+    {
+      "w": "CARAVAN",
+      "p": "n",
+      "c": "Group of travellers with camels crossing a desert together",
+      "ru": "караван"
+    },
+    {
+      "w": "ODYSSEY",
+      "p": "n",
+      "c": "Long, adventurous journey full of changes of fortune",
+      "ru": "одиссея, долгие странствия"
+    },
+    {
+      "w": "SOJOURN",
+      "p": "n",
+      "c": "Temporary stay in a place away from home (formal)",
+      "ru": "временное пребывание"
+    },
+    {
+      "w": "RUCKSACK",
+      "p": "n",
+      "c": "British word for a large bag carried on your back",
+      "ru": "рюкзак"
+    },
+    {
+      "w": "GUIDEBOOK",
+      "p": "n",
+      "c": "Manual for tourists describing a place's sights, hotels and routes",
+      "ru": "путеводитель"
+    },
+    {
+      "w": "PHRASEBOOK",
+      "p": "n",
+      "c": "Pocket guide to useful expressions in a foreign language",
+      "ru": "разговорник"
+    },
+    {
+      "w": "VAGABOND",
+      "p": "n",
+      "c": "Person who wanders from place to place without a home",
+      "ru": "бродяга"
+    },
+    {
+      "w": "WAYFARER",
+      "p": "n",
+      "c": "Literary word for a traveller on foot",
+      "ru": "путник, странник"
+    },
+    {
+      "w": "PORTER",
+      "p": "n",
+      "c": "Person paid to carry luggage at a station or hotel",
+      "ru": "носильщик"
+    },
+    {
+      "w": "CONCIERGE",
+      "p": "n",
+      "c": "Hotel employee who helps guests with bookings and advice",
+      "ru": "консьерж"
+    },
+    {
+      "w": "GANGWAY",
+      "p": "n",
+      "c": "Movable bridge for walking onto or off a ship",
+      "ru": "трап, сходни"
+    },
+    {
+      "w": "BERTH",
+      "p": "n",
+      "c": "Sleeping place on a ship or train",
+      "ru": "полка, койка"
+    },
+    {
+      "w": "TOLL",
+      "p": "n",
+      "c": "Fee you must pay to use certain roads or bridges",
+      "ru": "дорожный сбор"
+    },
+    {
+      "w": "FARE",
+      "p": "n",
+      "c": "Price of a ticket on a bus, train or plane",
+      "ru": "стоимость проезда"
+    },
+    {
+      "w": "CAMPSITE",
+      "p": "n",
+      "c": "Place where people put up tents for holidays",
+      "ru": "кемпинг"
+    },
+    {
+      "w": "BIVOUAC",
+      "p": "n",
+      "c": "Temporary camp without tents, used by climbers or soldiers",
+      "ru": "бивак, привал"
+    },
+    {
+      "w": "EXPATRIATE",
+      "p": "n",
+      "c": "Person living outside their native country",
+      "ru": "экспат, живущий за рубежом"
+    },
+    {
+      "w": "FRONTIER",
+      "p": "n",
+      "c": "Border between two countries, or edge of explored land",
+      "ru": "граница, рубеж"
+    },
+    {
+      "w": "INNKEEPER",
+      "p": "n",
+      "c": "Person who runs an inn or a small hotel",
+      "ru": "хозяин гостиницы, трактирщик"
+    },
+    {
+      "w": "GUESTHOUSE",
+      "p": "n",
+      "c": "Private home offering rooms to paying travellers",
+      "ru": "гостевой дом"
+    },
+    {
+      "w": "SIGHTSEEING",
+      "p": "n",
+      "c": "Visiting famous places as a tourist",
+      "ru": "осмотр достопримечательностей"
+    },
+    {
+      "w": "JAUNT",
+      "p": "n",
+      "c": "Short trip taken for pleasure",
+      "ru": "увеселительная поездка"
+    },
+    {
+      "w": "ESCAPADE",
+      "p": "n",
+      "c": "Daring, exciting adventure, often slightly reckless",
+      "ru": "авантюра, похождение"
+    },
+    {
+      "w": "QUEST",
+      "p": "n",
+      "c": "Long search for something precious or hard to find",
+      "ru": "поиски, странствие"
+    },
+    {
+      "w": "MISHAP",
+      "p": "n",
+      "c": "Small accident or piece of bad luck on the way",
+      "ru": "злоключение, неприятность"
+    },
+    {
+      "w": "STOWAWAY",
+      "p": "n",
+      "c": "Person who hides on a ship or plane to travel free",
+      "ru": "безбилетный пассажир, заяц"
+    },
+    {
+      "w": "CASTAWAY",
+      "p": "n",
+      "c": "Shipwrecked person stranded on a lonely island",
+      "ru": "потерпевший кораблекрушение"
+    },
+    {
+      "w": "SHIPWRECK",
+      "p": "n",
+      "c": "Destruction or sinking of a vessel at sea",
+      "ru": "кораблекрушение"
+    },
+    {
+      "w": "EXPLORER",
+      "p": "n",
+      "c": "Person who travels into unknown regions to discover them",
+      "ru": "исследователь, первооткрыватель"
+    },
+    {
+      "w": "TRAILBLAZER",
+      "p": "n",
+      "c": "Pioneer who is the first to open a new route",
+      "ru": "первопроходец"
+    },
+    {
+      "w": "AISLE",
+      "p": "n",
+      "c": "Passage between rows of seats on a plane",
+      "ru": "проход между рядами"
+    },
+    {
+      "w": "RUNWAY",
+      "p": "n",
+      "c": "Long strip where planes take off and land",
+      "ru": "взлётно-посадочная полоса"
+    },
+    {
+      "w": "TARMAC",
+      "p": "n",
+      "c": "Paved area of an airport where planes stand",
+      "ru": "лётное поле, перрон"
+    },
+    {
+      "w": "CAROUSEL",
+      "p": "n",
+      "c": "Moving belt where you collect bags after a flight",
+      "ru": "багажная лента"
+    },
+    {
+      "w": "SIGNPOST",
+      "p": "n",
+      "c": "Roadside pole with arms showing the way and distance to places",
+      "ru": "дорожный указатель"
+    },
+    {
+      "w": "BYWAY",
+      "p": "n",
+      "c": "Small country road that few people use",
+      "ru": "просёлочная дорога"
+    },
+    {
+      "w": "GETAWAY",
+      "p": "n",
+      "c": "Short holiday or escape from everyday routine",
+      "ru": "короткий отпуск, побег"
+    },
+    {
+      "w": "HIDEAWAY",
+      "p": "n",
+      "c": "Secluded place where you can escape from people",
+      "ru": "укромное место, убежище"
+    },
+    {
+      "w": "YACHT",
+      "p": "n",
+      "c": "Sailing boat used for pleasure or racing",
+      "ru": "яхта"
+    },
+    {
+      "w": "KAYAK",
+      "p": "n",
+      "c": "Narrow covered canoe moved with a double-bladed paddle",
+      "ru": "байдарка, каяк"
+    },
+    {
+      "w": "PROMENADE",
+      "p": "n",
+      "c": "Wide paved path along the seafront for strolling",
+      "ru": "набережная, променад"
+    },
+    {
+      "w": "WHARF",
+      "p": "n",
+      "c": "Platform where ships are loaded and unloaded",
+      "ru": "пристань, причал"
+    },
+    {
+      "w": "QUAY",
+      "p": "n",
+      "c": "Stone landing place beside water where boats tie up",
+      "ru": "причал, каменная набережная"
+    },
+    {
+      "w": "LIGHTHOUSE",
+      "p": "n",
+      "c": "Tower with a bright lamp that warns ships of danger",
+      "ru": "маяк"
+    },
+    {
+      "w": "PORTHOLE",
+      "p": "n",
+      "c": "Small round window in the side of a ship",
+      "ru": "иллюминатор"
+    },
+    {
+      "w": "SKIPPER",
+      "p": "n",
+      "c": "Captain of a small boat or fishing vessel",
+      "ru": "шкипер, капитан"
+    },
+    {
+      "w": "CHAUFFEUR",
+      "p": "n",
+      "c": "Person employed to drive someone else's car",
+      "ru": "личный водитель, шофёр"
+    },
+    {
+      "w": "RICKSHAW",
+      "p": "n",
+      "c": "Light two-wheeled cart for passengers, pulled by a person",
+      "ru": "рикша"
+    },
+    {
+      "w": "FUNICULAR",
+      "p": "n",
+      "c": "Cable railway that carries passengers up a steep slope",
+      "ru": "фуникулёр"
+    },
+    {
+      "w": "STAGECOACH",
+      "p": "n",
+      "c": "Horse-drawn vehicle that once carried passengers on a route",
+      "ru": "дилижанс"
+    },
+    {
+      "w": "SAFARI",
+      "p": "n",
+      "c": "Trip to watch or hunt wild animals, especially in Africa",
+      "ru": "сафари"
+    },
+    {
+      "w": "STAYCATION",
+      "p": "n",
+      "c": "Holiday spent at home or near where you live",
+      "ru": "отпуск дома"
+    },
+    {
+      "w": "BACKWATER",
+      "p": "n",
+      "c": "Quiet, isolated place where little ever happens",
+      "ru": "захолустье, глушь"
+    },
+    {
+      "w": "MEMENTO",
+      "p": "n",
+      "c": "Object kept to remind you of a place or event",
+      "ru": "сувенир, памятная вещь"
+    },
+    {
+      "w": "HOMESTAY",
+      "p": "n",
+      "c": "Visit during which you live with a local family",
+      "ru": "проживание в местной семье"
+    },
+    {
+      "w": "WAYSIDE",
+      "p": "n",
+      "c": "Edge of a road or path",
+      "ru": "обочина, придорожье"
+    },
+    {
+      "w": "DINGHY",
+      "p": "n",
+      "c": "Small open boat, often made of inflatable rubber",
+      "ru": "шлюпка, надувная лодка"
+    },
+    {
+      "w": "MOTORHOME",
+      "p": "n",
+      "c": "Large vehicle with beds and a kitchen, used for touring",
+      "ru": "автодом, дом на колёсах"
+    },
+    {
+      "w": "CONVOY",
+      "p": "n",
+      "c": "Group of vehicles or ships travelling together for safety",
+      "ru": "колонна, конвой"
+    },
+    {
+      "w": "FORAY",
+      "p": "n",
+      "c": "Brief trip into an unfamiliar place",
+      "ru": "вылазка, набег"
+    },
+    {
+      "w": "GLAMPING",
+      "p": "n",
+      "c": "Camping with the comforts of a good hotel",
+      "ru": "глэмпинг, комфортный кемпинг"
+    },
+    {
+      "w": "SHUTTLE",
+      "p": "n",
+      "c": "Bus or plane making frequent trips between two places",
+      "ru": "трансфер, челнок"
+    },
+    {
+      "w": "FOOTPATH",
+      "p": "n",
+      "c": "Narrow track for walkers, especially in the countryside",
+      "ru": "тропинка, пешеходная дорожка"
+    },
+    {
+      "w": "BOARDWALK",
+      "p": "n",
+      "c": "Raised wooden path, often along a beach",
+      "ru": "дощатый настил, набережная"
+    },
+    {
+      "w": "HOVERCRAFT",
+      "p": "n",
+      "c": "Vehicle that rides over water on a cushion of air",
+      "ru": "судно на воздушной подушке"
+    },
+    {
+      "w": "BUOY",
+      "p": "n",
+      "c": "Floating marker that shows ships a safe channel",
+      "ru": "буй, бакен"
+    },
+    {
+      "w": "FORD",
+      "p": "n",
+      "c": "Shallow place where you can cross a river",
+      "ru": "брод"
+    },
+    {
+      "w": "INTREPID",
+      "p": "adj",
+      "c": "Fearless and willing to face danger on a journey",
+      "ru": "бесстрашный, отважный"
+    },
+    {
+      "w": "REMOTE",
+      "p": "adj",
+      "c": "Far away from towns and other people",
+      "ru": "отдалённый, глухой"
+    },
+    {
+      "w": "EXOTIC",
+      "p": "adj",
+      "c": "Strikingly unusual because it comes from a distant country",
+      "ru": "экзотический"
+    },
+    {
+      "w": "PICTURESQUE",
+      "p": "adj",
+      "c": "Charming and pretty enough to paint",
+      "ru": "живописный, как с картинки"
+    },
+    {
+      "w": "BUSTLING",
+      "p": "adj",
+      "c": "Full of busy, noisy activity and people",
+      "ru": "оживлённый, суетливый"
+    },
+    {
+      "w": "UNCHARTED",
+      "p": "adj",
+      "c": "Not yet mapped or explored",
+      "ru": "неизведанный, не нанесённый на карту"
+    },
+    {
+      "w": "NOMADIC",
+      "p": "adj",
+      "c": "Moving from place to place with no fixed home",
+      "ru": "кочевой"
+    },
+    {
+      "w": "ADVENTUROUS",
+      "p": "adj",
+      "c": "Eager to take risks and try new experiences",
+      "ru": "смелый, любящий приключения"
+    },
+    {
+      "w": "FOOTSORE",
+      "p": "adj",
+      "c": "Having aching feet after a long walk",
+      "ru": "со стёртыми ногами"
+    },
+    {
+      "w": "WEARY",
+      "p": "adj",
+      "c": "Very tired, especially after long travel or effort",
+      "ru": "утомлённый, усталый"
+    },
+    {
+      "w": "SEASICK",
+      "p": "adj",
+      "c": "Feeling ill because of a boat's rocking motion",
+      "ru": "страдающий морской болезнью"
+    },
+    {
+      "w": "QUAINT",
+      "p": "adj",
+      "c": "Attractively unusual and old-fashioned",
+      "ru": "старомодно-очаровательный"
+    },
+    {
+      "w": "PANORAMIC",
+      "p": "adj",
+      "c": "Showing a wide view of a large area",
+      "ru": "панорамный"
+    },
+    {
+      "w": "PERILOUS",
+      "p": "adj",
+      "c": "Full of serious danger",
+      "ru": "опасный, рискованный"
+    },
+    {
+      "w": "IMPASSABLE",
+      "p": "adj",
+      "c": "Impossible to travel along or through",
+      "ru": "непроходимый, непроезжий"
+    },
+    {
+      "w": "BUMPY",
+      "p": "adj",
+      "c": "Uneven and jolting, like a rough road or flight",
+      "ru": "ухабистый, тряский"
+    },
+    {
+      "w": "TOURISTY",
+      "p": "adj",
+      "c": "Too full of visitors and cheap attractions",
+      "ru": "наводнённый туристами"
+    },
+    {
+      "w": "ITINERANT",
+      "p": "adj",
+      "c": "Travelling from place to place to work",
+      "ru": "странствующий, кочующий"
+    },
+    {
+      "w": "NAUTICAL",
+      "p": "adj",
+      "c": "Relating to ships, sailors and navigation",
+      "ru": "морской, мореходный"
+    },
+    {
+      "w": "SEAWORTHY",
+      "p": "adj",
+      "c": "Safe and fit enough to sail on the open sea",
+      "ru": "пригодный к плаванию"
+    },
+    {
+      "w": "LANDLOCKED",
+      "p": "adj",
+      "c": "Having no coastline, entirely surrounded by other countries",
+      "ru": "не имеющий выхода к морю"
+    },
+    {
+      "w": "HOSPITABLE",
+      "p": "adj",
+      "c": "Friendly and generous towards guests and visitors",
+      "ru": "гостеприимный"
+    },
+    {
+      "w": "UNSPOILT",
+      "p": "adj",
+      "c": "Not damaged by tourism or building development",
+      "ru": "нетронутый, неиспорченный"
+    },
+    {
+      "w": "UNTRODDEN",
+      "p": "adj",
+      "c": "Not yet walked on or visited by anyone",
+      "ru": "нехоженый"
+    },
+    {
+      "w": "OUTBOUND",
+      "p": "adj",
+      "c": "Travelling away from a place rather than returning",
+      "ru": "отправляющийся, вылетающий"
+    },
+    {
+      "w": "INBOUND",
+      "p": "adj",
+      "c": "Arriving at or coming towards a place",
+      "ru": "прибывающий, входящий"
+    },
+    {
+      "w": "FOOTLOOSE",
+      "p": "adj",
+      "c": "Free to go anywhere, with no responsibilities",
+      "ru": "вольный, ничем не связанный"
+    },
+    {
+      "w": "OVERNIGHT",
+      "p": "adj",
+      "c": "Lasting or travelling from evening until the next morning",
+      "ru": "ночной"
+    },
+    {
+      "w": "NONSTOP",
+      "p": "adj",
+      "c": "Of a flight or train: going straight to its destination without halts",
+      "ru": "беспересадочный, прямой"
+    },
+    {
+      "w": "WINDING",
+      "p": "adj",
+      "c": "(Of a road or river) full of twists and bends",
+      "ru": "извилистый"
+    },
+    {
+      "w": "PEDESTRIAN",
+      "p": "adj",
+      "c": "Intended for people on foot, not for cars",
+      "ru": "пешеходный"
+    },
+    {
+      "w": "FARAWAY",
+      "p": "adj",
+      "c": "Very distant, in a remote part of the world",
+      "ru": "далёкий, дальний"
+    },
+    {
+      "w": "OUTLYING",
+      "p": "adj",
+      "c": "Situated far from the centre of a town or region",
+      "ru": "отдалённый, окраинный"
+    },
+    {
+      "w": "UNINHABITED",
+      "p": "adj",
+      "c": "With nobody living there, like a desert island",
+      "ru": "необитаемый"
+    },
+    {
+      "w": "ROUNDABOUT",
+      "p": "adj",
+      "c": "Not direct; taking a longer way than necessary",
+      "ru": "окольный, кружной"
+    },
+    {
+      "w": "BOUND",
+      "p": "adj",
+      "c": "Heading for a place: a ship ___ for Lisbon",
+      "ru": "направляющийся, следующий (в)"
+    },
+    {
+      "w": "GUIDED",
+      "p": "adj",
+      "c": "Led by someone who shows you round: a ___ tour",
+      "ru": "с гидом, с экскурсоводом"
+    },
+    {
+      "w": "EMBARK",
+      "p": "v",
+      "c": "To go on board a ship or plane",
+      "ru": "садиться на борт"
+    },
+    {
+      "w": "DISEMBARK",
+      "p": "v",
+      "c": "To leave a ship, plane or train after a journey",
+      "ru": "высаживаться, сходить на берег"
+    },
+    {
+      "w": "NAVIGATE",
+      "p": "v",
+      "c": "To find your way or plan a route",
+      "ru": "прокладывать путь, ориентироваться"
+    },
+    {
+      "w": "TRAVERSE",
+      "p": "v",
+      "c": "To cross or move through a wide area",
+      "ru": "пересекать, проходить"
+    },
+    {
+      "w": "ACCLIMATIZE",
+      "p": "v",
+      "c": "To get used to new weather, altitude or surroundings",
+      "ru": "акклиматизироваться"
+    },
+    {
+      "w": "BACKTRACK",
+      "p": "v",
+      "c": "To retrace your route, returning the way you came",
+      "ru": "возвращаться назад"
+    },
+    {
+      "w": "HITCHHIKE",
+      "p": "v",
+      "c": "To travel by getting free rides from passing drivers",
+      "ru": "ездить автостопом"
+    },
+    {
+      "w": "STRAND",
+      "p": "v",
+      "c": "To leave someone stuck somewhere, unable to get home",
+      "ru": "оставить без возможности уехать"
+    },
+    {
+      "w": "GALLIVANT",
+      "p": "v",
+      "c": "To roam around in search of fun and pleasure",
+      "ru": "разъезжать в поисках развлечений"
+    },
+    {
+      "w": "CHARTER",
+      "p": "v",
+      "c": "To hire a whole plane or boat for private use",
+      "ru": "зафрахтовать, арендовать"
+    },
+    {
+      "w": "PADDLE",
+      "p": "v",
+      "c": "To move a canoe through water with a short oar",
+      "ru": "грести (веслом)"
+    },
+    {
+      "w": "SCOUT",
+      "p": "v",
+      "c": "To explore an area to gather information",
+      "ru": "разведывать"
+    },
+    {
+      "w": "ROAM",
+      "p": "v",
+      "c": "To travel aimlessly over a wide area",
+      "ru": "бродить, скитаться"
+    },
+    {
+      "w": "RAMBLE",
+      "p": "v",
+      "c": "To walk for pleasure through the countryside",
+      "ru": "бродить, гулять за городом"
+    },
+    {
+      "w": "TRUDGE",
+      "p": "v",
+      "c": "To walk slowly with heavy, tired steps",
+      "ru": "плестись, тащиться"
+    },
+    {
+      "w": "SAUNTER",
+      "p": "v",
+      "c": "To walk in a slow, relaxed, unhurried way",
+      "ru": "прогуливаться, идти не спеша"
+    },
+    {
+      "w": "MAROON",
+      "p": "v",
+      "c": "To abandon someone on a deserted island",
+      "ru": "высадить на необитаемом острове"
+    },
+    {
+      "w": "STOW",
+      "p": "v",
+      "c": "To pack something neatly away, e.g. in an overhead bin",
+      "ru": "укладывать, убирать"
+    },
+    {
+      "w": "WAYLAY",
+      "p": "v",
+      "c": "To stop a traveller on the road to rob or delay them",
+      "ru": "подстерегать, задерживать в пути"
+    },
+    {
+      "w": "UPGRADE",
+      "p": "v",
+      "c": "To move to a better seat or hotel room",
+      "ru": "повысить класс (места, номера)"
+    },
+    {
+      "w": "DECAMP",
+      "p": "v",
+      "c": "To leave a place suddenly or secretly",
+      "ru": "сбежать, сняться с лагеря"
+    },
+    {
+      "w": "OVERSTAY",
+      "p": "v",
+      "c": "To remain longer than your visa allows",
+      "ru": "задержаться дольше положенного"
+    },
+    {
+      "w": "MOOR",
+      "p": "v",
+      "c": "To tie a boat to the shore or a buoy",
+      "ru": "швартовать"
+    },
+    {
+      "w": "CAPSIZE",
+      "p": "v",
+      "c": "(Of a boat) to turn over in the water",
+      "ru": "перевернуться, опрокинуться"
+    },
+    {
+      "w": "DRIFT",
+      "p": "v",
+      "c": "To be carried slowly along by water or wind",
+      "ru": "дрейфовать, плыть по течению"
+    },
+    {
+      "w": "BUCKLE",
+      "p": "v",
+      "c": "To fasten a seatbelt or strap",
+      "ru": "пристегнуть, застегнуть"
+    },
+    {
+      "w": "BYPASS",
+      "p": "v",
+      "c": "To go around a town instead of through it",
+      "ru": "объезжать, обходить"
+    },
+    {
+      "w": "CRISSCROSS",
+      "p": "v",
+      "c": "To travel back and forth across an area many times",
+      "ru": "исколесить вдоль и поперёк"
+    },
+    {
+      "w": "REROUTE",
+      "p": "v",
+      "c": "To send a flight or traffic along a different way",
+      "ru": "перенаправить, изменить маршрут"
+    },
+    {
+      "w": "ALIGHT",
+      "p": "v",
+      "c": "To get off a bus or train (formal)",
+      "ru": "сходить, выходить (из транспорта)"
+    },
+    {
+      "w": "TAXI",
+      "p": "v",
+      "c": "(Of a plane) to move slowly along the ground",
+      "ru": "рулить (о самолёте)"
+    },
+    {
+      "w": "SWERVE",
+      "p": "v",
+      "c": "To turn suddenly to avoid hitting something",
+      "ru": "резко свернуть, вильнуть"
+    },
+    {
+      "w": "OVERBOOK",
+      "p": "v",
+      "c": "To sell more seats or rooms than are available",
+      "ru": "продать больше мест, чем есть"
+    },
+    {
+      "w": "OVERSEAS",
+      "p": "adv",
+      "c": "Across the sea, in faraway countries",
+      "ru": "за рубежом, за морем"
+    },
+    {
+      "w": "ABOARD",
+      "p": "adv",
+      "c": "On or onto a ship, plane or train",
+      "ru": "на борт, на борту"
+    },
+    {
+      "w": "ASTRAY",
+      "p": "adv",
+      "c": "Away from the correct path or direction",
+      "ru": "сбившись с пути"
+    },
+    {
+      "w": "AFAR",
+      "p": "adv",
+      "c": "From or at a great distance",
+      "ru": "издалека, вдали"
+    },
+    {
+      "w": "ONWARD",
+      "p": "adv",
+      "c": "Forward, further on a journey",
+      "ru": "вперёд, дальше"
+    },
+    {
+      "w": "OVERLAND",
+      "p": "adv",
+      "c": "Across country by road, rail or on foot, not by sea or air",
+      "ru": "по суше, сухопутным путём"
+    },
+    {
+      "w": "MIDWAY",
+      "p": "adv",
+      "c": "Halfway between two places, e.g. on a journey",
+      "ru": "на полпути"
+    },
+    {
+      "w": "OVERBOARD",
+      "p": "adv",
+      "c": "Over the side of a ship into the water",
+      "ru": "за борт"
+    },
+    {
+      "w": "STANDBY",
+      "p": "adv",
+      "c": "To fly ___: wait at the airport for an unsold seat",
+      "ru": "без брони, в листе ожидания"
+    }
+  ]
+}

@@ -1,0 +1,1305 @@
+{
+  "slug": "society",
+  "ru": "Общество и политика",
+  "en": "Politics & Society",
+  "quotes": [
+    {
+      "q": "Man is by nature a political animal.",
+      "a": "Aristotle",
+      "src": "Politics, Book I, 1253a (trans. Benjamin Jowett)",
+      "ru": "Человек по своей природе — существо политическое."
+    },
+    {
+      "q": "Politics is the art of the possible.",
+      "a": "Otto von Bismarck",
+      "src": "Interview with Friedrich Meyer von Waldeck, August 11, 1867 (trans.)",
+      "ru": "Политика — это искусство возможного."
+    },
+    {
+      "q": "United we stand, divided we fall.",
+      "a": "Proverb",
+      "src": "Proverb (cf. John Dickinson, \"The Liberty Song\", 1768)",
+      "ru": "Вместе мы выстоим, порознь — падём."
+    },
+    {
+      "q": "Every nation gets the government it deserves.",
+      "a": "Joseph de Maistre",
+      "src": "Letter of August 27, 1811 (Lettres et Opuscules), trans.",
+      "ru": "Всякий народ получает то правительство, которого заслуживает."
+    },
+    {
+      "q": "Man is born free; and everywhere he is in chains.",
+      "a": "Jean-Jacques Rousseau",
+      "src": "The Social Contract, Book I, ch. 1, 1762 (trans.)",
+      "ru": "Человек рождён свободным — а между тем повсюду он в цепях."
+    },
+    {
+      "q": "If men were angels, no government would be necessary.",
+      "a": "James Madison",
+      "src": "The Federalist No. 51, 1788",
+      "ru": "Будь люди ангелами, ни в каком правительстве не было бы нужды."
+    },
+    {
+      "q": "Power tends to corrupt and absolute power corrupts absolutely.",
+      "a": "Lord Acton",
+      "src": "Letter to Mandell Creighton, April 5, 1887",
+      "ru": "Власть склонна развращать, а абсолютная власть развращает абсолютно."
+    },
+    {
+      "q": "A house divided against itself cannot stand.",
+      "a": "Abraham Lincoln",
+      "src": "House Divided Speech, Springfield, Illinois, June 16, 1858",
+      "ru": "Дом, разделённый сам в себе, не устоит."
+    },
+    {
+      "q": "The people never give up their liberties but under some delusion.",
+      "a": "Edmund Burke",
+      "src": "Speech at a County Meeting of Buckinghamshire, 1784",
+      "ru": "Народ никогда не отказывается от своих свобод иначе как под влиянием какого-нибудь заблуждения."
+    },
+    {
+      "q": "No man is good enough to govern another man, without that other's consent.",
+      "a": "Abraham Lincoln",
+      "src": "Speech at Peoria, Illinois, October 16, 1854",
+      "ru": "Ни один человек не настолько хорош, чтобы управлять другим без его согласия."
+    },
+    {
+      "q": "Government of the people, by the people, for the people, shall not perish from the earth.",
+      "a": "Abraham Lincoln",
+      "src": "Gettysburg Address, November 19, 1863",
+      "ru": "Власть народа, осуществляемая народом и для народа, не исчезнет с лица земли."
+    },
+    {
+      "q": "Under a government which imprisons any unjustly, the true place for a just man is also a prison.",
+      "a": "Henry David Thoreau",
+      "src": "Resistance to Civil Government (Civil Disobedience), 1849",
+      "ru": "При правительстве, которое несправедливо заключает в тюрьму хоть кого-то, истинное место справедливого человека — тоже тюрьма."
+    },
+    {
+      "q": "Society in every state is a blessing, but government, even in its best state, is but a necessary evil.",
+      "a": "Thomas Paine",
+      "src": "Common Sense, 1776",
+      "ru": "Общество в любом своём состоянии — благо, а правительство даже в лучшем своём виде — лишь неизбежное зло."
+    },
+    {
+      "q": "Those who would give up essential liberty, to purchase a little temporary safety, deserve neither liberty nor safety.",
+      "a": "Benjamin Franklin",
+      "src": "Pennsylvania Assembly, Reply to the Governor, November 11, 1755",
+      "ru": "Те, кто готов отказаться от насущной свободы, чтобы купить толику временной безопасности, не заслуживают ни свободы, ни безопасности."
+    },
+    {
+      "q": "When bad men combine, the good must associate; else they will fall one by one, an unpitied sacrifice in a contemptible struggle.",
+      "a": "Edmund Burke",
+      "src": "Thoughts on the Cause of the Present Discontents, 1770",
+      "ru": "Когда дурные люди сговариваются, хорошие должны объединиться; иначе они падут поодиночке — никем не оплаканной жертвой в презренной борьбе."
+    }
+  ],
+  "words": [
+    {
+      "w": "BALLOT",
+      "p": "n",
+      "c": "Secret vote, or the paper on which it is cast",
+      "ru": "бюллетень, тайное голосование"
+    },
+    {
+      "w": "UNSEAT",
+      "p": "v",
+      "c": "Remove a sitting politician from office, especially by election defeat",
+      "ru": "лишать места, смещать (на выборах)"
+    },
+    {
+      "w": "CAMPAIGN",
+      "p": "n",
+      "c": "Series of organized activities to win an election",
+      "ru": "предвыборная кампания"
+    },
+    {
+      "w": "MANIFESTO",
+      "p": "n",
+      "c": "Published statement of a party's aims and policies",
+      "ru": "манифест, предвыборная программа"
+    },
+    {
+      "w": "SUFFRAGE",
+      "p": "n",
+      "c": "The right to vote in political elections",
+      "ru": "избирательное право"
+    },
+    {
+      "w": "TURNOUT",
+      "p": "n",
+      "c": "Share of eligible people who actually vote",
+      "ru": "явка избирателей"
+    },
+    {
+      "w": "LANDSLIDE",
+      "p": "n",
+      "c": "Election won by an overwhelming majority",
+      "ru": "сокрушительная победа на выборах"
+    },
+    {
+      "w": "INCUMBENT",
+      "p": "n",
+      "c": "Person currently holding a political office",
+      "ru": "действующий обладатель должности"
+    },
+    {
+      "w": "REFERENDUM",
+      "p": "n",
+      "c": "Direct public vote on a single political question",
+      "ru": "референдум"
+    },
+    {
+      "w": "COALITION",
+      "p": "n",
+      "c": "Alliance of parties that govern together",
+      "ru": "коалиция"
+    },
+    {
+      "w": "CABINET",
+      "p": "n",
+      "c": "Group of senior ministers who direct government policy",
+      "ru": "кабинет министров"
+    },
+    {
+      "w": "PARLIAMENT",
+      "p": "n",
+      "c": "Elected national assembly that makes a country's laws",
+      "ru": "парламент"
+    },
+    {
+      "w": "PUNDIT",
+      "p": "n",
+      "c": "Expert who gives opinions on politics in the media",
+      "ru": "эксперт, политический обозреватель"
+    },
+    {
+      "w": "DEMAGOGUE",
+      "p": "n",
+      "c": "Leader who gains support by exploiting fears and prejudices",
+      "ru": "демагог"
+    },
+    {
+      "w": "TYRANT",
+      "p": "n",
+      "c": "Ruler who uses absolute power cruelly",
+      "ru": "тиран"
+    },
+    {
+      "w": "AUTOCRAT",
+      "p": "n",
+      "c": "Ruler who holds unlimited power alone",
+      "ru": "самодержец, автократ"
+    },
+    {
+      "w": "MONARCHY",
+      "p": "n",
+      "c": "System of rule by a king or queen",
+      "ru": "монархия"
+    },
+    {
+      "w": "OLIGARCHY",
+      "p": "n",
+      "c": "Rule by a small group of powerful people",
+      "ru": "олигархия"
+    },
+    {
+      "w": "ANARCHY",
+      "p": "n",
+      "c": "Total disorder due to the absence of government",
+      "ru": "анархия, безвластие"
+    },
+    {
+      "w": "REGIME",
+      "p": "n",
+      "c": "Government, especially a strict or undemocratic one",
+      "ru": "режим"
+    },
+    {
+      "w": "JUNTA",
+      "p": "n",
+      "c": "Military group that rules after seizing power",
+      "ru": "военная хунта"
+    },
+    {
+      "w": "COUP",
+      "p": "n",
+      "c": "Sudden, often violent, illegal seizure of power",
+      "ru": "государственный переворот"
+    },
+    {
+      "w": "UPRISING",
+      "p": "n",
+      "c": "Popular revolt against those in power",
+      "ru": "восстание"
+    },
+    {
+      "w": "INSURGENT",
+      "p": "n",
+      "c": "Rebel waging armed struggle against a government",
+      "ru": "повстанец, мятежник"
+    },
+    {
+      "w": "DISSIDENT",
+      "p": "n",
+      "c": "Person who openly opposes an official regime",
+      "ru": "диссидент, инакомыслящий"
+    },
+    {
+      "w": "DISSENT",
+      "p": "n",
+      "c": "Strong public disagreement with official views",
+      "ru": "несогласие, инакомыслие"
+    },
+    {
+      "w": "PROPAGANDA",
+      "p": "n",
+      "c": "Biased information spread to promote a political cause",
+      "ru": "пропаганда"
+    },
+    {
+      "w": "CENSORSHIP",
+      "p": "n",
+      "c": "Official suppression of books, films or news deemed unacceptable",
+      "ru": "цензура"
+    },
+    {
+      "w": "RHETORIC",
+      "p": "n",
+      "c": "Persuasive speech, often seen as empty or insincere",
+      "ru": "риторика, громкие слова"
+    },
+    {
+      "w": "SLOGAN",
+      "p": "n",
+      "c": "Short memorable phrase used in politics or advertising",
+      "ru": "лозунг"
+    },
+    {
+      "w": "RALLY",
+      "p": "n",
+      "c": "Large public meeting held to show support for a cause",
+      "ru": "митинг"
+    },
+    {
+      "w": "PETITION",
+      "p": "n",
+      "c": "Formal written request signed by many people",
+      "ru": "петиция"
+    },
+    {
+      "w": "ACTIVIST",
+      "p": "n",
+      "c": "Person who campaigns energetically for social change",
+      "ru": "активист"
+    },
+    {
+      "w": "GRASSROOTS",
+      "p": "n",
+      "c": "Ordinary members of a movement, not its leaders",
+      "ru": "рядовые члены, низы"
+    },
+    {
+      "w": "FACTION",
+      "p": "n",
+      "c": "Small, often rebellious group within a larger party",
+      "ru": "фракция, группировка"
+    },
+    {
+      "w": "CAUCUS",
+      "p": "n",
+      "c": "Closed meeting of a party's members to pick candidates or policy",
+      "ru": "партийное совещание"
+    },
+    {
+      "w": "WHIP",
+      "p": "n",
+      "c": "Party official who makes sure members vote as told",
+      "ru": "партийный организатор («кнут»)"
+    },
+    {
+      "w": "HUSTINGS",
+      "p": "n",
+      "c": "Speeches and public meetings of an election campaign",
+      "ru": "предвыборные выступления"
+    },
+    {
+      "w": "CONSTITUENT",
+      "p": "n",
+      "c": "Voter living in an elected representative's district",
+      "ru": "избиратель (округа)"
+    },
+    {
+      "w": "ELECTORATE",
+      "p": "n",
+      "c": "All the people in a country entitled to vote",
+      "ru": "электорат, избиратели"
+    },
+    {
+      "w": "MANDATE",
+      "p": "n",
+      "c": "Authority to govern that voters give to a winner",
+      "ru": "мандат, полномочия"
+    },
+    {
+      "w": "VETO",
+      "p": "n",
+      "c": "Official right to block a decision or law",
+      "ru": "право вето"
+    },
+    {
+      "w": "TREATY",
+      "p": "n",
+      "c": "Formal written agreement between states",
+      "ru": "договор"
+    },
+    {
+      "w": "DIPLOMACY",
+      "p": "n",
+      "c": "Managing international relations through negotiation",
+      "ru": "дипломатия"
+    },
+    {
+      "w": "BELLWETHER",
+      "p": "n",
+      "c": "Voting district or group whose choices predict wider trends",
+      "ru": "индикатор тенденций, лакмусовая бумажка"
+    },
+    {
+      "w": "ENVOY",
+      "p": "n",
+      "c": "Official representative sent on a diplomatic mission",
+      "ru": "посланник"
+    },
+    {
+      "w": "SANCTION",
+      "p": "n",
+      "c": "Penalty imposed on a country to force a change of policy",
+      "ru": "санкция"
+    },
+    {
+      "w": "EMBARGO",
+      "p": "n",
+      "c": "Official ban on trade with a particular country",
+      "ru": "эмбарго"
+    },
+    {
+      "w": "ALLY",
+      "p": "n",
+      "c": "Country on the same side as another in a war",
+      "ru": "союзник"
+    },
+    {
+      "w": "TREASON",
+      "p": "n",
+      "c": "Crime of betraying one's own country",
+      "ru": "государственная измена"
+    },
+    {
+      "w": "PATRIOT",
+      "p": "n",
+      "c": "Person who loves and will defend their country",
+      "ru": "патриот"
+    },
+    {
+      "w": "BUREAUCRACY",
+      "p": "n",
+      "c": "Administrative system with many officials and complex rules",
+      "ru": "бюрократия"
+    },
+    {
+      "w": "STATESMAN",
+      "p": "n",
+      "c": "Wise, experienced and respected political leader",
+      "ru": "государственный деятель"
+    },
+    {
+      "w": "MINISTRY",
+      "p": "n",
+      "c": "Government department responsible for one area of policy",
+      "ru": "министерство"
+    },
+    {
+      "w": "WATCHDOG",
+      "p": "n",
+      "c": "Body that monitors officials or companies to stop abuses",
+      "ru": "надзорный орган"
+    },
+    {
+      "w": "WELFARE",
+      "p": "n",
+      "c": "State help for people in need, such as benefits",
+      "ru": "социальная помощь, соцобеспечение"
+    },
+    {
+      "w": "INEQUALITY",
+      "p": "n",
+      "c": "Unfair difference in wealth, rights or opportunities",
+      "ru": "неравенство"
+    },
+    {
+      "w": "PRIVILEGE",
+      "p": "n",
+      "c": "Special right or advantage available only to some",
+      "ru": "привилегия"
+    },
+    {
+      "w": "ARISTOCRACY",
+      "p": "n",
+      "c": "Highest social class, usually with inherited titles",
+      "ru": "аристократия, знать"
+    },
+    {
+      "w": "GENTRY",
+      "p": "n",
+      "c": "Wealthy landowning class ranking just below the nobility",
+      "ru": "мелкопоместное дворянство"
+    },
+    {
+      "w": "COMMONER",
+      "p": "n",
+      "c": "Ordinary person without noble rank or title",
+      "ru": "простолюдин"
+    },
+    {
+      "w": "MINORITY",
+      "p": "n",
+      "c": "Smaller group differing in race, religion or views from the rest",
+      "ru": "меньшинство"
+    },
+    {
+      "w": "DIASPORA",
+      "p": "n",
+      "c": "People of one origin scattered far from their homeland",
+      "ru": "диаспора"
+    },
+    {
+      "w": "REFUGEE",
+      "p": "n",
+      "c": "Person forced to flee their country by war or danger",
+      "ru": "беженец"
+    },
+    {
+      "w": "ASYLUM",
+      "p": "n",
+      "c": "Protection a state grants to someone fleeing persecution",
+      "ru": "политическое убежище"
+    },
+    {
+      "w": "EXILE",
+      "p": "n",
+      "c": "State of being forced to live away from one's country",
+      "ru": "изгнание, ссылка"
+    },
+    {
+      "w": "CENSUS",
+      "p": "n",
+      "c": "Official count of a country's population",
+      "ru": "перепись населения"
+    },
+    {
+      "w": "PREJUDICE",
+      "p": "n",
+      "c": "Unfair opinion formed without reason or knowledge",
+      "ru": "предубеждение, предрассудок"
+    },
+    {
+      "w": "SEGREGATION",
+      "p": "n",
+      "c": "Enforced separation of racial or social groups",
+      "ru": "сегрегация"
+    },
+    {
+      "w": "SOLIDARITY",
+      "p": "n",
+      "c": "Unity and mutual support among people with shared aims",
+      "ru": "солидарность"
+    },
+    {
+      "w": "HEGEMONY",
+      "p": "n",
+      "c": "Dominance of one state or group over others",
+      "ru": "гегемония, господство"
+    },
+    {
+      "w": "SUPERPOWER",
+      "p": "n",
+      "c": "Nation with dominant global military and economic might",
+      "ru": "сверхдержава"
+    },
+    {
+      "w": "HAWKISH",
+      "p": "adj",
+      "c": "Favouring force or a hard line in foreign policy",
+      "ru": "воинственный, жёсткий (о политике)"
+    },
+    {
+      "w": "DOVISH",
+      "p": "adj",
+      "c": "Favouring peace and negotiation over the use of force",
+      "ru": "миролюбивый, склонный к компромиссу"
+    },
+    {
+      "w": "TURNCOAT",
+      "p": "n",
+      "c": "Person who deserts their party for the opposing side",
+      "ru": "перебежчик, ренегат"
+    },
+    {
+      "w": "FIREBRAND",
+      "p": "n",
+      "c": "Passionate person who stirs up political unrest",
+      "ru": "смутьян, подстрекатель"
+    },
+    {
+      "w": "FILIBUSTER",
+      "p": "n",
+      "c": "Very long speech made to delay a vote",
+      "ru": "обструкция, затягивание прений"
+    },
+    {
+      "w": "GAFFE",
+      "p": "n",
+      "c": "Embarrassing public blunder, especially by a politician",
+      "ru": "промах, оплошность"
+    },
+    {
+      "w": "UTOPIA",
+      "p": "n",
+      "c": "Imagined place where society is perfect",
+      "ru": "утопия"
+    },
+    {
+      "w": "DYSTOPIA",
+      "p": "n",
+      "c": "Imagined society that is oppressive and frightening",
+      "ru": "антиутопия"
+    },
+    {
+      "w": "IDEOLOGY",
+      "p": "n",
+      "c": "System of ideas underlying a political theory",
+      "ru": "идеология"
+    },
+    {
+      "w": "UPHEAVAL",
+      "p": "n",
+      "c": "Sudden, violent change that disrupts a society",
+      "ru": "потрясение, переворот"
+    },
+    {
+      "w": "UNREST",
+      "p": "n",
+      "c": "Angry public discontent, often with protests or riots",
+      "ru": "волнения, беспорядки"
+    },
+    {
+      "w": "DEADLOCK",
+      "p": "n",
+      "c": "Situation in which neither side can make progress",
+      "ru": "тупик, патовая ситуация"
+    },
+    {
+      "w": "CONSENSUS",
+      "p": "n",
+      "c": "General agreement among all members of a group",
+      "ru": "консенсус, согласие"
+    },
+    {
+      "w": "QUORUM",
+      "p": "n",
+      "c": "Minimum number of members needed to make valid decisions",
+      "ru": "кворум"
+    },
+    {
+      "w": "PATRONAGE",
+      "p": "n",
+      "c": "Power to give jobs or favours to political supporters",
+      "ru": "покровительство, раздача должностей"
+    },
+    {
+      "w": "GRAFT",
+      "p": "n",
+      "c": "Illegal gain by abuse of public office",
+      "ru": "взяточничество, казнокрадство"
+    },
+    {
+      "w": "SLEAZE",
+      "p": "n",
+      "c": "Dishonest or immoral behaviour in public life",
+      "ru": "нечистоплотность, коррупция"
+    },
+    {
+      "w": "CRONYISM",
+      "p": "n",
+      "c": "Giving official posts to friends regardless of merit",
+      "ru": "кумовство, блат"
+    },
+    {
+      "w": "POPULISM",
+      "p": "n",
+      "c": "Politics claiming to champion ordinary people against elites",
+      "ru": "популизм"
+    },
+    {
+      "w": "JINGOISM",
+      "p": "n",
+      "c": "Extreme, aggressive patriotism that favours war",
+      "ru": "ура-патриотизм, шовинизм"
+    },
+    {
+      "w": "XENOPHOBIA",
+      "p": "n",
+      "c": "Dislike or fear of people from other countries",
+      "ru": "ксенофобия"
+    },
+    {
+      "w": "BACKBENCHER",
+      "p": "n",
+      "c": "Member of parliament who holds no senior post",
+      "ru": "рядовой депутат"
+    },
+    {
+      "w": "KINGMAKER",
+      "p": "n",
+      "c": "Powerful figure who decides who becomes leader",
+      "ru": "«делатель королей», влиятельный покровитель"
+    },
+    {
+      "w": "STATECRAFT",
+      "p": "n",
+      "c": "Skill of managing a nation's affairs",
+      "ru": "искусство управлять государством"
+    },
+    {
+      "w": "POLLSTER",
+      "p": "n",
+      "c": "Person who conducts surveys of public opinion",
+      "ru": "специалист по опросам"
+    },
+    {
+      "w": "MOUTHPIECE",
+      "p": "n",
+      "c": "Person or newspaper that voices the views of others",
+      "ru": "рупор"
+    },
+    {
+      "w": "PUPPET",
+      "p": "n",
+      "c": "Leader secretly controlled by someone else",
+      "ru": "марионетка"
+    },
+    {
+      "w": "HENCHMAN",
+      "p": "n",
+      "c": "Loyal follower who does a leader's dirty work",
+      "ru": "приспешник"
+    },
+    {
+      "w": "RABBLE",
+      "p": "n",
+      "c": "Noisy, disorderly crowd; scornfully, the common people",
+      "ru": "сброд, чернь"
+    },
+    {
+      "w": "SNOBBERY",
+      "p": "n",
+      "c": "Attitude of looking down on those of lower status",
+      "ru": "снобизм"
+    },
+    {
+      "w": "TABOO",
+      "p": "n",
+      "c": "Social custom forbidding a subject or practice",
+      "ru": "табу, запрет"
+    },
+    {
+      "w": "KOWTOW",
+      "p": "v",
+      "c": "Act with excessive submissiveness towards those in power",
+      "ru": "раболепствовать, пресмыкаться"
+    },
+    {
+      "w": "PARIAH",
+      "p": "n",
+      "c": "Person or nation shunned and despised by everyone",
+      "ru": "пария, отверженный"
+    },
+    {
+      "w": "STIGMA",
+      "p": "n",
+      "c": "Mark of social disgrace attached to a condition or group",
+      "ru": "клеймо, позорное пятно"
+    },
+    {
+      "w": "MUZZLE",
+      "p": "v",
+      "c": "Prevent the press or critics from speaking freely",
+      "ru": "затыкать рот, заглушать"
+    },
+    {
+      "w": "GHETTO",
+      "p": "n",
+      "c": "Poor, crowded district where a minority group lives",
+      "ru": "гетто"
+    },
+    {
+      "w": "SLUM",
+      "p": "n",
+      "c": "Overcrowded, run-down part of a city where poor people live",
+      "ru": "трущобы"
+    },
+    {
+      "w": "BACKPEDAL",
+      "p": "v",
+      "c": "Retreat from an earlier promise or stated position",
+      "ru": "идти на попятную, отыгрывать назад"
+    },
+    {
+      "w": "ABSTAIN",
+      "p": "v",
+      "c": "Deliberately choose not to vote either way",
+      "ru": "воздерживаться (при голосовании)"
+    },
+    {
+      "w": "ENFRANCHISE",
+      "p": "v",
+      "c": "Give a person or group the right to vote",
+      "ru": "предоставлять избирательное право"
+    },
+    {
+      "w": "OUST",
+      "p": "v",
+      "c": "Force someone out of a position of power",
+      "ru": "смещать, вытеснять"
+    },
+    {
+      "w": "OVERTHROW",
+      "p": "v",
+      "c": "Remove a ruler or government from power by force",
+      "ru": "свергать"
+    },
+    {
+      "w": "ABDICATE",
+      "p": "v",
+      "c": "Formally give up the throne",
+      "ru": "отрекаться от престола"
+    },
+    {
+      "w": "IMPEACH",
+      "p": "v",
+      "c": "Formally charge a high official with misconduct in office",
+      "ru": "объявлять импичмент"
+    },
+    {
+      "w": "RATIFY",
+      "p": "v",
+      "c": "Make a treaty officially valid by formal approval",
+      "ru": "ратифицировать"
+    },
+    {
+      "w": "OPPRESS",
+      "p": "v",
+      "c": "Keep a people down by cruel, unjust use of power",
+      "ru": "угнетать"
+    },
+    {
+      "w": "SUBJUGATE",
+      "p": "v",
+      "c": "Bring a people under complete control by conquest",
+      "ru": "покорять, порабощать"
+    },
+    {
+      "w": "PERSECUTE",
+      "p": "v",
+      "c": "Cruelly harass someone for their beliefs or race",
+      "ru": "преследовать, притеснять"
+    },
+    {
+      "w": "REBEL",
+      "p": "v",
+      "c": "Rise up against a government or authority",
+      "ru": "восставать, бунтовать"
+    },
+    {
+      "w": "MOBILIZE",
+      "p": "v",
+      "c": "Organize people or resources for collective action",
+      "ru": "мобилизовать"
+    },
+    {
+      "w": "CANVASS",
+      "p": "v",
+      "c": "Go door to door asking people for their votes",
+      "ru": "агитировать (за кандидата)"
+    },
+    {
+      "w": "ENDORSE",
+      "p": "v",
+      "c": "Publicly declare support for a candidate or policy",
+      "ru": "поддерживать, одобрять"
+    },
+    {
+      "w": "HECKLE",
+      "p": "v",
+      "c": "Interrupt a public speaker with rude, hostile shouts",
+      "ru": "перебивать выкриками"
+    },
+    {
+      "w": "LOBBY",
+      "p": "v",
+      "c": "Try to influence lawmakers on a particular issue",
+      "ru": "лоббировать"
+    },
+    {
+      "w": "GERRYMANDER",
+      "p": "v",
+      "c": "Redraw electoral districts to favour one party",
+      "ru": "перекраивать избирательные округа"
+    },
+    {
+      "w": "BROKER",
+      "p": "v",
+      "c": "Arrange a deal by negotiating between opposing sides",
+      "ru": "быть посредником, устраивать (сделку)"
+    },
+    {
+      "w": "ANNEX",
+      "p": "v",
+      "c": "Seize another country's territory and add it to one's own",
+      "ru": "аннексировать, присоединять"
+    },
+    {
+      "w": "SECEDE",
+      "p": "v",
+      "c": "Formally withdraw from a federation or union",
+      "ru": "отделяться, выходить из состава"
+    },
+    {
+      "w": "ASSIMILATE",
+      "p": "v",
+      "c": "Absorb newcomers fully into a society's culture",
+      "ru": "ассимилировать"
+    },
+    {
+      "w": "DEPORT",
+      "p": "v",
+      "c": "Officially expel a foreigner from a country",
+      "ru": "депортировать, высылать"
+    },
+    {
+      "w": "PANDER",
+      "p": "v",
+      "c": "Indulge people's prejudices or desires to win their favour",
+      "ru": "потакать, заигрывать"
+    },
+    {
+      "w": "PLEDGE",
+      "p": "v",
+      "c": "Solemnly promise something, as candidates do to voters",
+      "ru": "обещать, давать обязательство"
+    },
+    {
+      "w": "DEFECT",
+      "p": "v",
+      "c": "Abandon one's country or party to join an opponent",
+      "ru": "перебегать к противнику"
+    },
+    {
+      "w": "UPHOLD",
+      "p": "v",
+      "c": "Maintain and defend a principle or right",
+      "ru": "поддерживать, отстаивать"
+    },
+    {
+      "w": "POLARIZE",
+      "p": "v",
+      "c": "Split a society into two sharply opposed groups",
+      "ru": "поляризовать, раскалывать"
+    },
+    {
+      "w": "WIELD",
+      "p": "v",
+      "c": "Hold and use power or influence",
+      "ru": "обладать (властью), располагать (влиянием)"
+    },
+    {
+      "w": "USURP",
+      "p": "v",
+      "c": "Take a position of power illegally or by force",
+      "ru": "узурпировать, захватывать"
+    },
+    {
+      "w": "QUELL",
+      "p": "v",
+      "c": "Put an end to a rebellion or unrest by force",
+      "ru": "подавлять"
+    },
+    {
+      "w": "INCITE",
+      "p": "v",
+      "c": "Stir up people to violence or unrest",
+      "ru": "подстрекать, разжигать"
+    },
+    {
+      "w": "WHITEWASH",
+      "p": "v",
+      "c": "Cover up a scandal or someone's wrongdoing",
+      "ru": "обелять, замалчивать"
+    },
+    {
+      "w": "NATIONALIZE",
+      "p": "v",
+      "c": "Transfer a private company into state ownership",
+      "ru": "национализировать"
+    },
+    {
+      "w": "PRIVATIZE",
+      "p": "v",
+      "c": "Sell state-owned industry to individual owners",
+      "ru": "приватизировать"
+    },
+    {
+      "w": "EMPOWER",
+      "p": "v",
+      "c": "Give people more control over their own lives",
+      "ru": "расширять права и возможности"
+    },
+    {
+      "w": "DEMONIZE",
+      "p": "v",
+      "c": "Portray a person or group as evil or dangerous",
+      "ru": "демонизировать"
+    },
+    {
+      "w": "SCAPEGOAT",
+      "p": "v",
+      "c": "Unfairly blame a person or group for others' failures",
+      "ru": "делать козлом отпущения"
+    },
+    {
+      "w": "MARGINALIZE",
+      "p": "v",
+      "c": "Push a group to the edge of society, denying it influence",
+      "ru": "оттеснять на обочину, маргинализировать"
+    },
+    {
+      "w": "EMANCIPATE",
+      "p": "v",
+      "c": "Free people from legal, social or political restrictions",
+      "ru": "освобождать, эмансипировать"
+    },
+    {
+      "w": "PARTISAN",
+      "p": "adj",
+      "c": "Strongly biased in favour of one political side or cause",
+      "ru": "пристрастный, партийный"
+    },
+    {
+      "w": "BIPARTISAN",
+      "p": "adj",
+      "c": "Backed by both of two rival political sides",
+      "ru": "двухпартийный"
+    },
+    {
+      "w": "VENAL",
+      "p": "adj",
+      "c": "Open to bribery; ready to sell one's influence",
+      "ru": "продажный, подкупный"
+    },
+    {
+      "w": "RADICAL",
+      "p": "adj",
+      "c": "Favouring sweeping, fundamental political change",
+      "ru": "радикальный"
+    },
+    {
+      "w": "MODERATE",
+      "p": "adj",
+      "c": "Holding political views that are not extreme",
+      "ru": "умеренный"
+    },
+    {
+      "w": "REACTIONARY",
+      "p": "adj",
+      "c": "Strongly opposed to political or social progress",
+      "ru": "реакционный"
+    },
+    {
+      "w": "PROGRESSIVE",
+      "p": "adj",
+      "c": "Favouring social reform and new liberal ideas",
+      "ru": "прогрессивный"
+    },
+    {
+      "w": "DESPOTIC",
+      "p": "adj",
+      "c": "Ruling with absolute and cruel power",
+      "ru": "деспотический"
+    },
+    {
+      "w": "SOVEREIGN",
+      "p": "adj",
+      "c": "Fully independent and self-governing",
+      "ru": "суверенный"
+    },
+    {
+      "w": "CIVIC",
+      "p": "adj",
+      "c": "Relating to citizens and their public duties",
+      "ru": "гражданский"
+    },
+    {
+      "w": "SECULAR",
+      "p": "adj",
+      "c": "Not connected with religion or the church",
+      "ru": "светский"
+    },
+    {
+      "w": "UNANIMOUS",
+      "p": "adj",
+      "c": "Agreed on by every single person involved",
+      "ru": "единогласный"
+    },
+    {
+      "w": "CONTENTIOUS",
+      "p": "adj",
+      "c": "Likely to cause heated public disagreement",
+      "ru": "спорный, острый"
+    },
+    {
+      "w": "DIVISIVE",
+      "p": "adj",
+      "c": "Tending to cause hostility and splits between people",
+      "ru": "вызывающий раскол"
+    },
+    {
+      "w": "MILITANT",
+      "p": "adj",
+      "c": "Aggressively active in support of a cause",
+      "ru": "воинствующий"
+    },
+    {
+      "w": "SUBVERSIVE",
+      "p": "adj",
+      "c": "Seeking to undermine an established system or authority",
+      "ru": "подрывной"
+    },
+    {
+      "w": "SEDITIOUS",
+      "p": "adj",
+      "c": "Encouraging rebellion against the state",
+      "ru": "крамольный, подстрекательский"
+    },
+    {
+      "w": "EGALITARIAN",
+      "p": "adj",
+      "c": "Believing all people deserve the same rights and chances",
+      "ru": "эгалитарный, уравнительный"
+    },
+    {
+      "w": "LIBERTARIAN",
+      "p": "adj",
+      "c": "Favouring maximum individual freedom and a minimal state",
+      "ru": "либертарианский"
+    },
+    {
+      "w": "DEPRIVED",
+      "p": "adj",
+      "c": "Lacking basic necessities and opportunities in life",
+      "ru": "обездоленный, неблагополучный"
+    },
+    {
+      "w": "DOWNTRODDEN",
+      "p": "adj",
+      "c": "Oppressed and badly treated by those in power",
+      "ru": "угнетённый, забитый"
+    },
+    {
+      "w": "DISAFFECTED",
+      "p": "adj",
+      "c": "Resentful and no longer loyal to those in authority",
+      "ru": "недовольный, утративший лояльность"
+    },
+    {
+      "w": "PLEBEIAN",
+      "p": "adj",
+      "c": "Of the common people; lacking refinement",
+      "ru": "плебейский"
+    },
+    {
+      "w": "PATRICIAN",
+      "p": "adj",
+      "c": "Belonging to the aristocracy; refined and upper-class",
+      "ru": "патрицианский, аристократический"
+    },
+    {
+      "w": "HEREDITARY",
+      "p": "adj",
+      "c": "Passed down from parent to child, as a title",
+      "ru": "наследственный"
+    },
+    {
+      "w": "STATELESS",
+      "p": "adj",
+      "c": "Not recognized as a citizen of any country",
+      "ru": "не имеющий гражданства"
+    },
+    {
+      "w": "RIGGED",
+      "p": "adj",
+      "c": "Dishonestly arranged to produce a desired result",
+      "ru": "подтасованный, сфальсифицированный"
+    },
+    {
+      "w": "RESTIVE",
+      "p": "adj",
+      "c": "Impatient, unruly and close to rebelling",
+      "ru": "беспокойный, непокорный"
+    },
+    {
+      "w": "BOURGEOIS",
+      "p": "adj",
+      "c": "Typical of conventional, materialistic middle-class values",
+      "ru": "буржуазный, мещанский"
+    },
+    {
+      "w": "UNELECTED",
+      "p": "adj",
+      "c": "Holding power without having been chosen by voters",
+      "ru": "неизбранный, невыборный"
+    },
+    {
+      "w": "INCLUSIVE",
+      "p": "adj",
+      "c": "Deliberately welcoming people of all groups",
+      "ru": "инклюзивный, открытый для всех"
+    },
+    {
+      "w": "VOCAL",
+      "p": "adj",
+      "c": "Expressing opinions openly and loudly",
+      "ru": "открыто высказывающийся"
+    },
+    {
+      "w": "MUNICIPAL",
+      "p": "adj",
+      "c": "Relating to the local government of a town or city",
+      "ru": "муниципальный, городской"
+    },
+    {
+      "w": "FEDERAL",
+      "p": "adj",
+      "c": "Relating to the central government of a union of states",
+      "ru": "федеральный"
+    },
+    {
+      "w": "INALIENABLE",
+      "p": "adj",
+      "c": "Impossible to take away, as basic human rights",
+      "ru": "неотъемлемый"
+    },
+    {
+      "w": "POLITICIZED",
+      "p": "adj",
+      "c": "Turned into a matter of party dispute",
+      "ru": "политизированный"
+    },
+    {
+      "w": "MAINSTREAM",
+      "p": "adj",
+      "c": "Shared by most people; widely accepted as normal",
+      "ru": "общепринятый, традиционный"
+    },
+    {
+      "w": "FRINGE",
+      "p": "adj",
+      "c": "Outside the main body of opinion; extreme or minor",
+      "ru": "маргинальный, периферийный"
+    },
+    {
+      "w": "ELITIST",
+      "p": "adj",
+      "c": "Believing a select few should hold power and privilege",
+      "ru": "элитарный"
+    },
+    {
+      "w": "TRIBAL",
+      "p": "adj",
+      "c": "Fiercely loyal to one's own group above all others",
+      "ru": "клановый, племенной"
+    },
+    {
+      "w": "COVERT",
+      "p": "adj",
+      "c": "Secret and not openly acknowledged",
+      "ru": "тайный, скрытый"
+    },
+    {
+      "w": "WARRING",
+      "p": "adj",
+      "c": "Engaged in armed conflict or bitter rivalry",
+      "ru": "враждующий, воюющий"
+    },
+    {
+      "w": "NARROWLY",
+      "p": "adv",
+      "c": "By only a small margin, as in a close vote",
+      "ru": "с небольшим перевесом, едва"
+    },
+    {
+      "w": "NOMINALLY",
+      "p": "adv",
+      "c": "In name only, not in actual fact",
+      "ru": "номинально"
+    },
+    {
+      "w": "NATIONWIDE",
+      "p": "adv",
+      "c": "Throughout a whole country: protests spread ___",
+      "ru": "по всей стране"
+    },
+    {
+      "w": "OSTENSIBLY",
+      "p": "adv",
+      "c": "Apparently or supposedly, but perhaps not really",
+      "ru": "якобы, по видимости"
+    },
+    {
+      "w": "DEFIANTLY",
+      "p": "adv",
+      "c": "In a boldly disobedient or resisting way",
+      "ru": "вызывающе, демонстративно"
+    },
+    {
+      "w": "FORCIBLY",
+      "p": "adv",
+      "c": "Using physical power, against a person's will",
+      "ru": "насильно, принудительно"
+    },
+    {
+      "w": "PEACEABLY",
+      "p": "adv",
+      "c": "Without violence or conflict",
+      "ru": "мирно"
+    },
+    {
+      "w": "OVERTLY",
+      "p": "adv",
+      "c": "Openly, with no attempt to conceal",
+      "ru": "открыто, явно"
+    },
+    {
+      "w": "JOINTLY",
+      "p": "adv",
+      "c": "Together, with responsibility shared by two or more",
+      "ru": "совместно"
+    },
+    {
+      "w": "FERVENTLY",
+      "p": "adv",
+      "c": "With passionate sincerity, as in a ___ held belief",
+      "ru": "горячо, страстно, пылко"
+    }
+  ]
+}

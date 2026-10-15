@@ -49,6 +49,22 @@ test('вшитый levels.json разбирается и содержит meta',
   for (const id of modes) assert.ok(Array.isArray(data[id].campaign) && data[id].campaign.length > 0, `${id}: нет кампании`);
 });
 
+test('уровни «Слов» (§2.5) вшиты отдельным <script id="words"> и разбираются так же, как в рантайме', async () => {
+  const html = readFileSync(resolve(DIST, 'index.html'), 'utf8');
+  assert.ok(!html.includes('__WORDS__'), 'плейсхолдер слов не подставлен');
+  const m = html.match(/<script type="application\/json" id="words">([\s\S]*?)<\/script>/);
+  assert.ok(m, 'блок слов не найден');
+  const raw = m[1];
+  const { readEmbeddedLevels } = await import('../src/core/levels.js');
+  const levelsBlock = html.match(/<script type="application\/json" id="levels">([\s\S]*?)<\/script>/)[1];
+  const fakeDoc = { getElementById: (id) => (id === 'levels' ? { textContent: levelsBlock } : id === 'words' ? { textContent: raw } : null) };
+  const levels = readEmbeddedLevels(fakeDoc);
+  assert.ok(levels.zip && levels.flow && levels.stroke, 'головоломки на месте');
+  if (existsSync(resolve(ROOT, 'src/data/words.json'))) {
+    assert.ok(Array.isArray(levels.words.campaign) && levels.words.campaign.length > 0, 'кампания «Слов»');
+  }
+});
+
 test('sw.js и манифест записаны, хэш подставлен', () => {
   const sw = readFileSync(resolve(DIST, 'sw.js'), 'utf8');
   assert.ok(sw.includes(`'roscherk-' + CONTENT_HASH`) || sw.includes('roscherk-'));
@@ -88,7 +104,7 @@ test('в бандле нет shadowBlur и внешних ссылок на CDN'
   assert.ok(!/https?:\/\/(cdn|unpkg|fonts\.googleapis)/.test(html), 'внешние ресурсы запрещены');
 });
 
-test('contentHash учитывает иконки: assets/icon.svg, иначе готовые dist/icon-*.png (они в PRECACHE sw.js)', () => {
+test('contentHash учитывает иконки: assets/icon.png или .svg, иначе готовые dist/icon-*.png (они в PRECACHE sw.js)', () => {
   // Исходник svg — приоритетный источник, png при нём не влияют.
   const svg = '<svg viewBox="0 0 1 1"/>';
   const pngs = [
@@ -112,7 +128,8 @@ test('contentHash учитывает иконки: assets/icon.svg, иначе �
   const base = { js: 'var a=1;', css: '.a{}', levels: '{}', html: '<html>', sw: 'self;', manifest: '{}', icon: fromSvg };
   assert.notEqual(contentHashOf({ ...base, icon: fromPng }), contentHashOf(base));
   assert.notEqual(contentHashOf({ ...base, icon: '' }), contentHashOf(base));
-  // Реальная сборка: источник иконок назван в отчёте — в репозитории это assets/icon.svg.
+  // Реальная сборка: источник иконок назван в отчёте — мастер assets/icon.png, иначе assets/icon.svg.
   assert.equal(typeof report.iconSource, 'string');
-  assert.ok(existsSync(resolve(ROOT, 'assets/icon.svg')) ? report.iconSource === 'assets/icon.svg' : report.iconSource.length > 0);
+  const expected = existsSync(resolve(ROOT, 'assets/icon.png')) ? 'assets/icon.png' : existsSync(resolve(ROOT, 'assets/icon.svg')) ? 'assets/icon.svg' : null;
+  assert.ok(expected ? report.iconSource === expected : report.iconSource.length > 0, report.iconSource);
 });

@@ -1,6 +1,6 @@
 // Точка входа оболочки: объект app, роутер экранов без History API (§4.1), тема, звук,
 // хранилище, Service Worker, оверлей «Поверни телефон». Режимы — только через реестр и §5.1.
-import { MODES, MODE_BY_ID, MODE_IDS } from './modes/index.js';
+import { MODES, MODE_BY_ID, MODE_IDS, ROTATION_MODES, ROTATION_IDS } from './modes/index.js';
 import { readEmbeddedLevels, modeSets } from './core/levels.js';
 import { load, save, normalize } from './core/storage.js';
 import { createAudio } from './core/audio.js';
@@ -18,6 +18,18 @@ import { mountCampaignDone } from './ui/win.js';
 
 const BUILD_HASH = '__CONTENT_HASH__';
 const DEV_HOSTS = ['localhost', '127.0.0.1', '[::1]'];
+/**
+ * Нативная оболочка (Capacitor, сборка для App Store): страница отдаётся с capacitor://localhost,
+ * поэтому это не «dev», приложение уже «установлено» (без карточки «На экран Домой»), Service
+ * Worker не нужен. Мост Capacitor внедряется до скриптов страницы.
+ */
+const NATIVE = (() => {
+  try {
+    return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+  } catch {
+    return false;
+  }
+})();
 
 function createApp() {
   const root = document.getElementById('app');
@@ -46,17 +58,20 @@ function createApp() {
     state,
     levels,
     modes: MODES,
+    /** Режимы Ежедневной и Бесконечности (§3.2; «Слова» — только кампания, §2.5). */
+    rotationModes: ROTATION_MODES,
     modeById: MODE_BY_ID,
     audio,
     overlays,
     buildHash: BUILD_HASH.startsWith('__') ? 'dev' : BUILD_HASH,
-    dev: DEV_HOSTS.includes(location.hostname) || location.protocol === 'file:',
-    isStandalone: navigator.standalone === true || matchMedia('(display-mode: standalone)').matches,
+    native: NATIVE,
+    dev: !NATIVE && (DEV_HOSTS.includes(location.hostname) || location.protocol === 'file:'),
+    isStandalone: NATIVE || navigator.standalone === true || matchMedia('(display-mode: standalone)').matches,
     endlessUsed: new Set(),
 
     modeSets: (modeId) => modeSets(levels, modeId),
     dailyPoolSize() {
-      return Math.max(1, ...MODES.map((m) => modeSets(levels, m.id).daily.length));
+      return Math.max(1, ...ROTATION_MODES.map((m) => modeSets(levels, m.id).daily.length));
     },
     today: () => localDateString(new Date()),
     reducedMotion: () => reducedMq.matches,
@@ -120,7 +135,7 @@ function createApp() {
 
     startDaily() {
       const today = app.today();
-      const pick = pickDaily(today, MODE_IDS, app.dailyPoolSize());
+      const pick = pickDaily(today, ROTATION_IDS, app.dailyPoolSize());
       const level = modeSets(levels, pick.mode).daily[pick.index];
       if (!level) {
         overlays.toast(t('noLevels'));
@@ -132,13 +147,13 @@ function createApp() {
     /** Следующий уровень Бесконечности для серии streak; excludeId — только что пропущенный. */
     startEndless(modeChoice, streak, excludeId = null) {
       const pools = {};
-      for (const id of MODE_IDS) pools[id] = modeSets(levels, id).pool;
+      for (const id of ROTATION_IDS) pools[id] = modeSets(levels, id).pool;
       const used = new Set(app.endlessUsed);
       if (excludeId) used.add(excludeId);
-      const choice = MODE_IDS.includes(modeChoice) ? modeChoice : MODES.length > 1 ? MIX : MODE_IDS[0];
+      const choice = ROTATION_IDS.includes(modeChoice) ? modeChoice : ROTATION_IDS.length > 1 ? MIX : ROTATION_IDS[0];
       const picked = pickEndlessLevel({
         pools,
-        modeIds: MODE_IDS,
+        modeIds: ROTATION_IDS,
         modeChoice: choice,
         streak,
         usedIds: used,
@@ -188,7 +203,7 @@ function createApp() {
 /** Service Worker (§4.6): не на localhost, под try/catch (file:// открывается без офлайна). */
 function registerServiceWorker(app) {
   try {
-    if (!('serviceWorker' in navigator)) return;
+    if (NATIVE || !('serviceWorker' in navigator)) return;
     if (DEV_HOSTS.includes(location.hostname) || location.protocol !== 'https:') return;
     navigator.serviceWorker
       .register('./sw.js')

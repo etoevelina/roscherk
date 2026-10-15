@@ -14,6 +14,7 @@ export function defaultSettings() {
     flowNumbers: false,
     installCardClosed: false,
     installReminderShown: false,
+    introSeen: [], // режимы, для которых показано знакомство (§2.5)
   };
 }
 
@@ -102,6 +103,7 @@ export function normalize(raw, modeIds = DEFAULT_MODES) {
     out.settings.flowNumbers = s.flowNumbers === true;
     out.settings.installCardClosed = s.installCardClosed === true;
     out.settings.installReminderShown = s.installReminderShown === true;
+    out.settings.introSeen = Array.isArray(s.introSeen) ? s.introSeen.filter((x) => typeof x === 'string').slice(0, 16) : [];
   }
 
   if (isObject(raw.daily)) {

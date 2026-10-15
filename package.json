@@ -1,13 +1,15 @@
 {
   "name": "roscherk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Росчерк — головоломки одной линией (мобильная веб-игра для iPhone)",
+  "description": "Росчерк — головоломки одной линией и английские слова (мобильная веб-игра для iPhone)",
   "type": "module",
   "scripts": {
     "gen": "node tools/generate.mjs",
+    "words": "node tools/words.mjs",
     "verify": "node tools/verify.mjs",
     "build": "node tools/build.mjs",
+    "deploy": "node tools/build.mjs && node tools/deploy.mjs",
     "icons": "node tools/icon.mjs",
     "dev": "python3 -m http.server 8765 --bind 127.0.0.1 --directory dist",
     "test": "node --test tests/"

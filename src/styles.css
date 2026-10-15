@@ -78,6 +78,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Только для экранного диктора (VoiceOver), визуально скрыто. */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 #app {
   position: absolute;
   inset: 0;
@@ -379,6 +392,43 @@ button:disabled { opacity: 0.4; cursor: default; }
 .win-card .line.strong { color: var(--text); font-weight: 600; }
 .win-card .chapter-done { color: var(--mode-color, var(--accent)); font-weight: 700; margin-top: 6px; }
 
+/* --- Экранная клавиатура («Слова», §2.5) --- */
+.kbd {
+  flex: 0 0 auto;
+  padding: 4px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surface);
+  border-top: 1px solid var(--surface2);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.kbd-row { display: flex; justify-content: center; gap: 5px; }
+.kbd .key {
+  flex: 0 1 34px;
+  min-width: 0;
+  height: 44px;
+  border-radius: 7px;
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 19px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.kbd .key.wide { flex: 0 1 54px; }
+.kbd .key svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.kbd .key.down { background: var(--mode-color, var(--accent)); color: #fff; transform: translateY(1px); }
+@media (max-height: 700px) {
+  .kbd .key { height: 40px; }
+  .kbd { gap: 5px; padding-top: 3px; padding-bottom: 4px; }
+}
+
 .empty-state { text-align: center; padding: 40px 0; color: var(--text-muted); }
 .campaign-done { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 24px; text-align: center; }
 .campaign-done h2 { font-size: 28px; margin: 0 0 8px; }
@@ -446,6 +496,9 @@ button:disabled { opacity: 0.4; cursor: default; }
   align-items: center;
   pointer-events: none;
 }
+/* Экран с клавиатурой («Слова»): тосты под шапкой, а не поверх клавиш. */
+body.kbd-open .toast-stack { top: calc(var(--safe-top) + 60px); bottom: auto; }
+.toast.passive { pointer-events: none; }
 .toast {
   pointer-events: auto;
   display: flex;

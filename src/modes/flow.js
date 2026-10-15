@@ -668,8 +668,8 @@ const flowMode = {
     ru: 'Соедини каждую пару точек дорожкой своего цвета. Дорожки не пересекаются, все клетки должны быть заполнены.',
     en: 'Connect each pair of dots with a path of its colour. Paths never cross and every cell must be filled.',
   },
-  color: '#F28C3B',
-  colorLight: '#D9731F',
+  color: '#92BCC5', // Lumin (§4.4): приглушённый оттенок режима для тёмной темы
+  colorLight: '#4F7C86',
 
   /** create(levelData, saved) → state. Битый снимок игнорируется — создаётся чистое состояние. */
   create(levelData, saved) {

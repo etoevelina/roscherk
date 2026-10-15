@@ -6,7 +6,9 @@
 // dist/icon-*.png) тоже учитывается — иначе новая иконка не доехала бы до установленного PWA.
 // Подставляется в sw.js, в бандл (версия в настройках) и в index.html.
 // Проверки: dist/index.html ≤ 1 МБ; levels.json ≤ 400 КБ (иначе компактное кодирование путей).
-//   node tools/build.mjs [--no-icons]
+//   node tools/build.mjs [--no-icons] [--native]
+// --native — сборка для оболочки Capacitor (App Store): подключает src/native.js (плагины Haptics,
+// StatusBar, SplashScreen), без Service Worker и манифеста она не нуждается, но они не мешают.
 import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -99,7 +101,7 @@ export function luminAssets(css) {
   });
 }
 
-export async function build({ icons = true, log = console.log } = {}) {
+export async function build({ icons = true, native = false, log = console.log } = {}) {
   const t0 = performance.now();
   mkdirSync(DIST, { recursive: true });
 
@@ -110,6 +112,8 @@ export async function build({ icons = true, log = console.log } = {}) {
   const bundle = await esbuild.build({
     entryPoints: [resolve(ROOT, 'src/main.js')],
     bundle: true,
+    // Нативный модуль — только в сборке --native; в вебе импорт указывает на пустую заглушку.
+    alias: { __NATIVE_MODULE__: resolve(ROOT, native ? 'src/native.js' : 'src/native-web.js') },
     write: false,
     format: 'iife',
     target: ['safari15'],
@@ -200,7 +204,7 @@ export async function build({ icons = true, log = console.log } = {}) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  build({ icons: !process.argv.includes('--no-icons') }).catch((err) => {
+  build({ icons: !process.argv.includes('--no-icons'), native: process.argv.includes('--native') }).catch((err) => {
     console.error(err.message || err);
     process.exit(1);
   });

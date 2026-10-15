@@ -300,7 +300,7 @@ const mode = {
     ru: 'Отгадай английское слово по определению. У каждой буквы свой номер — буква встанет во все клетки с этим номером.',
     en: 'Guess the English word from its definition. Every letter has a number — it fills every cell with that number.',
   },
-  color: '#7E76A8', // лаванда Lumin, затемнённая под белый текст кнопки «Играть»
+  color: '#B3ABDB', // Lumin (§4.4): приглушённый оттенок режима для тёмной темы
   colorLight: '#6A6296',
   dom: true,
   keyboard: true,

@@ -371,8 +371,8 @@ const mode = {
     ru: 'Проведи одну дорожку от 1 до последнего числа через все клетки, посещая числа по порядку. Сквозь толстые линии нельзя.',
     en: 'Draw one route from 1 to the last number through every cell, visiting numbers in order. Thick lines are walls.',
   },
-  color: '#4F8CFF',
-  colorLight: '#2F6FE0',
+  color: '#9DBB98', // Lumin (§4.4): приглушённый оттенок режима для тёмной темы
+  colorLight: '#5E7D63',
 
   /**
    * create(levelData, saved) → state. Снимок (serialize) восстанавливает дорожку, возвраты и hintUsed.

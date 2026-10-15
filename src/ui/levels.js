@@ -2,7 +2,7 @@
 // остальные — замок. Список — отдельный контейнер со скроллом.
 import { h, icon } from './dom.js';
 import { t, tr, formatTime } from '../core/i18n.js';
-import { levelStatuses } from '../core/progress.js';
+import { levelStatuses, nextLevelIndex } from '../core/progress.js';
 
 export function mountLevels(app, { modeId }) {
   const mode = app.modeById[modeId];
@@ -13,6 +13,8 @@ export function mountLevels(app, { modeId }) {
   // «Слова» (§2.5): окно открытых уровней считается в каждой теме отдельно.
   const statuses = levelStatuses(campaign, progress, skipped, { byChapter: !!mode.openByChapter });
   const color = app.theme.accentOf(mode);
+  // Lumin «Level map»: текущий (следующий непройденный) уровень — лавандовое кольцо.
+  const current = nextLevelIndex(campaign, progress, skipped, { byChapter: !!mode.openByChapter });
 
   const content = h('div', { class: 'content', style: { '--mode-color': color } });
   if (campaign.length === 0) content.appendChild(h('div', { class: 'empty-state', text: t('noLevels') }));
@@ -33,7 +35,7 @@ export function mountLevels(app, { modeId }) {
     for (const level of ch.items) {
       const s = statuses[campaign.indexOf(level)];
       const tile = h('button', {
-        class: `tile ${s.status} ${s.skipped ? 'skipped' : ''}`,
+        class: `tile ${s.status} ${s.skipped ? 'skipped' : ''} ${s.index === current ? 'current' : ''}`,
         'aria-label': `${t('level', { n: s.index + 1 })}${s.status === 'locked' ? `, ${t('locked')}` : ''}`,
         disabled: s.status === 'locked',
         onClick: () => {
@@ -57,11 +59,11 @@ export function mountLevels(app, { modeId }) {
 
   const el = h(
     'div',
-    { class: 'screen levels-screen' },
+    { class: 'screen levels-screen lumin' },
     h(
       'div',
       { class: 'topbar' },
-      h('button', { class: 'icon-btn', 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
+      h('button', { class: 'icon-btn round', 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
       h('span', { class: 'title', text: t('levelsTitle', { mode: tr(mode.name) }) }),
       h('span', { class: 'spacer' }),
     ),

@@ -6,7 +6,6 @@ import { t, tr } from '../core/i18n.js';
 import { createCanvas, createRenderLoop, boardRect, createFrameBudget } from '../core/canvas.js';
 import { createPointerTracker, attachPointer } from '../core/input.js';
 import { vibrate } from '../core/audio.js';
-import { createConfetti } from '../core/particles.js';
 import { createGhost, pulse } from '../core/anim.js';
 import { findLevel } from '../core/levels.js';
 import {
@@ -30,8 +29,9 @@ const HINT_ARM_MS = 2000;
 /** Статистика попытки, которую undo не откатывает (§2.1): тупики stroke, подсказки и вводы «Слов». */
 const ATTEMPT_STATS = ['deadEnds', 'hints', 'ent', 'bad'];
 const RESET_TOAST_MS = 5000;
-const CONFETTI_MS = 1200;
-const CONFETTI_STRONG_MS = 1800;
+// Lumin «Level complete»: финал спокойный — мягкое свечение поля ≤ 700 мс, без конфетти (§3.1 п.4).
+const WIN_GLOW_MS = 700;
+const WIN_OVERLAY_DELAY_MS = 420;
 const FRAME_BUDGET_MS = 4;
 const FRAME_WARMUP = 3; // кадров без предупреждения о бюджете после смены уровня/темы/размера
 
@@ -88,7 +88,6 @@ export function mountGame(app, params) {
   let strokeSteps = 0;
   let appeared = false; // состояние получено undo/restore: анимацию появления не повторять
   let hintArmedUntil = 0;
-  let confetti = null;
   let winAt = 0;
   let ghost = null;
   let ghostStart = 0;
@@ -105,7 +104,7 @@ export function mountGame(app, params) {
 
   // --- DOM -------------------------------------------------------------------------------
   const isDom = !!mode.dom; // §2.5: режим рисует себя DOM-разметкой (view), холста нет
-  const lumin = mode.skin === 'lumin'; // оформление по дизайн-системе Lumin (§2.5)
+  const lumin = mode.skin === 'lumin'; // полный Lumin-вид режима «Слова» (§2.5); оболочка — Lumin для всех (§4.4)
   const titleText = isCampaign
     ? typeof mode.titleFor === 'function'
       ? tr(mode.titleFor(level, levelIndex, campaign))
@@ -138,11 +137,11 @@ export function mountGame(app, params) {
     : null;
   const el = h(
     'div',
-    { class: `screen game-screen${lumin ? ' lumin' : ''}${isDom ? ' dom' : ''}`, style: { '--mode-color': theme.accent } },
+    { class: `screen game-screen lumin${isDom ? ' dom' : ''}`, style: { '--mode-color': theme.accent } },
     h(
       'div',
       { class: 'topbar accent' },
-      h('button', { class: `icon-btn${lumin ? ' round' : ''}`, 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
+      h('button', { class: 'icon-btn round', 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
       h('span', { class: 'title', text: titleText }),
       topHint || subEl,
     ),
@@ -151,7 +150,6 @@ export function mountGame(app, params) {
     h('div', { class: 'bottombar' }, undoBtn, resetBtn, lumin ? null : hintBtn, skipBtn, footerEl),
     kbd,
   );
-  if (lumin) document.body.classList.add('lumin-on');
 
   function barButton(name, label, onClick) {
     return h(
@@ -292,19 +290,27 @@ export function mountGame(app, params) {
   function drawWinFx(ctx, tt) {
     if (app.reducedMotion()) return false;
     const dt = tt - winAt;
-    const dur = confetti ? confetti.dur : CONFETTI_MS;
+    const dur = WIN_GLOW_MS;
     let more = false;
     if (dt < dur) {
-      // «Сияние» поля — пульс цвета режима поверх холста.
+      // Lumin «soft radial bloom»: мягкое свечение цвета режима из центра поля, гаснет за 700 мс.
       const rect = cv.rect();
+      const cx = rect.w / 2;
+      const cy = layout && layout.y0 != null && layout.size ? layout.y0 + layout.size / 2 : rect.h / 2;
+      const r = Math.max(rect.w, rect.h) * 0.6;
+      const fade = 1 - dt / dur;
       ctx.save();
-      ctx.globalAlpha = 0.08 + 0.1 * pulse(tt, 400, winAt);
-      ctx.fillStyle = theme.accent;
+      ctx.globalAlpha = (0.12 + 0.1 * pulse(tt, 400, winAt)) * fade;
+      const g = ctx.createRadialGradient ? ctx.createRadialGradient(cx, cy, 0, cx, cy, r) : null;
+      if (g) {
+        g.addColorStop(0, theme.accent);
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+      } else ctx.fillStyle = theme.accent;
       ctx.fillRect(0, 0, rect.w, rect.h);
       ctx.restore();
       more = true;
     }
-    if (confetti && confetti.draw(ctx, tt)) more = true;
     return more;
   }
 
@@ -750,15 +756,6 @@ export function mountGame(app, params) {
     updateHud();
     winAt = tt;
     const reduced = app.reducedMotion();
-    // Lumin: финал спокойный, без конфетти (§2.5).
-    if (!reduced && cv && !lumin) {
-      const rect = cv.rect();
-      confetti = createConfetti(rect.w, rect.h, tt, {
-        strong: !!chapterDone,
-        colors: [theme.accent, theme.hint, theme.ok, theme.text, ...theme.flow.slice(0, 4)],
-        seed: (level.seed || 1) >>> 0,
-      });
-    }
     loop.invalidate();
 
     const stats = mode.stats(gameState);
@@ -800,7 +797,7 @@ export function mountGame(app, params) {
         else app.go('game', { kind, modeId: mode.id, levelId: level.id, date: dailyDate });
       },
     });
-    const delay = reduced ? 0 : lumin ? 360 : chapterDone ? CONFETTI_STRONG_MS : CONFETTI_MS;
+    const delay = reduced ? 0 : WIN_OVERLAY_DELAY_MS;
     setTimeout(() => {
       if (destroyed) return;
       el.appendChild(overlay);
@@ -913,7 +910,6 @@ export function mountGame(app, params) {
       loop.stop();
       cv?.destroy();
       view?.destroy();
-      if (lumin) document.body.classList.remove('lumin-on');
       unwatchTheme();
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('pagehide', onPageHide);

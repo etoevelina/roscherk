@@ -1,6 +1,6 @@
 {
   "name": "roscherk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Росчерк — головоломки одной линией и английские слова (мобильная веб-игра для iPhone)",
   "type": "module",
@@ -16,6 +16,14 @@
   },
   "license": "UNLICENSED",
   "devDependencies": {
+    "@capacitor/cli": "8.5.3",
     "esbuild": "^0.25.4"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.5.3",
+    "@capacitor/haptics": "8.0.2",
+    "@capacitor/ios": "8.5.3",
+    "@capacitor/splash-screen": "8.0.2",
+    "@capacitor/status-bar": "8.0.4"
   }
 }

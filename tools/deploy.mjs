@@ -1,7 +1,8 @@
 // Публикация на GitHub Pages (§0): содержимое dist/ — в ветку gh-pages удалённого origin.
 //   node tools/deploy.mjs            (обычно через npm run deploy: сборка + публикация)
 // Ветка gh-pages собирается во временной папке из одного коммита (история сайта не копится),
-// автор коммита — тот же, что в git config репозитория. dist/artifact.html не публикуется.
+// автор коммита — тот же, что в git config репозитория. dist/artifact.html не публикуется;
+// dist-extra/ (политика конфиденциальности и т. п.) добавляется к сайту.
 import { execFileSync } from 'node:child_process';
 import { cpSync, existsSync, mkdtempSync, readdirSync, rmSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -24,6 +25,9 @@ function main() {
   const tmp = mkdtempSync(join(tmpdir(), 'roscherk-pages-'));
   try {
     for (const f of readdirSync(DIST)) if (!SKIP.has(f)) cpSync(resolve(DIST, f), resolve(tmp, f), { recursive: true });
+    // Дополнительные страницы сайта (политика конфиденциальности для App Store): dist-extra/*.
+    const extra = resolve(ROOT, 'dist-extra');
+    if (existsSync(extra)) for (const f of readdirSync(extra)) cpSync(resolve(extra, f), resolve(tmp, f), { recursive: true });
     writeFileSync(resolve(tmp, '.nojekyll'), ''); // отдавать файлы как есть, без Jekyll
     git(['init', '-q', '-b', 'gh-pages'], tmp);
     git(['config', 'user.name', name], tmp);

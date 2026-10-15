@@ -1,54 +1,57 @@
 /* Росчерк — стили оболочки (§4.1, §4.4). Тёмная тема по умолчанию, светлая по data-theme. */
 
 :root {
-  --bg: #0f1117;
-  --surface: #171a23;
-  --surface2: #202430;
-  --surface3: #2a2f3d;
-  --text: #f2f4f8;
-  --text-muted: #9aa3b5;
-  --grid: #262b38;
-  --wall: #e8ebf2;
-  --accent: #4f8cff;
-  --accent-text: #ffffff;
-  --line-glow: #8fb5ff;
-  --hint: #ffd166;
-  --danger: #ff5d6c;
-  --ok: #3ddc97;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --radius: 16px;
+  /* Тёмная тема — производная Lumin (те же оттенки шалфея и лаванды на тёмном), §4.4. */
+  --bg: #121412;
+  --surface: #1a1d1a;
+  --surface2: #232723;
+  --surface3: #2c302b;
+  --text: #eef0ea;
+  --text-muted: #a1a8a2;
+  --grid: #2c302b;
+  --wall: #e6e9e2;
+  --accent: #b8b1e0;
+  --accent-text: #111311;
+  --line-glow: #d5d0ee;
+  --hint: #d9b57a;
+  --danger: #e0a3a3;
+  --ok: #a9c8a2;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.25);
+  --radius: 22px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
-  --flow-0: #ff5d6c; --flow-1: #ffa94d; --flow-2: #ffd93d; --flow-3: #5ce07a;
-  --flow-4: #3ad6c9; --flow-5: #4f8cff; --flow-6: #9b7bff; --flow-7: #ff6fd8;
-  --flow-8: #b8f26b; --flow-9: #e0c3ff; --flow-10: #7fdbff; --flow-11: #d4a373;
-  --flow-text-0: #0f1117; --flow-text-1: #0f1117; --flow-text-2: #0f1117; --flow-text-3: #0f1117;
-  --flow-text-4: #0f1117; --flow-text-5: #ffffff; --flow-text-6: #ffffff; --flow-text-7: #0f1117;
-  --flow-text-8: #0f1117; --flow-text-9: #0f1117; --flow-text-10: #0f1117; --flow-text-11: #0f1117;
+  /* «Потоки»: 12 приглушённых, но различимых оттенков (Lumin «muted, not washed out»). */
+  --flow-0: #e08a8e; --flow-1: #e8a86b; --flow-2: #d9c066; --flow-3: #94c48a;
+  --flow-4: #6cc4bc; --flow-5: #8daee0; --flow-6: #b49ce6; --flow-7: #e39ac6;
+  --flow-8: #b8cc6a; --flow-9: #7fc0e0; --flow-10: #cfa27f; --flow-11: #c3c8d2;
+  --flow-text-0: #111311; --flow-text-1: #111311; --flow-text-2: #111311; --flow-text-3: #111311;
+  --flow-text-4: #111311; --flow-text-5: #111311; --flow-text-6: #111311; --flow-text-7: #111311;
+  --flow-text-8: #111311; --flow-text-9: #111311; --flow-text-10: #111311; --flow-text-11: #111311;
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  --bg: #f4f5f9;
-  --surface: #ffffff;
-  --surface2: #e9ecf3;
-  --surface3: #dde1ea;
-  --text: #141824;
-  --text-muted: #5b6475;
-  --grid: #d9dde7;
-  --wall: #1b1f2a;
-  --accent: #2f6fe0;
+  /* Светлая тема — токены Lumin: canvas, paper, ink, шалфей, лаванда (§4.4). */
+  --bg: #f3f4ef;
+  --surface: #fbfcf9;
+  --surface2: #eceee9;
+  --surface3: #e2e5de;
+  --text: #111311;
+  --text-muted: #5f655f;
+  --grid: #e2e5de;
+  --wall: #111311;
+  --accent: #6a6296;
   --accent-text: #ffffff;
-  --line-glow: #6f9df0;
-  --hint: #b88400;
-  --danger: #d93a4a;
-  --ok: #1a9e68;
-  --shadow: 0 8px 24px rgba(20, 24, 36, 0.12);
+  --line-glow: #b7b0d6;
+  --hint: #a07a3c;
+  --danger: #9a5e5e;
+  --ok: #56705a;
+  --shadow: 0 1px 2px rgba(12, 17, 13, 0.05), 0 10px 30px rgba(30, 36, 30, 0.06);
 
-  --flow-0: #d7263d; --flow-1: #e07a10; --flow-2: #c9a000; --flow-3: #1f9d55;
-  --flow-4: #0f8f8a; --flow-5: #2f6fe0; --flow-6: #6c4bd9; --flow-7: #d1308f;
-  --flow-8: #5e9e12; --flow-9: #8e5bbf; --flow-10: #1a7fb5; --flow-11: #8b5a2b;
+  --flow-0: #b5555a; --flow-1: #b86f2e; --flow-2: #9a7d1f; --flow-3: #4f7f47;
+  --flow-4: #2f7f79; --flow-5: #4a6fa5; --flow-6: #7a62a8; --flow-7: #a8507f;
+  --flow-8: #6d7d22; --flow-9: #2f6f8f; --flow-10: #8f6040; --flow-11: #5a5f6b;
   --flow-text-0: #ffffff; --flow-text-1: #ffffff; --flow-text-2: #ffffff; --flow-text-3: #ffffff;
   --flow-text-4: #ffffff; --flow-text-5: #ffffff; --flow-text-6: #ffffff; --flow-text-7: #ffffff;
   --flow-text-8: #ffffff; --flow-text-9: #ffffff; --flow-text-10: #ffffff; --flow-text-11: #ffffff;
@@ -168,34 +171,50 @@ button:disabled { opacity: 0.4; cursor: default; }
 }
 
 .hero {
-  padding: 24px 0 8px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 4px 18px;
 }
+.hero-icon { width: 60px; height: 60px; border-radius: 16px; flex: 0 0 auto; box-shadow: var(--shadow), inset 0 0 0 1px var(--lm-line); }
+.hero-text { min-width: 0; }
+/* Lumin: надзаголовок — 11px, разрядка .16em, верхний регистр. */
+.eyebrow { font-size: 11px; font-weight: 750; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+.continue-card .btn.big { margin-top: 14px; }
+.daily-card { background: linear-gradient(140deg, var(--lm-lav2), var(--surface) 70%); }
+.endless-card { background: linear-gradient(140deg, var(--lm-mist), var(--surface) 70%); }
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 4px; }
+.stat { padding: 12px 6px; border-radius: 18px; text-align: center; background: var(--surface); box-shadow: inset 0 0 0 1px var(--lm-line); }
+.stat strong { display: block; font-size: 22px; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stat small { font-size: 11px; letter-spacing: 0.04em; color: var(--text-muted); }
+.cd-badge { width: 76px; height: 76px; margin: 0 auto 14px; border-radius: 50%; display: grid; place-items: center; background: var(--lm-lav2); color: var(--lm-lav-text); animation: lw-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.cd-badge svg { width: 36px; height: 36px; fill: currentColor; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
 .hero h1 {
   margin: 0;
-  font-size: 34px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 620;
+  letter-spacing: -0.05em;
 }
-.hero p { margin: 4px 0 0; color: var(--text-muted); }
+.hero p { margin: 6px 0 0; color: var(--text-muted); }
 
 .section-title {
-  margin: 20px 0 8px;
-  font-size: 13px;
-  font-weight: 600;
+  margin: 22px 4px 10px;
+  font-size: 11px;
+  font-weight: 750;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.16em;
   color: var(--text-muted);
 }
 
 .card {
   background: var(--surface);
   border-radius: var(--radius);
-  padding: 14px 16px;
+  padding: 16px;
   margin-bottom: 12px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), inset 0 0 0 1px var(--lm-line);
 }
-.card h3 { margin: 0; font-size: 17px; }
+.card h3 { margin: 0; font-size: 17px; font-weight: 650; letter-spacing: -0.02em; }
 .card .muted { color: var(--text-muted); font-size: 14px; }
 .card .row { display: flex; align-items: center; gap: 12px; }
 .card .row .grow { flex: 1; min-width: 0; container-type: inline-size; }
@@ -207,56 +226,64 @@ button:disabled { opacity: 0.4; cursor: default; }
 @container (max-width: 100px) { .card .row .grow .muted { font-size: 11px; } }
 
 .mode-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--mode-color, var(--accent));
-  color: #fff;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--lm-line);
+  color: var(--mode-color, var(--accent));
   flex: 0 0 auto;
 }
-.mode-icon svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+/* Lumin: оттенок режима — лёгкой подложкой, сам знак — цветом режима. */
+.mode-icon::before { content: ""; position: absolute; inset: 0; background: var(--mode-color, var(--accent)); opacity: 0.14; }
+.mode-icon svg { position: relative; width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 
 .btn {
   min-height: 44px;
   padding: 0 18px;
-  border-radius: 12px;
-  font-weight: 600;
+  border-radius: 14px;
+  font-weight: 650;
   font-size: 15px;
-  background: var(--surface2);
+  background: var(--lm-tile);
+  box-shadow: inset 0 0 0 1px var(--lm-line);
   color: var(--text);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
 }
-.btn:active { filter: brightness(0.92); }
-.btn.primary { background: var(--mode-color, var(--accent)); color: #fff; }
+.btn:active { filter: brightness(0.94); }
+/* Lumin «One decisive action»: основная кнопка — чернильная. */
+.btn.primary { background: var(--lm-ink); color: var(--lm-on-ink); box-shadow: none; }
+.btn.tonal { background: var(--lm-sage2); box-shadow: none; color: var(--lm-ink); }
 .btn.big { min-height: 56px; font-size: 18px; width: 100%; }
 .btn.danger { color: var(--danger); }
-.btn.link { background: none; color: var(--mode-color, var(--accent)); }
+.btn.link { background: none; box-shadow: none; color: var(--lm-ink); text-decoration: underline; }
 .btn-row { display: flex; gap: 10px; margin-top: 12px; }
 .btn-row .btn { flex: 1; }
 
-.progress-bar { height: 4px; border-radius: 2px; background: var(--surface3); margin-top: 8px; overflow: hidden; }
-.progress-bar > div { height: 100%; background: var(--mode-color, var(--accent)); border-radius: 2px; }
+.progress-bar { height: 6px; border-radius: 99px; background: var(--surface3); margin-top: 12px; overflow: hidden; }
+.progress-bar > div { height: 100%; background: var(--lm-ink); border-radius: inherit; }
 
 .install-card { position: relative; padding-right: 48px; }
 .install-card .close { position: absolute; top: 4px; right: 4px; }
 .install-card .pict { display: flex; gap: 10px; align-items: center; margin-top: 8px; color: var(--text-muted); font-size: 14px; }
-.install-card .pict svg { width: 28px; height: 28px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+.install-card .pict svg { width: 28px; height: 28px; stroke: var(--lm-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
 
 .calendar { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; margin-top: 10px; }
-.calendar span { aspect-ratio: 1; border-radius: 4px; background: var(--surface3); }
-.calendar span.done { background: var(--ok); }
-.calendar span.today { outline: 2px solid var(--accent); outline-offset: -2px; }
+.calendar span { aspect-ratio: 1; border-radius: 6px; background: var(--surface3); }
+.calendar span.done { background: var(--lm-sage); }
+.calendar span.today { outline: 2px solid var(--lm-lav-strong); outline-offset: -2px; }
 
 .seg {
   display: flex;
   background: var(--surface2);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 3px;
   gap: 3px;
   margin-top: 10px;
@@ -269,28 +296,31 @@ button:disabled { opacity: 0.4; cursor: default; }
   font-weight: 600;
   color: var(--text-muted);
 }
-.seg button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); }
+.seg button.on { background: var(--lm-tile); color: var(--text); box-shadow: 0 1px 2px rgba(12, 17, 13, 0.08), inset 0 0 0 1px var(--lm-line); }
 
 /* --- Выбор уровня --- */
 .chapter { margin-bottom: 18px; }
-.chapter h4 { margin: 0 0 8px; font-size: 15px; color: var(--text-muted); }
+.chapter h4 { margin: 0 4px 10px; font-size: 11px; font-weight: 750; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); }
 .tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .tile {
   position: relative;
   aspect-ratio: 1;
   min-height: 44px;
-  border-radius: 12px;
-  background: var(--surface);
+  border-radius: 16px;
+  background: var(--lm-tile);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 650;
   font-size: 17px;
-  box-shadow: var(--shadow);
+  box-shadow: inset 0 0 0 1px var(--lm-line);
 }
-.tile.locked { color: var(--text-muted); background: var(--surface2); box-shadow: none; }
-.tile.done { background: var(--mode-color, var(--accent)); color: #fff; }
+.tile.locked { color: var(--text-muted); background: transparent; box-shadow: inset 0 0 0 1px var(--lm-line); }
+.tile.locked:disabled { opacity: 0.7; }
+/* Lumin «Level map»: пройден — чернильная заливка, текущий — лавандовое кольцо. */
+.tile.done { background: var(--lm-ink); color: var(--lm-on-ink); box-shadow: none; }
+.tile.current { box-shadow: inset 0 0 0 1px var(--lm-line), 0 0 0 3px var(--lm-lav-strong); }
 .tile.skipped { outline: 2px dashed var(--text-muted); outline-offset: -2px; }
 .tile .mark { position: absolute; top: 4px; right: 5px; font-size: 12px; line-height: 1; }
 .tile .time { font-size: 10px; font-weight: 500; opacity: 0.85; margin-top: 1px; }
@@ -331,7 +361,8 @@ button:disabled { opacity: 0.4; cursor: default; }
   align-items: center;
   justify-content: space-around;
   gap: 4px;
-  background: var(--surface);
+  background: var(--bg);
+  border-top: 1px solid var(--lm-line);
 }
 .bar-btn {
   min-width: 56px;
@@ -347,9 +378,9 @@ button:disabled { opacity: 0.4; cursor: default; }
   color: var(--text-muted);
 }
 .bar-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.bar-btn:active { background: var(--surface2); }
-.bar-btn.pulse { animation: soft-pulse 1.6s ease-in-out infinite; color: var(--hint); }
-.bar-btn.skip { color: var(--mode-color, var(--accent)); }
+.bar-btn:active { background: var(--lm-sage2); }
+.bar-btn.pulse { animation: soft-pulse 1.6s ease-in-out infinite; color: var(--lm-ink); background: var(--lm-sage2); }
+.bar-btn.skip { color: var(--lm-ink); font-weight: 650; }
 @keyframes soft-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 /* Текст footer режима («ходов N · P %») — всегда одной строкой, даже на 375pt с кнопкой «Пропустить». */
 .footer-text {
@@ -378,19 +409,30 @@ button:disabled { opacity: 0.4; cursor: default; }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 .win-card {
   background: var(--surface);
-  border-radius: 20px;
-  padding: 18px 18px 16px;
-  box-shadow: var(--shadow);
+  border-radius: 28px;
+  padding: 20px 18px 16px;
+  box-shadow: var(--lm-shadow2), inset 0 0 0 1px var(--lm-line);
   text-align: center;
 }
-.win-card h2 { margin: 0; font-size: 26px; }
-.win-card .badge { font-size: 40px; line-height: 1.1; color: var(--hint); margin: 4px 0; }
-.win-card .badge.check { color: var(--ok); }
-.win-card .badge svg { width: 44px; height: 44px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.win-card h2 { margin: 2px 0 0; font-size: 28px; line-height: 1.05; font-weight: 620; letter-spacing: -0.045em; }
+/* Lumin «Level complete»: галочка в шалфейном круге, одно восходящее движение. */
+.win-card .badge {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--lm-sage2);
+  color: var(--lm-success);
+  animation: lw-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.win-card .badge.star { background: var(--lm-lav2); color: var(--lm-lav-text); }
+.win-card .badge svg { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .win-card .badge.star svg { fill: currentColor; }
-.win-card .line { color: var(--text-muted); font-size: 15px; margin: 2px 0; }
-.win-card .line.strong { color: var(--text); font-weight: 600; }
-.win-card .chapter-done { color: var(--mode-color, var(--accent)); font-weight: 700; margin-top: 6px; }
+.win-card .line { color: var(--text-muted); font-size: 15px; margin: 3px 0; }
+.win-card .line.strong { color: var(--text); font-weight: 650; }
+.win-card .chapter-done { color: var(--lm-success); font-weight: 650; margin-top: 8px; }
 
 /* --- Экранная клавиатура («Слова», §2.5) --- */
 .kbd {
@@ -431,7 +473,7 @@ button:disabled { opacity: 0.4; cursor: default; }
 
 .empty-state { text-align: center; padding: 40px 0; color: var(--text-muted); }
 .campaign-done { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 24px; text-align: center; }
-.campaign-done h2 { font-size: 28px; margin: 0 0 8px; }
+.campaign-done h2 { font-size: 30px; margin: 0 0 8px; font-weight: 620; letter-spacing: -0.045em; }
 
 /* --- Настройки --- */
 .setting-row {
@@ -477,7 +519,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   transition: transform 150ms;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
-.toggle.on { background: var(--accent); }
+.toggle.on { background: var(--lm-ink); }
 .toggle.on::after { transform: translateX(20px); }
 .setting-btn { width: 100%; justify-content: flex-start; padding: 0 4px; min-height: 48px; background: none; font-weight: 500; }
 .version { color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 16px; }
@@ -486,18 +528,17 @@ button:disabled { opacity: 0.4; cursor: default; }
 #overlays { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
 #overlays > * { pointer-events: auto; }
 .toast-stack {
+  /* Тосты — под шапкой: снизу их перекрывали бы клавиатура «Слов» и кнопки экрана победы. */
   position: absolute;
   left: 24px;
   right: 24px;
-  bottom: calc(var(--safe-bottom) + 84px);
+  top: calc(var(--safe-top) + 60px);
   display: flex;
   flex-direction: column;
   gap: 8px;
   align-items: center;
   pointer-events: none;
 }
-/* Экран с клавиатурой («Слова»): тосты под шапкой, а не поверх клавиш. */
-body.kbd-open .toast-stack { top: calc(var(--safe-top) + 60px); bottom: auto; }
 .toast.passive { pointer-events: none; }
 .toast {
   pointer-events: auto;
@@ -538,7 +579,7 @@ body.kbd-open .toast-stack { top: calc(var(--safe-top) + 60px); bottom: auto; }
 .dialog-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(17, 19, 17, 0.32);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -549,9 +590,9 @@ body.kbd-open .toast-stack { top: calc(var(--safe-top) + 60px); bottom: auto; }
   width: 100%;
   max-width: 360px;
   background: var(--surface);
-  border-radius: 18px;
-  padding: 18px;
-  box-shadow: var(--shadow);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: var(--lm-shadow2), inset 0 0 0 1px var(--lm-line);
 }
 .dialog p { margin: 0 0 12px; font-size: 16px; }
 .dialog textarea {
@@ -582,10 +623,10 @@ body.kbd-open .toast-stack { top: calc(var(--safe-top) + 60px); bottom: auto; }
 }
 .rotate-overlay h2 { margin: 0; }
 .rotate-overlay p { margin: 0; color: var(--text-muted); }
-.rotate-overlay svg { width: 64px; height: 64px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rotate-overlay svg { width: 64px; height: 64px; stroke: var(--lm-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 @media (prefers-reduced-motion: reduce) {
-  .screen, .toast, .win-overlay, .dialog-backdrop { animation: none; }
+  .screen, .toast, .win-overlay, .dialog-backdrop, .win-card .badge { animation: none; }
   .board.shake { animation: none; }
   .bar-btn.pulse { animation: none; }
   .toggle, .toggle::after { transition: none; }

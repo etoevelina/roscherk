@@ -1,0 +1,64 @@
+# Облачная сборка iOS для App Store (Codemagic): Xcode на Mac не нужен.
+# Что настроить один раз в Codemagic (делает владелец Apple Developer аккаунта, см. docs/APP_STORE.md):
+#   1. Teams → Integrations → App Store Connect: ключ API (Issuer ID, Key ID, .p8) — имя интеграции
+#      «roscherk-asc» (или поменять ниже в integrations.app_store_connect).
+#   2. Codemagic подписывает приложение сам (автоматическая подпись по ключу API): сертификат
+#      распространения и профиль создаются в Apple Developer от имени ключа.
+#   3. В App Store Connect должно существовать приложение с bundle id tech.kuick.roscherk.
+# Запуск: workflow «ios-release» вручную (кнопка Start new build) или push тега v*.
+workflows:
+  ios-release:
+    name: Росчерк — iOS → TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      node: 22
+      xcode: latest
+      cocoapods: default
+      groups:
+        - roscherk # необязательно: переменные группы (например, APP_STORE_APPLE_ID)
+      vars:
+        BUNDLE_ID: tech.kuick.roscherk
+        XCODE_WORKSPACE: ios/App/App.xcworkspace
+        XCODE_SCHEME: App
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: tech.kuick.roscherk
+    integrations:
+      app_store_connect: roscherk-asc
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: 'v*'
+          include: true
+      cancel_previous_builds: true
+    scripts:
+      - name: Зависимости
+        script: npm ci
+      - name: Тесты
+        script: npm test
+      - name: Веб-сборка для нативной оболочки
+        script: node tools/build.mjs --native
+      - name: Синхронизация с проектом iOS (Capacitor)
+        script: npx cap sync ios
+      - name: Номер сборки = номер сборки Codemagic (должен расти с каждой загрузкой)
+        script: |
+          cd ios/App
+          agvtool new-version -all "$BUILD_NUMBER"
+      - name: Подпись
+        script: xcode-project use-profiles
+      - name: Архив .ipa
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # submit_to_app_store: true  # включить, когда скриншоты и описание в App Store Connect заполнены
+        # release_type: AFTER_APPROVAL

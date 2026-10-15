@@ -104,11 +104,11 @@ export function mountSettings(app) {
 
   const el = h(
     'div',
-    { class: 'screen settings-screen' },
+    { class: 'screen settings-screen lumin' },
     h(
       'div',
       { class: 'topbar' },
-      h('button', { class: 'icon-btn', 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
+      h('button', { class: 'icon-btn round', 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
       h('span', { class: 'title', text: t('settings') }),
       h('span', { class: 'spacer' }),
     ),

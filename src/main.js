@@ -15,6 +15,8 @@ import { mountLevels } from './ui/levels.js';
 import { mountGame } from './ui/game.js';
 import { mountSettings } from './ui/settings.js';
 import { mountCampaignDone } from './ui/win.js';
+// Нативная оболочка: tools/build.mjs --native подставляет импорт src/native.js, в вебе — заглушка.
+import { setupNative } from '__NATIVE_MODULE__';
 
 const BUILD_HASH = '__CONTENT_HASH__';
 const DEV_HOSTS = ['localhost', '127.0.0.1', '[::1]'];
@@ -32,6 +34,8 @@ const NATIVE = (() => {
 })();
 
 function createApp() {
+  // Оформление Lumin для всего приложения (§4.4): тосты, шторки, диалоги в #overlays.
+  document.body.classList.add('lumin-on');
   const root = document.getElementById('app');
   const overlaysRoot = document.getElementById('overlays');
   const levels = readEmbeddedLevels(document);
@@ -94,7 +98,7 @@ function createApp() {
     applyTheme() {
       const id = applyTheme(app.state.settings.theme);
       themeObj = readTheme(document.documentElement, modeAccent(currentMode, id));
-      setThemeColorMeta(currentMode ? themeObj.accent : themeObj.bg);
+      setThemeColorMeta(themeObj.bg); // Lumin: шапки цвета фона на всех экранах (§4.4)
       for (const cb of themeListeners) cb(themeObj);
       return themeObj;
     },
@@ -103,7 +107,7 @@ function createApp() {
       currentMode = mode;
       const id = applyTheme(app.state.settings.theme);
       themeObj = readTheme(document.documentElement, modeAccent(mode, id));
-      setThemeColorMeta(mode ? themeObj.accent : themeObj.bg);
+      setThemeColorMeta(themeObj.bg);
       return themeObj;
     },
     onThemeChange(cb) {
@@ -235,5 +239,6 @@ function registerServiceWorker(app) {
 }
 
 const app = createApp();
+setupNative();
 registerServiceWorker(app);
 if (app.dev) window.__roscherk = app;

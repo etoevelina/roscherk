@@ -157,8 +157,8 @@ export default {
     ru: 'Проведи по каждому отрезку ровно один раз, не отрывая пальца. Через точки можно проходить несколько раз.',
     en: 'Trace every segment exactly once without lifting your finger. Dots may be visited many times.',
   },
-  color: '#F2A33C',
-  colorLight: '#C97A12',
+  color: '#D3A57E', // Lumin (§4.4): приглушённый оттенок режима для тёмной темы
+  colorLight: '#9A6B45',
 
   create(levelData, saved) {
     const g = buildGraph(levelData);

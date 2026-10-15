@@ -33,8 +33,8 @@ export function buildWinOverlay(app, info) {
   const card = h(
     'div',
     { class: 'win-card', style: { '--mode-color': app.theme.accentOf(info.mode) } },
-    h('h2', { text: t('done') }),
     badge,
+    h('h2', { text: t('done') }),
     ...lines,
     info.chapterDone ? h('div', { class: 'chapter-done', text: info.chapterLabel || t('chapterDone', { n: info.chapterDone }) }) : null,
     vocabList(info.vocab),
@@ -113,18 +113,18 @@ export function mountCampaignDone(app, { modeId }) {
   const only = !!mode.campaignOnly;
   const el = h(
     'div',
-    { class: 'screen', style: { '--mode-color': app.theme.accentOf(mode) } },
+    { class: 'screen lumin', style: { '--mode-color': app.theme.accentOf(mode) } },
     h(
       'div',
       { class: 'topbar' },
-      h('button', { class: 'icon-btn', 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
+      h('button', { class: 'icon-btn round', 'aria-label': t('back'), onClick: () => app.go('home') }, icon('back')),
       h('span', { class: 'title', text: tr(mode.name) }),
       h('span', { class: 'spacer' }),
     ),
     h(
       'div',
       { class: 'campaign-done' },
-      h('div', { class: 'badge star', style: { color: 'var(--hint)', fontSize: '48px' } }, icon('star')),
+      h('div', { class: 'cd-badge', 'aria-hidden': 'true' }, icon('star')),
       h('h2', { text: t('campaignDone') }),
       h('p', { class: 'muted', style: { color: 'var(--text-muted)' }, text: t(only ? 'campaignDoneOnly' : 'campaignDoneText', { mode: tr(mode.name) }) }),
       only

@@ -72,7 +72,7 @@ test('победа: 1–3 звезды (starsFor) пишутся в прогре
   assert.match(game, /import \{[^}]*\bstarsFor\b[^}]*\} from '\.\.\/core\/progress\.js'/);
   assert.match(game, /import \{ recordActivity \} from '\.\.\/core\/stats\.js'/);
   assert.match(game, /const stars = starsFor\(attempt, perfect\)/);
-  assert.match(game, /recordWin\(progress, level\.id, star, elapsedMs, stars\)/);
+  assert.match(game, /recordWin\(progress, level\.id, star, elapsedMs, stars, !attempt\.hintUsed\)/);
   // Активность пишется один раз, после веток кампании/ежедневной/бесконечности, до сохранения.
   const solved = game.slice(game.indexOf('function onSolved()'));
   const act = solved.indexOf('state.activity = recordActivity(state.activity, app.today())');

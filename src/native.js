@@ -16,9 +16,13 @@ export function setupNative() {
       /* без вибрации */
     }
   };
-  // Статус-бар поверх страницы (safe-area учтена в CSS). Под ним в обеих темах тёмная полоса
-  // шапки (§4.1), поэтому текст статус-бара всегда светлый (Style.Dark = светлые значки).
+  // Статус-бар поверх страницы (safe-area учтена в CSS). Значки — по теме приложения: в светлой
+  // тёмные (Style.Light), в тёмной светлые (Style.Dark); main.js вызывает это при смене темы.
+  document.body.classList.add('native');
   StatusBar.setOverlaysWebView({ overlay: true }).catch(() => {});
-  StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
+  window.__roscherkStatusBar = (themeId) => {
+    StatusBar.setStyle({ style: themeId === 'light' ? Style.Light : Style.Dark }).catch(() => {});
+  };
+  window.__roscherkStatusBar(document.documentElement.dataset.theme);
   SplashScreen.hide().catch(() => {});
 }

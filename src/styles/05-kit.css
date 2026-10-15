@@ -288,3 +288,18 @@ button.w-card:active { transform: scale(0.985); }
 @keyframes w-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 :focus-visible { outline: 3px solid rgba(104, 118, 100, 0.45); outline-offset: 3px; }
+
+/* PWA на экране «Домой»: статус-бар black-translucent всегда со светлыми значками — в светлой
+   теме под ним тёмная полоса высотой safe-area (§4.1). Во вкладке Safari safe-top = 0; в нативной
+   оболочке значки переключаются по теме (src/native.js), полоса не нужна. */
+:root[data-theme="light"] body:not(.native) #app > .screen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--safe-top);
+  background: #111311;
+  z-index: 7;
+  pointer-events: none;
+}

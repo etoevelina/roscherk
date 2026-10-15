@@ -964,7 +964,7 @@ export function mountGame(app, params) {
     if (isCampaign) {
       const progress = state.progress[mode.id] || {};
       prevBestMs = progress[level.id]?.bestMs || 0;
-      state.progress[mode.id] = recordWin(progress, level.id, star, elapsedMs, stars);
+      state.progress[mode.id] = recordWin(progress, level.id, star, elapsedMs, stars, !attempt.hintUsed);
       // Пройденный уровень больше не «пропущенный» (пунктирная рамка на карте).
       const skipped = state.skipped[mode.id] || [];
       if (skipped.includes(level.id)) state.skipped[mode.id] = skipped.filter((id) => id !== level.id);

@@ -198,7 +198,7 @@ export async function build({ icons = true, native = false, log = console.log } 
 
   // sw.js (прекэш с графикой) и манифест.
   const artList = arts.map((f) => `'./art/${f}'`).join(', ');
-  writeFileSync(resolve(DIST, 'sw.js'), fill(swTemplate, { [HASH_PLACEHOLDER]: contentHash, "'__ART_FILES__'": artList }));
+  writeFileSync(resolve(DIST, 'sw.js'), fill(swTemplate, { [HASH_PLACEHOLDER]: contentHash, '/*__ART_FILES__*/': artList }));
   writeFileSync(resolve(DIST, 'manifest.webmanifest'), manifest);
 
   // Иконки (при неудаче — предупреждение, если старые иконки уже лежат в dist).

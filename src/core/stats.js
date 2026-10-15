@@ -76,7 +76,7 @@ export function totals(state, campaignIdsByMode, todayStr) {
       completed++;
       const s = rec.stars || (rec.star ? 3 : 1);
       stars += s;
-      if (s >= 2) noHint++;
+      if (rec.nh || rec.star) noHint++;
     }
   }
   const activityTotal = Object.values(state.activity || {}).reduce((a, n) => a + n, 0);

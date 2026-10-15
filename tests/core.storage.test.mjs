@@ -60,7 +60,7 @@ test('миграция: недостающие поля дописываются
     endless: { best: { zip: 4, mix: -1, flow: 'x' } },
   };
   const s = normalize(raw, MODES);
-  assert.deepEqual(s.progress.zip, { abc: { star: true, bestMs: 4100, stars: 3 }, neg: { star: false, bestMs: 0, stars: 1 } });
+  assert.deepEqual(s.progress.zip, { abc: { star: true, bestMs: 4100, stars: 3, nh: true }, neg: { star: false, bestMs: 0, stars: 1, nh: false } });
   assert.deepEqual(s.progress.flow, {});
   assert.deepEqual(s.progress.stroke, {});
   assert.deepEqual(s.skipped.zip, ['a']);
@@ -91,7 +91,7 @@ test('current без mode/levelId отбрасывается', () => {
 test('save → load даёт то же состояние', () => {
   const storage = fakeStorage();
   const s = defaultState(MODES);
-  s.progress.zip.deadbeef = { star: true, bestMs: 1234, stars: 3 };
+  s.progress.zip.deadbeef = { star: true, bestMs: 1234, stars: 3, nh: true };
   s.current = { kind: 'daily', mode: 'flow', levelId: 'f1', elapsedMs: 5, hintUsed: true, resets: 1, startedAt: 10, state: { x: 1 } };
   assert.equal(save(s, storage), true);
   assert.deepEqual(load(storage, MODES), s);
@@ -99,7 +99,7 @@ test('save → load даёт то же состояние', () => {
 
 test('код прогресса: экспорт без current, импорт возвращает нормализованное состояние', () => {
   const s = defaultState(MODES);
-  s.progress.flow.ff = { star: false, bestMs: 99, stars: 1 };
+  s.progress.flow.ff = { star: false, bestMs: 99, stars: 1, nh: false };
   s.daily = { streak: 3, bestStreak: 5, lastDate: '2026-02-03', history: ['2026-02-01', '2026-02-02', '2026-02-03'] };
   s.current = { kind: 'campaign', mode: 'zip', levelId: 'z', elapsedMs: 1, hintUsed: false, resets: 0, startedAt: 0, state: {} };
   const code = exportCode(s);

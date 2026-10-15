@@ -88,6 +88,7 @@ export function normalize(raw, modeIds = DEFAULT_MODES) {
           bestMs: Number.isFinite(bestMs) && bestMs > 0 ? bestMs : 0,
           // 1–3 звезды (docs/DESIGN.md): пройден · без подсказок · идеально. Старые записи: star → 3, иначе 1.
           stars: Number.isInteger(stars) && stars >= 1 && stars <= 3 ? Math.max(stars, star ? 3 : 1) : star ? 3 : 1,
+          nh: rec.nh === true || star, // пройден без подсказок (старые записи: только по звезде)
         };
       }
       out.progress[mode] = entry;

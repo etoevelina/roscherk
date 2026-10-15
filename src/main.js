@@ -118,6 +118,7 @@ function createApp() {
       const id = applyTheme(app.state.settings.theme);
       themeObj = readTheme(document.documentElement, modeAccent(currentMode, id));
       setThemeColorMeta(themeObj.bg); // Lumin: шапки цвета фона на всех экранах (§4.4)
+      window.__roscherkStatusBar?.(id); // нативная оболочка: значки статус-бара по теме
       for (const cb of themeListeners) cb(themeObj);
       return themeObj;
     },
@@ -246,7 +247,14 @@ function createApp() {
     return app;
   }
   // Онбординг (docs/DESIGN.md) — только при первом запуске; кто уже играл, его не видит.
-  const played = Object.values(app.state.progress).some((p) => p && Object.keys(p).length) || !!app.state.daily.lastDate;
+  const st0 = app.state;
+  const played =
+    Object.values(st0.progress).some((p) => p && Object.keys(p).length) ||
+    Object.values(st0.skipped).some((l) => l && l.length) ||
+    Object.values(st0.endless.best).some((n) => n > 0) ||
+    !!st0.daily.lastDate ||
+    !!st0.current ||
+    Object.keys(st0.activity || {}).length > 0;
   if (!app.state.settings.onboarded && played) {
     app.state.settings.onboarded = true;
     app.save();

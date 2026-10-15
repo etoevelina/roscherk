@@ -96,11 +96,14 @@ export function starFor(attempt, perfect = true) {
  * recordWin(progress, levelId, star, ms, stars) → новый объект progress для режима.
  * Звезда, полученная однажды, сохраняется; лучшее время — минимум; звёзды 1–3 — максимум.
  */
-export function recordWin(progress, levelId, star, ms, stars = star ? 3 : 1) {
+export function recordWin(progress, levelId, star, ms, stars = star ? 3 : 1, noHint = star) {
   const prev = progress[levelId];
   const bestMs = prev && prev.bestMs > 0 ? Math.min(prev.bestMs, ms) : ms;
   const best = Math.max(prev?.stars || (prev?.star ? 3 : prev ? 1 : 0), clampStars(stars), star ? 3 : 1);
-  return { ...progress, [levelId]: { star: !!(prev?.star || star), bestMs: Math.max(1, Math.round(bestMs)), stars: best } };
+  // nh — хоть раз пройден без подсказок (для «Без подсказок» в статистике; звёзды этого не говорят:
+  // у режимов с perfect()=true подсказанная победа — тоже 2 звезды).
+  const nh = !!(prev?.nh || prev?.star || star || noHint);
+  return { ...progress, [levelId]: { star: !!(prev?.star || star), bestMs: Math.max(1, Math.round(bestMs)), stars: best, nh } };
 }
 
 const clampStars = (n) => (Number.isInteger(n) ? Math.min(3, Math.max(1, n)) : 1);

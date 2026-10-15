@@ -71,13 +71,13 @@ test('звезда — за попытку без подсказки и perfect;
 
 test('recordWin: лучшее время — минимум, звезда сохраняется навсегда', () => {
   let p = recordWin({}, 'L0', false, 50000);
-  assert.deepEqual(p.L0, { star: false, bestMs: 50000, stars: 1 });
+  assert.deepEqual(p.L0, { star: false, bestMs: 50000, stars: 1, nh: false });
   p = recordWin(p, 'L0', false, 55000, 2);
-  assert.deepEqual(p.L0, { star: false, bestMs: 50000, stars: 2 }, 'звёзды 1–3 — максимум');
+  assert.deepEqual(p.L0, { star: false, bestMs: 50000, stars: 2, nh: false }, 'звёзды 1–3 — максимум');
   p = recordWin(p, 'L0', true, 60000);
-  assert.deepEqual(p.L0, { star: true, bestMs: 50000, stars: 3 });
+  assert.deepEqual(p.L0, { star: true, bestMs: 50000, stars: 3, nh: true });
   p = recordWin(p, 'L0', false, 41000.4, 1);
-  assert.deepEqual(p.L0, { star: true, bestMs: 41000, stars: 3 }, 'звезда и три звезды не теряются при повторе без звезды');
+  assert.deepEqual(p.L0, { star: true, bestMs: 41000, stars: 3, nh: true }, 'звезда и три звезды не теряются при повторе без звезды');
 });
 
 test('starsFor / levelStars: 1 — пройден, +1 без подсказок, +1 идеально; старые записи', () => {

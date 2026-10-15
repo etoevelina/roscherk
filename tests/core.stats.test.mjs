@@ -40,7 +40,7 @@ test('график месяца — 30 дней, года — 12 месяцев 
 test('totals: пройдено, без подсказок %, серия, всего', () => {
   const s = defaultState(['zip', 'words']);
   s.progress.zip = { a: { star: true, bestMs: 1, stars: 3 }, b: { star: false, bestMs: 1, stars: 1 }, gone: { star: true, bestMs: 1 } };
-  s.progress.words = { w: { star: false, bestMs: 1, stars: 2 } };
+  s.progress.words = { w: { star: false, bestMs: 1, stars: 2, nh: true } };
   s.activity = { '2026-10-14': 1 };
   s.daily = { streak: 4, bestStreak: 6, lastDate: '2026-10-14', history: [] };
   const t = totals(s, { zip: ['a', 'b'], words: ['w', 'x'] }, '2026-10-15');
